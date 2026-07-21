@@ -88,6 +88,27 @@
         @apply bg-black/[0.06] font-semibold text-[#1D1D1F];
     }
 
+    .cat-more {
+        @apply flex w-full cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-left text-[14px] font-medium text-[#0071E3] transition-colors duration-150 hover:bg-black/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0071E3];
+    }
+
+    .category-sheet-body {
+        scrollbar-width: thin;
+        scrollbar-color: #d2d2d7 transparent;
+    }
+
+    .category-tile {
+        @apply flex cursor-pointer items-start gap-3 rounded-2xl bg-[#F5F5F7] px-3.5 py-3 transition hover:bg-[#EBEBED] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0071E3];
+    }
+
+    .category-tile-active {
+        @apply bg-[#0071E3]/10 ring-1 ring-[#0071E3]/30;
+    }
+
+    .category-tile-icon {
+        @apply mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm;
+    }
+
     .btn-primary {
         @apply inline-flex items-center justify-center gap-1.5 rounded-full bg-[#0071E3] px-4 py-1.5 text-[13px] font-semibold text-white transition-colors duration-150 cursor-pointer hover:bg-[#0077ED] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0071E3];
     }
@@ -156,6 +177,14 @@
 
     .filter-chip-active {
         @apply bg-[#0071E3] text-white hover:bg-[#0077ED];
+    }
+
+    .author-chip {
+        @apply flex w-[88px] shrink-0 cursor-pointer flex-col items-center text-center transition-opacity duration-150 hover:opacity-80;
+    }
+
+    .author-avatar {
+        @apply flex h-[72px] w-[72px] items-center justify-center overflow-hidden rounded-full bg-[#E8E8ED] text-[18px] font-semibold text-[#1D1D1F] shadow-[0_2px_10px_rgba(0,0,0,0.08)] ring-1 ring-black/5;
     }
 
     .app-icon {

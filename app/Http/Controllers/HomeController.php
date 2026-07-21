@@ -27,7 +27,9 @@ class HomeController extends Controller
 
         $totalApps = AppListing::query()->where('is_published', true)->count();
 
-        return view('home', compact('categories', 'featured', 'totalApps'));
+        $topAuthors = $this->topAuthors(12);
+
+        return view('home', compact('categories', 'featured', 'totalApps', 'topAuthors'));
     }
 
     public function show(string $slug): View
@@ -135,6 +137,39 @@ class HomeController extends Controller
             ->filter()
             ->unique()
             ->sort(SORT_NATURAL | SORT_FLAG_CASE)
+            ->values();
+    }
+
+    /**
+     * @return Collection<int, object{name: string, apps_count: int, logo: ?string, initials: string}>
+     */
+    private function topAuthors(int $limit = 12): Collection
+    {
+        return AppListing::query()
+            ->where('is_published', true)
+            ->with('user:id,name,avatar')
+            ->latest()
+            ->get()
+            ->groupBy(fn (AppListing $app) => $app->authorName())
+            ->map(function (Collection $apps, string $name) {
+                $lead = $apps->first(fn (AppListing $app) => $app->logoUrl()) ?? $apps->first();
+                $words = preg_split('/\s+/', trim($name)) ?: [];
+                $initials = collect($words)
+                    ->filter()
+                    ->take(2)
+                    ->map(fn (string $word) => mb_strtoupper(mb_substr($word, 0, 1)))
+                    ->implode('');
+
+                return (object) [
+                    'name' => $name,
+                    'apps_count' => $apps->count(),
+                    'logo' => $lead?->logoUrl(),
+                    'avatar' => $lead?->user?->avatar,
+                    'initials' => $initials !== '' ? $initials : 'A',
+                ];
+            })
+            ->sortByDesc('apps_count')
+            ->take($limit)
             ->values();
     }
 }
