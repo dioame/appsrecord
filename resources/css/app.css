@@ -134,6 +134,18 @@
     .store-shelf::-webkit-scrollbar { display: none; }
     .store-shelf > * { scroll-snap-align: start; }
 
+    .shelf-arrow {
+        @apply absolute top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#D2D2D7] bg-white/95 text-[#1D1D1F] shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition hover:bg-white hover:shadow-[0_6px_20px_rgba(0,0,0,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0071E3] sm:inline-flex;
+    }
+
+    .shelf-arrow-left {
+        @apply left-0 -translate-x-1/2;
+    }
+
+    .shelf-arrow-right {
+        @apply right-0 translate-x-1/2;
+    }
+
     .app-icon {
         @apply shrink-0 overflow-hidden rounded-[22%] bg-[#E8E8ED] shadow-[0_2px_8px_rgba(0,0,0,0.12)];
     }
