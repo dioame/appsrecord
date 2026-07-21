@@ -56,6 +56,20 @@ class AppListing extends Model
         return filled($this->author) ? $this->author : ($this->user->name ?? 'Unknown');
     }
 
+    public function scopeByAuthor($query, string $author)
+    {
+        $author = trim($author);
+
+        return $query->where(function ($inner) use ($author) {
+            $inner->where('author', $author)
+                ->orWhere(function ($fallback) use ($author) {
+                    $fallback->where(function ($emptyAuthor) {
+                        $emptyAuthor->whereNull('author')->orWhere('author', '');
+                    })->whereHas('user', fn ($user) => $user->where('name', $author));
+                });
+        });
+    }
+
     public function isMobile(): bool
     {
         return ($this->platform ?? 'mobile') === 'mobile';

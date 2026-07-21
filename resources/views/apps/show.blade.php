@@ -61,7 +61,9 @@
         <div class="stat-cell">
             <p class="stat-label">Developer</p>
             <svg class="mt-1 h-6 w-6 text-[#86868B]" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21a8 8 0 10-16 0M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
-            <p class="stat-sub truncate max-w-full">{{ $app->authorName() }}</p>
+            <p class="stat-sub truncate max-w-full">
+                <a href="{{ route('search', ['author' => $app->authorName()]) }}" class="text-[#0071E3] hover:underline cursor-pointer">{{ $app->authorName() }}</a>
+            </p>
         </div>
         <div class="stat-cell">
             <p class="stat-label">Platform</p>

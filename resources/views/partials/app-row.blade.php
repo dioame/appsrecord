@@ -12,7 +12,11 @@
     <div class="min-w-0 flex-1">
         <h3 class="truncate text-[15px] font-normal leading-tight text-[#1D1D1F]">{{ $app->name }}</h3>
         <p class="mt-0.5 truncate text-[13px] leading-tight text-[#86868B]">
-            {{ $app->platformLabel() }} · {{ \Illuminate\Support\Str::limit($app->description, 40) }}
+            @if (! empty($showAuthor))
+                {{ $app->authorName() }} · {{ $app->platformLabel() }}
+            @else
+                {{ $app->platformLabel() }} · {{ \Illuminate\Support\Str::limit($app->description, 40) }}
+            @endif
         </p>
     </div>
 

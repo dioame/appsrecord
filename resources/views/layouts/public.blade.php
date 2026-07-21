@@ -33,11 +33,14 @@
             aria-label="Store navigation"
         >
             <form action="{{ route('search') }}" method="GET" class="mb-4">
+                @if (request('author'))
+                    <input type="hidden" name="author" value="{{ request('author') }}">
+                @endif
                 <label class="relative block">
                     <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-[#86868B]">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"/></svg>
                     </span>
-                    <input type="search" name="q" value="{{ request('q') }}" placeholder="Search" class="store-search pl-9" autocomplete="off">
+                    <input type="search" name="q" value="{{ request('q') }}" placeholder="Search apps or authors" class="store-search pl-9" autocomplete="off">
                 </label>
             </form>
 
@@ -45,6 +48,10 @@
                 <a href="{{ route('home') }}" class="side-link {{ request()->routeIs('home') && !request()->routeIs('categories.*') ? 'side-link-active' : '' }}" @click="mobileNav = false">
                     <svg class="side-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
                     Apps
+                </a>
+                <a href="{{ route('search') }}" class="side-link {{ request()->routeIs('search') ? 'side-link-active' : '' }}" @click="mobileNav = false">
+                    <svg class="side-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"/></svg>
+                    Search
                 </a>
                 <a href="{{ route('home') }}#featured" class="side-link" @click="mobileNav = false">
                     <svg class="side-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l2.4 6.2L21 12l-6.6 2.8L12 21l-2.4-6.2L3 12l6.6-2.8L12 3z"/></svg>

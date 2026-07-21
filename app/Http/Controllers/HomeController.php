@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\AppListing;
 use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -66,9 +68,23 @@ class HomeController extends Controller
         return view('categories.show', compact('category', 'apps', 'categories'));
     }
 
-    public function search(\Illuminate\Http\Request $request): View
+    public function search(Request $request): View
     {
         $q = trim((string) $request->query('q', ''));
+        $author = trim((string) $request->query('author', ''));
+        $platform = trim((string) $request->query('platform', ''));
+        $categorySlug = trim((string) $request->query('category', ''));
+
+        $validPlatforms = AppListing::PLATFORMS;
+        if ($platform !== '' && ! in_array($platform, $validPlatforms, true)) {
+            $platform = '';
+        }
+
+        $category = $categorySlug !== ''
+            ? Category::query()->where('slug', $categorySlug)->first()
+            : null;
+
+        $hasFilters = $q !== '' || $author !== '' || $platform !== '' || $category !== null;
 
         $apps = AppListing::query()
             ->where('is_published', true)
@@ -76,13 +92,49 @@ class HomeController extends Controller
             ->when($q !== '', function ($query) use ($q) {
                 $query->where(function ($inner) use ($q) {
                     $inner->where('name', 'like', "%{$q}%")
-                        ->orWhere('description', 'like', "%{$q}%");
+                        ->orWhere('description', 'like', "%{$q}%")
+                        ->orWhere('author', 'like', "%{$q}%")
+                        ->orWhereHas('user', fn ($user) => $user->where('name', 'like', "%{$q}%"));
                 });
             })
+            ->when($author !== '', fn ($query) => $query->byAuthor($author))
+            ->when($platform !== '', fn ($query) => $query->where('platform', $platform))
+            ->when($category !== null, fn ($query) => $query->where('category_id', $category->id))
             ->latest()
-            ->take(30)
+            ->take(48)
             ->get();
 
-        return view('search', compact('apps', 'q'));
+        $authors = $this->publishedAuthors();
+        $categories = Category::query()
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        return view('search', compact(
+            'apps',
+            'q',
+            'author',
+            'platform',
+            'category',
+            'categories',
+            'authors',
+            'hasFilters',
+        ));
+    }
+
+    /**
+     * @return Collection<int, string>
+     */
+    private function publishedAuthors(): Collection
+    {
+        return AppListing::query()
+            ->where('is_published', true)
+            ->with('user:id,name')
+            ->get(['id', 'user_id', 'author'])
+            ->map(fn (AppListing $app) => $app->authorName())
+            ->filter()
+            ->unique()
+            ->sort(SORT_NATURAL | SORT_FLAG_CASE)
+            ->values();
     }
 }
