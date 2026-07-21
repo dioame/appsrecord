@@ -17,32 +17,6 @@
         @endauth
     </header>
 
-    @if ($topAuthors->isNotEmpty())
-        <section class="mb-8">
-            <div class="mb-3 flex items-baseline justify-between gap-3">
-                <h2 class="section-title">Top Authors</h2>
-                <a href="{{ route('search') }}" class="see-all">Browse</a>
-            </div>
-            <div class="store-shelf !gap-5 !pb-1">
-                @foreach ($topAuthors as $topAuthor)
-                    <a href="{{ route('search', ['author' => $topAuthor->name]) }}" class="author-chip group">
-                        <div class="author-avatar">
-                            @if ($topAuthor->avatar)
-                                <img src="{{ $topAuthor->avatar }}" alt="" class="h-full w-full object-cover">
-                            @elseif ($topAuthor->logo)
-                                <img src="{{ $topAuthor->logo }}" alt="" class="h-full w-full object-cover">
-                            @else
-                                <span>{{ $topAuthor->initials }}</span>
-                            @endif
-                        </div>
-                        <p class="mt-2 w-full truncate text-center text-[13px] font-medium text-[#1D1D1F] group-hover:text-[#0071E3]">{{ $topAuthor->name }}</p>
-                        <p class="text-[11px] text-[#86868B]">{{ $topAuthor->apps_count }} {{ \Illuminate\Support\Str::plural('app', $topAuthor->apps_count) }}</p>
-                    </a>
-                @endforeach
-            </div>
-        </section>
-    @endif
-
     {{-- Lead with a featured hero if we have apps --}}
     @if ($featured->isNotEmpty())
         @php $lead = $featured->first(); @endphp
@@ -61,6 +35,32 @@
                 </div>
             </div>
         </a>
+    @endif
+
+    @if ($topAuthors->isNotEmpty())
+        <section class="mb-8">
+            <div class="mb-2 flex items-baseline justify-between gap-3">
+                <h2 class="text-[17px] font-semibold tracking-tight text-[#1D1D1F]">Top Authors</h2>
+                <a href="{{ route('search') }}" class="see-all !text-[13px]">Browse</a>
+            </div>
+            <div class="store-shelf !gap-3 !pb-1">
+                @foreach ($topAuthors as $topAuthor)
+                    <a href="{{ route('search', ['author' => $topAuthor->name]) }}" class="author-chip group">
+                        <div class="author-avatar">
+                            @if ($topAuthor->avatar)
+                                <img src="{{ $topAuthor->avatar }}" alt="" class="h-full w-full object-cover">
+                            @elseif ($topAuthor->logo)
+                                <img src="{{ $topAuthor->logo }}" alt="" class="h-full w-full object-cover">
+                            @else
+                                <span>{{ $topAuthor->initials }}</span>
+                            @endif
+                        </div>
+                        <p class="mt-1.5 w-full truncate text-center text-[12px] font-medium text-[#1D1D1F] group-hover:text-[#0071E3]">{{ $topAuthor->name }}</p>
+                        <p class="text-[10px] text-[#86868B]">{{ $topAuthor->apps_count }} {{ \Illuminate\Support\Str::plural('app', $topAuthor->apps_count) }}</p>
+                    </a>
+                @endforeach
+            </div>
+        </section>
     @endif
 
     <div id="apps" class="space-y-8">
