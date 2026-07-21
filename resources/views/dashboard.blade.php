@@ -17,6 +17,30 @@
                 </div>
             @endif
 
+            <div
+                class="mb-5 rounded-2xl border border-[#E8E8ED] bg-white p-4 sm:p-5"
+                x-data="{ copied: false }"
+            >
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div class="min-w-0">
+                        <p class="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#86868B]">Client showcase link</p>
+                        <h3 class="mt-1 font-display text-[17px] font-bold text-[#1D1D1F]">Share your app portfolio</h3>
+                        <p class="mt-1 text-[13px] text-[#86868B]">Send this public page to clients so they can browse all your published apps.</p>
+                        <a href="{{ $publicUrl }}" target="_blank" rel="noopener noreferrer" class="mt-2 block truncate text-[13px] text-[#0071E3] hover:underline">{{ $publicUrl }}</a>
+                    </div>
+                    <div class="flex shrink-0 flex-wrap gap-2">
+                        <button
+                            type="button"
+                            class="btn-primary"
+                            @click="navigator.clipboard?.writeText(@js($publicUrl)); copied = true; setTimeout(() => copied = false, 1600)"
+                        >
+                            <span x-text="copied ? 'Copied!' : 'Copy link'"></span>
+                        </button>
+                        <a href="{{ $publicUrl }}" target="_blank" rel="noopener noreferrer" class="btn-secondary">Open</a>
+                    </div>
+                </div>
+            </div>
+
             @if ($apps->isEmpty())
                 <div class="rounded-2xl bg-white px-6 py-12 text-center">
                     <h3 class="font-display text-[18px] font-bold text-[#1D1D1F]">No apps yet</h3>

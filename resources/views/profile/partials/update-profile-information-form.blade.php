@@ -24,6 +24,23 @@
         </div>
 
         <div>
+            <x-input-label for="slug" :value="__('Public link')" />
+            <div class="mt-1 flex items-center gap-2">
+                <span class="shrink-0 text-sm text-gray-500">{{ url('/creators') }}/</span>
+                <x-text-input id="slug" name="slug" type="text" class="block w-full" :value="old('slug', $user->slug)" required autocomplete="off" />
+            </div>
+            <p class="mt-1 text-sm text-gray-600">Share this page with clients: <a href="{{ $user->publicUrl() }}" class="text-[#0071E3] hover:underline" target="_blank" rel="noopener">{{ $user->publicUrl() }}</a></p>
+            <x-input-error class="mt-2" :messages="$errors->get('slug')" />
+        </div>
+
+        <div>
+            <x-input-label for="bio" :value="__('Bio (optional)')" />
+            <textarea id="bio" name="bio" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('bio', $user->bio) }}</textarea>
+            <p class="mt-1 text-sm text-gray-600">Shown on your public creator page.</p>
+            <x-input-error class="mt-2" :messages="$errors->get('bio')" />
+        </div>
+
+        <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />

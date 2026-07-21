@@ -9,6 +9,15 @@ use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('slug')) {
+            $this->merge([
+                'slug' => \Illuminate\Support\Str::slug((string) $this->input('slug')),
+            ]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -18,6 +27,15 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'slug' => [
+                'required',
+                'string',
+                'min:2',
+                'max:60',
+                'alpha_dash',
+                Rule::unique(User::class)->ignore($this->user()->id),
+            ],
+            'bio' => ['nullable', 'string', 'max:500'],
             'email' => [
                 'required',
                 'string',

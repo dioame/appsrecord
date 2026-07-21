@@ -48,7 +48,10 @@
             </div>
             <div class="store-shelf !gap-3 !pb-1">
                 @foreach ($topAuthors as $topAuthor)
-                    <a href="{{ route('search', ['author' => $topAuthor->name]) }}" class="author-chip group">
+                    <a
+                        href="{{ $topAuthor->slug ? route('creators.show', $topAuthor->slug) : route('search', ['author' => $topAuthor->name]) }}"
+                        class="author-chip group"
+                    >
                         <div class="author-avatar">
                             @if ($topAuthor->avatar)
                                 <img src="{{ $topAuthor->avatar }}" alt="" class="h-full w-full object-cover">

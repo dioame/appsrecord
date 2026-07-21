@@ -163,7 +163,7 @@ class HomeController extends Controller
     {
         return AppListing::query()
             ->where('is_published', true)
-            ->with('user:id,name,avatar')
+            ->with('user:id,name,avatar,slug')
             ->latest()
             ->get()
             ->groupBy(fn (AppListing $app) => $app->authorName())
@@ -178,6 +178,7 @@ class HomeController extends Controller
 
                 return (object) [
                     'name' => $name,
+                    'slug' => $lead?->user?->slug,
                     'apps_count' => $apps->count(),
                     'logo' => $lead?->logoUrl(),
                     'avatar' => $lead?->user?->avatar,
