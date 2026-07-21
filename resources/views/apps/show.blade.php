@@ -80,16 +80,68 @@
     </section>
 
     {{-- Screenshot cards --}}
-    <section class="mt-8">
+    <section
+        class="mt-8"
+        x-data="{
+            openIndex: null,
+            images: {{ \Illuminate\Support\Js::from(array_values($shots)) }},
+            captions: {{ \Illuminate\Support\Js::from(collect(array_values($shots))->keys()->map(fn ($i) => $captions[$i] ?? 'Screenshot '.($i + 1))->values()->all()) }},
+            get isOpen() { return this.openIndex !== null },
+            openAt(i) { this.openIndex = i },
+            close() { this.openIndex = null },
+            prev() { if (!this.images.length) return; this.openIndex = (this.openIndex - 1 + this.images.length) % this.images.length },
+            next() { if (!this.images.length) return; this.openIndex = (this.openIndex + 1) % this.images.length },
+        }"
+        @keydown.escape.window="close()"
+        @keydown.left.window="if (isOpen) prev()"
+        @keydown.right.window="if (isOpen) next()"
+    >
         @if (count($shots))
             <div class="store-shelf !gap-5">
-                @foreach ($shots as $index => $shot)
+                @foreach (array_values($shots) as $index => $shot)
                     @include('partials.device-preview', [
                         'app' => $app,
                         'shot' => $shot,
+                        'index' => $index,
                         'caption' => $captions[$index] ?? 'A closer look at '.$app->name.'.',
                     ])
                 @endforeach
+            </div>
+
+            {{-- Lightbox --}}
+            <div
+                x-show="isOpen"
+                x-cloak
+                x-transition.opacity
+                class="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+                @click.self="close()"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Screenshot preview"
+            >
+                <button type="button" class="absolute right-4 top-4 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" @click="close()" aria-label="Close">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+
+                @if (count($shots) > 1)
+                    <button type="button" class="absolute left-3 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:left-6" @click="prev()" aria-label="Previous">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                    </button>
+                    <button type="button" class="absolute right-3 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6" @click="next()" aria-label="Next">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                @endif
+
+                <div class="flex max-h-[90vh] w-full max-w-5xl flex-col items-center gap-3" @click.stop>
+                    <p class="text-center text-[14px] font-medium text-white/80" x-text="captions[openIndex] || ''"></p>
+                    <img
+                        :src="images[openIndex]"
+                        :alt="'Screenshot ' + (openIndex + 1)"
+                        class="max-h-[80vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl"
+                        x-transition
+                    >
+                    <p class="text-[12px] text-white/50" x-text="(openIndex + 1) + ' / ' + images.length"></p>
+                </div>
             </div>
         @else
             <div class="rounded-[28px] bg-[#F5F5F7] px-6 py-16 text-center text-[14px] text-[#86868B]">
