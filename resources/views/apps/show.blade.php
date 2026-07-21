@@ -17,20 +17,20 @@
 <article class="store-main-inner pb-12">
     {{-- Hero banner --}}
     <section class="hero-banner reveal">
-        <div class="relative flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:gap-8 sm:p-8 lg:p-10">
-            <div class="app-icon h-[120px] w-[120px] ring-1 ring-white/25 sm:h-[148px] sm:w-[148px]">
+        <div class="relative flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-8 sm:p-8 lg:p-10">
+            <div class="app-icon h-[96px] w-[96px] ring-1 ring-white/25 sm:h-[148px] sm:w-[148px]">
                 @if ($app->logoUrl())
                     <img src="{{ $app->logoUrl() }}" alt="{{ $app->name }} logo" class="h-full w-full object-cover">
                 @endif
             </div>
 
             <div class="min-w-0 flex-1">
-                <h1 class="font-display text-[34px] font-bold leading-none tracking-tight sm:text-[42px]">{{ $app->name }}</h1>
-                <p class="mt-3 max-w-xl text-[17px] leading-snug text-white/90">{{ $tagline }}</p>
-                <p class="mt-2 text-[14px] text-white/70">
+                <h1 class="font-display text-[28px] font-bold leading-tight tracking-tight sm:text-[42px] sm:leading-none">{{ $app->name }}</h1>
+                <p class="mt-2 max-w-xl text-[15px] leading-snug text-white/90 sm:mt-3 sm:text-[17px]">{{ $tagline }}</p>
+                <p class="mt-2 text-[13px] text-white/70 sm:text-[14px]">
                     Free · {{ $app->platformLabel() }}
                     @if ($app->link)
-                        · <a href="{{ $app->link }}" target="_blank" rel="noopener noreferrer" class="underline decoration-white/40 underline-offset-2 hover:decoration-white cursor-pointer">{{ \Illuminate\Support\Str::of($app->link)->replaceMatches('#^https?://#', '')->trim('/') }}</a>
+                        · <a href="{{ $app->link }}" target="_blank" rel="noopener noreferrer" class="underline decoration-white/40 underline-offset-2 hover:decoration-white cursor-pointer break-all">{{ \Illuminate\Support\Str::of($app->link)->replaceMatches('#^https?://#', '')->trim('/') }}</a>
                     @endif
                 </p>
                 <div class="mt-3">
@@ -120,31 +120,31 @@
                 x-show="isOpen"
                 x-cloak
                 x-transition.opacity
-                class="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+                class="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 p-3 backdrop-blur-sm sm:p-4"
                 @click.self="close()"
                 role="dialog"
                 aria-modal="true"
                 aria-label="Screenshot preview"
             >
-                <button type="button" class="absolute right-4 top-4 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" @click="close()" aria-label="Close">
+                <button type="button" class="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-4 sm:top-4" @click="close()" aria-label="Close">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
 
                 @if (count($shots) > 1)
-                    <button type="button" class="absolute left-3 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:left-6" @click="prev()" aria-label="Previous">
+                    <button type="button" class="absolute left-2 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:left-6 sm:h-11 sm:w-11" @click="prev()" aria-label="Previous">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                     </button>
-                    <button type="button" class="absolute right-3 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6" @click="next()" aria-label="Next">
+                    <button type="button" class="absolute right-2 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6 sm:h-11 sm:w-11" @click="next()" aria-label="Next">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                     </button>
                 @endif
 
-                <div class="flex max-h-[90vh] w-full max-w-5xl flex-col items-center gap-3" @click.stop>
-                    <p class="text-center text-[14px] font-medium text-white/80" x-text="captions[openIndex] || ''"></p>
+                <div class="flex max-h-[85vh] w-full max-w-5xl flex-col items-center gap-2 sm:max-h-[90vh] sm:gap-3" @click.stop>
+                    <p class="px-8 text-center text-[13px] font-medium text-white/80 sm:text-[14px]" x-text="captions[openIndex] || ''"></p>
                     <img
                         :src="images[openIndex]"
                         :alt="'Screenshot ' + (openIndex + 1)"
-                        class="max-h-[80vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl"
+                        class="max-h-[70vh] w-auto max-w-full rounded-xl object-contain shadow-2xl sm:max-h-[80vh] sm:rounded-2xl"
                         x-transition
                     >
                     <p class="text-[12px] text-white/50" x-text="(openIndex + 1) + ' / ' + images.length"></p>

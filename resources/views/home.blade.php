@@ -5,33 +5,33 @@
 
 @section('content')
 <div class="store-main-inner pb-12">
-    <header class="mb-6 flex items-end justify-between gap-3">
-        <div>
-            <h1 class="font-display text-[34px] font-bold leading-none tracking-tight text-[#1D1D1F]">Apps</h1>
-            <p class="mt-2 text-[15px] text-[#86868B]">{{ $totalApps }} apps across {{ $categories->count() }} categories</p>
+    <header class="mb-5 flex items-end justify-between gap-3 sm:mb-6">
+        <div class="min-w-0">
+            <h1 class="font-display text-[28px] font-bold leading-none tracking-tight text-[#1D1D1F] sm:text-[34px]">Apps</h1>
+            <p class="mt-2 text-[13px] text-[#86868B] sm:text-[15px]">{{ $totalApps }} apps across {{ $categories->count() }} categories</p>
         </div>
         @auth
-            <a href="{{ route('my-apps.create') }}" class="btn-get !normal-case !tracking-normal">+ Add</a>
+            <a href="{{ route('my-apps.create') }}" class="btn-get !normal-case !tracking-normal shrink-0">+ Add</a>
         @else
-            <a href="{{ route('register') }}" class="btn-get !normal-case !tracking-normal">Publish</a>
+            <a href="{{ route('register') }}" class="btn-get !normal-case !tracking-normal shrink-0">Publish</a>
         @endauth
     </header>
 
     {{-- Lead with a featured hero if we have apps --}}
     @if ($featured->isNotEmpty())
         @php $lead = $featured->first(); @endphp
-        <a href="{{ route('apps.public', $lead->slug) }}" class="hero-banner mb-8 block cursor-pointer transition hover:opacity-95">
-            <div class="relative flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:gap-8 sm:p-8">
-                <div class="app-icon h-[100px] w-[100px] ring-1 ring-white/20 sm:h-[120px] sm:w-[120px]">
+        <a href="{{ route('apps.public', $lead->slug) }}" class="hero-banner mb-6 block cursor-pointer transition hover:opacity-95 sm:mb-8">
+            <div class="relative flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-8 sm:p-8">
+                <div class="app-icon h-[88px] w-[88px] ring-1 ring-white/20 sm:h-[120px] sm:w-[120px]">
                     @if ($lead->logoUrl())
                         <img src="{{ $lead->logoUrl() }}" alt="" class="h-full w-full object-cover">
                     @endif
                 </div>
                 <div class="min-w-0 flex-1 text-white">
-                    <p class="text-[12px] font-semibold uppercase tracking-[0.1em] text-white/70">Featured</p>
-                    <h2 class="mt-1 font-display text-[30px] font-bold leading-none sm:text-[36px]">{{ $lead->name }}</h2>
-                    <p class="mt-2 max-w-xl text-[15px] text-white/85">{{ \Illuminate\Support\Str::limit($lead->description, 90) }}</p>
-                    <p class="mt-2 text-[13px] text-white/60">Free · {{ $lead->category->name }}</p>
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.1em] text-white/70 sm:text-[12px]">Featured</p>
+                    <h2 class="mt-1 font-display text-[24px] font-bold leading-tight sm:text-[36px] sm:leading-none">{{ $lead->name }}</h2>
+                    <p class="mt-2 max-w-xl text-[14px] text-white/85 sm:text-[15px]">{{ \Illuminate\Support\Str::limit($lead->description, 90) }}</p>
+                    <p class="mt-2 text-[12px] text-white/60 sm:text-[13px]">Free · {{ $lead->category->name }}</p>
                     <div class="mt-2">
                         <x-star-rating :rating="$lead->averageRating()" :count="$lead->ratingsCount()" light />
                     </div>
@@ -66,7 +66,7 @@
         </section>
     @endif
 
-    <div id="apps" class="space-y-8">
+    <div id="apps" class="space-y-6 sm:space-y-8">
         @foreach ($categories as $category)
             @if ($category->publishedApps->isNotEmpty())
                 <section id="cat-{{ $category->slug }}">
@@ -75,7 +75,7 @@
                         <a href="{{ route('categories.show', $category->slug) }}" class="see-all">See All</a>
                     </div>
 
-                    <div class="rounded-[22px] bg-[#F5F5F7] px-3 sm:px-4">
+                    <div class="rounded-[18px] bg-[#F5F5F7] px-2.5 sm:rounded-[22px] sm:px-4">
                         @php
                             $shelfApps = $category->publishedApps->take(6);
                             $columns = $shelfApps->chunk(ceil(max($shelfApps->count(), 1) / 3));

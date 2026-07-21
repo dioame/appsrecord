@@ -2,13 +2,16 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'AppsRecord') — {{ config('app.name', 'AppsRecord') }}</title>
     <meta name="description" content="@yield('meta_description', 'Discover and showcase apps by category — your portfolio app store.')">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-body antialiased text-[#1D1D1F]" x-data="{
+<body
+    class="font-body antialiased text-[#1D1D1F]"
+    :class="{ 'overflow-hidden': mobileNav || categoriesOpen }"
+    x-data="{
     mobileNav: false,
     categoriesOpen: false,
     categoryQuery: '',
@@ -22,7 +25,7 @@
 }" @keydown.escape.window="closeCategories()">
     <div class="store-shell">
         {{-- Mobile top bar --}}
-        <div class="fixed inset-x-0 top-0 z-50 flex h-12 items-center justify-between border-b border-[#E8E8ED] bg-[#F5F5F7] px-4 text-[#1D1D1F] lg:hidden">
+        <div class="store-topbar lg:hidden">
             <button type="button" class="inline-flex cursor-pointer items-center justify-center rounded-lg p-2 text-[#1D1D1F] hover:bg-black/5" @click="mobileNav = !mobileNav" aria-label="Open menu">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
@@ -39,7 +42,7 @@
 
         {{-- Sidebar --}}
         <aside
-            class="store-sidebar transition-transform duration-200 lg:translate-x-0"
+            class="store-sidebar transition-transform duration-200 ease-out"
             :class="mobileNav ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
             aria-label="Store navigation"
         >
@@ -212,7 +215,7 @@
         </div>
 
         {{-- Main --}}
-        <div class="store-main pt-12 lg:pt-0">
+        <div class="store-main">
             @if (session('status'))
                 <div class="store-main-inner !pb-0 !pt-4">
                     <div class="rounded-xl bg-emerald-50 px-3 py-2 text-[13px] text-emerald-800" role="status">

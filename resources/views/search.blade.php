@@ -4,9 +4,9 @@
 
 @section('content')
 <section class="store-main-inner pb-12">
-    <header class="mb-6">
-        <h1 class="font-display text-[34px] font-bold tracking-tight text-[#1D1D1F]">Search</h1>
-        <p class="mt-2 text-[15px] text-[#86868B]">
+    <header class="mb-5 sm:mb-6">
+        <h1 class="font-display text-[28px] font-bold tracking-tight text-[#1D1D1F] sm:text-[34px]">Search</h1>
+        <p class="mt-2 text-[13px] text-[#86868B] sm:text-[15px]">
             Find apps by name, description, or author — then narrow with filters.
         </p>
     </header>
@@ -26,8 +26,8 @@
             >
         </label>
 
-        <div class="flex flex-wrap items-end gap-3">
-            <label class="block min-w-[180px] flex-1 sm:max-w-[220px]">
+        <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+            <label class="block w-full sm:min-w-[180px] sm:flex-1 sm:max-w-[220px]">
                 <span class="mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">Author</span>
                 <select name="author" class="filter-select" onchange="this.form.submit()">
                     <option value="">All authors</option>
@@ -37,7 +37,7 @@
                 </select>
             </label>
 
-            <label class="block min-w-[140px] flex-1 sm:max-w-[180px]">
+            <label class="block w-full sm:min-w-[140px] sm:flex-1 sm:max-w-[180px]">
                 <span class="mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">Platform</span>
                 <select name="platform" class="filter-select" onchange="this.form.submit()">
                     <option value="">All platforms</option>
@@ -47,7 +47,7 @@
                 </select>
             </label>
 
-            <label class="block min-w-[160px] flex-1 sm:max-w-[200px]">
+            <label class="block w-full sm:min-w-[160px] sm:flex-1 sm:max-w-[200px]">
                 <span class="mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">Category</span>
                 <select name="category" class="filter-select" onchange="this.form.submit()">
                     <option value="">All categories</option>
@@ -57,10 +57,12 @@
                 </select>
             </label>
 
-            <button type="submit" class="btn-get !normal-case !tracking-normal">Search</button>
-            @if ($hasFilters)
-                <a href="{{ route('search') }}" class="see-all py-2">Clear</a>
-            @endif
+            <div class="flex items-center gap-3">
+                <button type="submit" class="btn-get !normal-case !tracking-normal">Search</button>
+                @if ($hasFilters)
+                    <a href="{{ route('search') }}" class="see-all py-2">Clear</a>
+                @endif
+            </div>
         </div>
     </form>
 
