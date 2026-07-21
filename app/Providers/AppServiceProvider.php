@@ -24,7 +24,11 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.public', function ($view) {
             $view->with(
                 'navCategories',
-                Category::query()->orderBy('sort_order')->orderBy('name')->get()
+                Category::query()
+                    ->withCount(['publishedApps as apps_count'])
+                    ->orderByDesc('apps_count')
+                    ->orderBy('name')
+                    ->get()
             );
         });
     }

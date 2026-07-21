@@ -114,7 +114,8 @@
                            class="cat-link {{ $activeCategorySlug === $navCategory->slug ? 'cat-link-active' : '' }}"
                            @click="mobileNav = false">
                             <x-category-icon :slug="$navCategory->slug" />
-                            <span class="truncate">{{ $navCategory->name }}</span>
+                            <span class="min-w-0 flex-1 truncate">{{ $navCategory->name }}</span>
+                            <span class="cat-count">{{ $navCategory->apps_count }}</span>
                         </a>
                     @endforeach
                 </div>
@@ -198,7 +199,10 @@
                                 <x-category-icon :slug="$navCategory->slug" class="h-5 w-5 text-[#0071E3]" />
                             </span>
                             <span class="min-w-0 flex-1">
-                                <span class="block truncate text-[14px] font-medium text-[#1D1D1F]">{{ $navCategory->name }}</span>
+                                <span class="flex items-center gap-2">
+                                    <span class="block truncate text-[14px] font-medium text-[#1D1D1F]">{{ $navCategory->name }}</span>
+                                    <span class="cat-count !bg-white">{{ $navCategory->apps_count }}</span>
+                                </span>
                                 <span class="mt-0.5 block truncate text-[12px] text-[#86868B]">{{ $navCategory->description }}</span>
                             </span>
                         </a>
