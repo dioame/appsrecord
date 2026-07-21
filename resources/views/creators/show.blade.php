@@ -4,22 +4,28 @@
 @section('meta_description', $creator->bio ?: 'Apps by '.$creator->name)
 
 @section('content')
-<div class="mx-auto w-full max-w-[720px] px-4 py-8 sm:px-6 sm:py-12">
-    <header class="mb-8 text-center sm:mb-10">
-        <div class="mx-auto author-avatar !h-20 !w-20 !text-[22px] sm:!h-24 sm:!w-24">
+<div class="mx-auto w-full max-w-[980px] px-4 py-8 sm:px-6 sm:py-10">
+    <header class="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-center sm:gap-5">
+        <div class="author-avatar !h-16 !w-16 !text-[18px] sm:!h-20 sm:!w-20 sm:!text-[20px]">
             @if ($creator->avatar)
                 <img src="{{ $creator->avatar }}" alt="" class="h-full w-full object-cover">
             @else
                 <span>{{ $creator->initials() }}</span>
             @endif
         </div>
-        <h1 class="mt-4 font-display text-[28px] font-bold tracking-tight text-[#1D1D1F] sm:text-[34px]">{{ $creator->name }}</h1>
-        @if ($creator->bio)
-            <p class="mx-auto mt-2 max-w-md text-[15px] leading-relaxed text-[#86868B]">{{ $creator->bio }}</p>
-        @endif
-        <p class="mt-3 text-[13px] text-[#86868B]">
-            {{ $apps->count() }} {{ \Illuminate\Support\Str::plural('app', $apps->count()) }}
-        </p>
+        <div class="min-w-0">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#86868B]">App portfolio</p>
+            <h1 class="mt-1 font-display text-[28px] font-bold tracking-tight text-[#1D1D1F] sm:text-[34px]">{{ $creator->name }}</h1>
+            @if ($creator->bio)
+                <p class="mt-1.5 max-w-2xl text-[14px] text-[#86868B] sm:text-[15px]">{{ $creator->bio }}</p>
+            @endif
+            <p class="mt-2 text-[13px] text-[#86868B]">
+                {{ $apps->count() }} {{ \Illuminate\Support\Str::plural('app', $apps->count()) }}
+                @if ($categories->isNotEmpty())
+                    · {{ $categories->count() }} {{ \Illuminate\Support\Str::plural('category', $categories->count()) }}
+                @endif
+            </p>
+        </div>
     </header>
 
     @if ($apps->isEmpty())
@@ -27,45 +33,41 @@
             No published apps yet.
         </div>
     @else
-        <ul class="space-y-3">
-            @foreach ($apps as $app)
-                @php
-                    $href = $app->link ?: route('apps.public', $app->slug);
-                    $external = filled($app->link);
-                @endphp
-                <li>
-                    <a
-                        href="{{ $href }}"
-                        @if ($external) target="_blank" rel="noopener noreferrer" @endif
-                        class="flex items-center gap-3.5 rounded-2xl bg-white p-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] sm:gap-4 sm:p-4"
-                    >
-                        <div class="app-icon h-14 w-14 sm:h-16 sm:w-16">
-                            @if ($app->logoUrl())
-                                <img src="{{ $app->logoUrl() }}" alt="" class="h-full w-full object-cover">
-                            @else
-                                <div class="flex h-full w-full items-center justify-center bg-[#E8E8ED] text-[#86868B]">
-                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" stroke-width="1.5"/></svg>
+        <div class="space-y-8">
+            @foreach ($categories as $category)
+                <section id="cat-{{ $category->slug ?? 'apps' }}">
+                    <div class="mb-2 flex items-baseline justify-between gap-3">
+                        <h2 class="section-title">{{ $category->name }}</h2>
+                        <span class="text-[13px] text-[#86868B]">{{ $category->apps->count() }}</span>
+                    </div>
+                    <div class="rounded-[18px] bg-white px-2.5 sm:rounded-[22px] sm:px-4">
+                        @foreach ($category->apps as $app)
+                            <a href="{{ route('creators.app', [$creator->slug, $app->slug]) }}" class="app-row group">
+                                <div class="app-icon h-12 w-12 sm:h-[60px] sm:w-[60px]">
+                                    @if ($app->logoUrl())
+                                        <img src="{{ $app->logoUrl() }}" alt="" class="h-full w-full object-cover">
+                                    @else
+                                        <div class="flex h-full w-full items-center justify-center bg-[#E8E8ED] text-[#86868B]">
+                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" stroke-width="1.5"/></svg>
+                                        </div>
+                                    @endif
                                 </div>
-                            @endif
-                        </div>
-
-                        <div class="min-w-0 flex-1">
-                            <p class="truncate text-[16px] font-semibold text-[#1D1D1F]">{{ $app->name }}</p>
-                            <p class="mt-0.5 truncate text-[13px] text-[#86868B]">
-                                {{ $app->platformLabel() }} · {{ $app->category->name ?? 'App' }}
-                            </p>
-                            <div class="mt-1.5">
-                                <x-star-rating :rating="$app->averageRating()" :count="$app->ratingsCount()" />
-                            </div>
-                        </div>
-
-                        <span class="inline-flex shrink-0 items-center justify-center rounded-full bg-[#0071E3] px-4 py-2 text-[13px] font-semibold text-white">
-                            {{ $external ? ($app->isWeb() ? 'Open' : 'Get') : 'View' }}
-                        </span>
-                    </a>
-                </li>
+                                <div class="min-w-0 flex-1">
+                                    <h3 class="truncate text-[14px] font-normal leading-tight text-[#1D1D1F] sm:text-[15px]">{{ $app->name }}</h3>
+                                    <p class="mt-0.5 truncate text-[12px] leading-tight text-[#86868B] sm:text-[13px]">
+                                        {{ $app->platformLabel() }} · {{ \Illuminate\Support\Str::limit($app->description, 48) }}
+                                    </p>
+                                    <div class="mt-1">
+                                        <x-star-rating :rating="$app->averageRating()" :count="$app->ratingsCount()" />
+                                    </div>
+                                </div>
+                                <span class="btn-get" tabindex="-1">View</span>
+                            </a>
+                        @endforeach
+                    </div>
+                </section>
             @endforeach
-        </ul>
+        </div>
     @endif
 </div>
 @endsection

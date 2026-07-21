@@ -22,38 +22,33 @@
 
             {{-- Compact portfolio share strip --}}
             <section
-                class="rounded-2xl bg-white px-4 py-3.5 sm:px-5"
+                class="rounded-2xl bg-white px-4 py-3 sm:px-5"
                 x-data="{ copied: false }"
             >
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-                    <div class="flex min-w-0 flex-1 items-start gap-3">
-                        <span class="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F5F5F7] text-[#0071E3]">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-                        </span>
-                        <div class="min-w-0 flex-1">
-                            <p class="text-[14px] font-semibold text-[#1D1D1F]">Client portfolio</p>
-                            <p class="mt-0.5 text-[12px] text-[#86868B]">Public page of your published apps</p>
-                            <div class="mt-2 flex items-center gap-2 rounded-xl bg-[#F5F5F7] px-3 py-2">
-                                <p class="min-w-0 flex-1 truncate font-mono text-[12px] text-[#1D1D1F]">{{ $publicUrl }}</p>
-                                <button
-                                    type="button"
-                                    class="shrink-0 rounded-lg px-2 py-1 text-[12px] font-semibold text-[#0071E3] transition hover:bg-white"
-                                    @click="navigator.clipboard?.writeText(@js($publicUrl)); copied = true; setTimeout(() => copied = false, 1600)"
-                                >
-                                    <span x-text="copied ? 'Copied' : 'Copy'"></span>
-                                </button>
-                            </div>
-                        </div>
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F5F5F7] text-[#0071E3]">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                    </span>
+                    <div class="min-w-0 shrink-0">
+                        <p class="text-[13px] font-semibold leading-tight text-[#1D1D1F]">Client portfolio</p>
+                        <p class="text-[11px] leading-tight text-[#86868B]">Public showcase link</p>
                     </div>
-                    <a
-                        href="{{ $publicUrl }}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="inline-flex shrink-0 items-center justify-center gap-1.5 self-stretch rounded-xl border border-[#D2D2D7] bg-white px-4 py-2.5 text-[13px] font-semibold text-[#1D1D1F] transition hover:bg-[#F5F5F7] sm:self-center"
-                    >
-                        Preview
-                        <svg class="h-3.5 w-3.5 text-[#86868B]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                    </a>
+                    <div class="flex min-w-0 flex-1 items-center gap-1 rounded-xl bg-[#F5F5F7] px-2.5 py-1.5">
+                        <p class="min-w-0 flex-1 truncate font-mono text-[12px] text-[#1D1D1F]">{{ $publicUrl }}</p>
+                        <button
+                            type="button"
+                            class="shrink-0 rounded-lg px-2.5 py-1 text-[12px] font-semibold text-[#0071E3] transition hover:bg-white"
+                            @click="navigator.clipboard?.writeText(@js($publicUrl)); copied = true; setTimeout(() => copied = false, 1600)"
+                        >
+                            <span x-text="copied ? 'Copied' : 'Copy'"></span>
+                        </button>
+                        <a
+                            href="{{ $publicUrl }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="shrink-0 rounded-lg px-2.5 py-1 text-[12px] font-semibold text-[#1D1D1F] transition hover:bg-white"
+                        >Preview</a>
+                    </div>
                 </div>
             </section>
 
