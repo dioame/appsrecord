@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 class AppListing extends Model
@@ -40,6 +41,38 @@ class AppListing extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(AppRating::class);
+    }
+
+    public function averageRating(): float
+    {
+        if (array_key_exists('ratings_avg_rating', $this->attributes) && $this->attributes['ratings_avg_rating'] !== null) {
+            return round((float) $this->attributes['ratings_avg_rating'], 1);
+        }
+
+        return round((float) ($this->ratings()->avg('rating') ?? 0), 1);
+    }
+
+    public function ratingsCount(): int
+    {
+        if (array_key_exists('ratings_count', $this->attributes)) {
+            return (int) $this->attributes['ratings_count'];
+        }
+
+        return $this->ratings()->count();
+    }
+
+    public function ratingFor(?User $user): ?int
+    {
+        if (! $user) {
+            return null;
+        }
+
+        return $this->ratings()->where('user_id', $user->id)->value('rating');
     }
 
     public function platformLabel(): string

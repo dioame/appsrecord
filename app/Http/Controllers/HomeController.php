@@ -13,7 +13,11 @@ class HomeController extends Controller
     public function index(): View
     {
         $categories = Category::query()
-            ->with(['publishedApps' => fn ($query) => $query->latest()->with('user')])
+            ->with(['publishedApps' => fn ($query) => $query
+                ->latest()
+                ->with('user')
+                ->withAvg('ratings', 'rating')
+                ->withCount('ratings')])
             ->orderBy('sort_order')
             ->orderBy('name')
             ->get();
@@ -21,6 +25,8 @@ class HomeController extends Controller
         $featured = AppListing::query()
             ->where('is_published', true)
             ->with(['category', 'user'])
+            ->withAvg('ratings', 'rating')
+            ->withCount('ratings')
             ->latest()
             ->take(6)
             ->get();
@@ -38,17 +44,23 @@ class HomeController extends Controller
             ->where('slug', $slug)
             ->where('is_published', true)
             ->with(['category', 'user'])
+            ->withAvg('ratings', 'rating')
+            ->withCount('ratings')
             ->firstOrFail();
+
+        $userRating = $app->ratingFor(auth()->user());
 
         $related = AppListing::query()
             ->where('is_published', true)
             ->where('category_id', $app->category_id)
             ->where('id', '!=', $app->id)
+            ->withAvg('ratings', 'rating')
+            ->withCount('ratings')
             ->latest()
             ->take(4)
             ->get();
 
-        return view('apps.show', compact('app', 'related'));
+        return view('apps.show', compact('app', 'related', 'userRating'));
     }
 
     public function category(string $slug): View
@@ -59,6 +71,8 @@ class HomeController extends Controller
 
         $apps = $category->publishedApps()
             ->with('user')
+            ->withAvg('ratings', 'rating')
+            ->withCount('ratings')
             ->latest()
             ->paginate(12);
 
@@ -91,6 +105,8 @@ class HomeController extends Controller
         $apps = AppListing::query()
             ->where('is_published', true)
             ->with(['category', 'user'])
+            ->withAvg('ratings', 'rating')
+            ->withCount('ratings')
             ->when($q !== '', function ($query) use ($q) {
                 $query->where(function ($inner) use ($q) {
                     $inner->where('name', 'like', "%{$q}%")

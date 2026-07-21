@@ -20,6 +20,9 @@
         <div class="min-w-0 flex-1">
             <p class="truncate text-[13px] font-semibold text-[#1D1D1F]">{{ $app->name }}</p>
             <p class="truncate text-[12px] text-[#86868B]">{{ $app->platformLabel() }} · {{ $app->category->name ?? 'App' }}</p>
+            <div class="mt-0.5">
+                <x-star-rating :rating="$app->averageRating()" :count="$app->ratingsCount()" />
+            </div>
         </div>
         <span class="btn-get !px-3 !py-1 text-[11px]" tabindex="-1">View</span>
     </div>

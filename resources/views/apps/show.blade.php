@@ -33,6 +33,9 @@
                         · <a href="{{ $app->link }}" target="_blank" rel="noopener noreferrer" class="underline decoration-white/40 underline-offset-2 hover:decoration-white cursor-pointer">{{ \Illuminate\Support\Str::of($app->link)->replaceMatches('#^https?://#', '')->trim('/') }}</a>
                     @endif
                 </p>
+                <div class="mt-3">
+                    <x-star-rating :rating="$app->averageRating()" :count="$app->ratingsCount()" size="md" light />
+                </div>
             </div>
 
             <div class="flex flex-wrap items-center gap-2 sm:self-start">
@@ -80,6 +83,8 @@
             </div>
         @endif
     </section>
+
+    @include('partials.app-rating', ['app' => $app, 'userRating' => $userRating ?? null])
 
     {{-- Screenshot cards --}}
     <section

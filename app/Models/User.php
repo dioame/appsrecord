@@ -59,4 +59,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(AppListing::class);
     }
+
+    public function appRatings(): HasMany
+    {
+        return $this->hasMany(AppRating::class);
+    }
 }

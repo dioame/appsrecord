@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppListingController;
+use App\Http\Controllers\AppRatingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -16,6 +17,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::post('/apps/{slug}/rate', [AppRatingController::class, 'store'])->name('apps.rate');
+
     Route::resource('my-apps', AppListingController::class)
         ->parameters(['my-apps' => 'app'])
         ->names('my-apps');

@@ -18,6 +18,9 @@
                 {{ $app->platformLabel() }} · {{ \Illuminate\Support\Str::limit($app->description, 40) }}
             @endif
         </p>
+        <div class="mt-1">
+            <x-star-rating :rating="$app->averageRating()" :count="$app->ratingsCount()" />
+        </div>
     </div>
 
     <span class="btn-get" tabindex="-1">View</span>

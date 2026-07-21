@@ -32,6 +32,9 @@
                     <h2 class="mt-1 font-display text-[30px] font-bold leading-none sm:text-[36px]">{{ $lead->name }}</h2>
                     <p class="mt-2 max-w-xl text-[15px] text-white/85">{{ \Illuminate\Support\Str::limit($lead->description, 90) }}</p>
                     <p class="mt-2 text-[13px] text-white/60">Free · {{ $lead->category->name }}</p>
+                    <div class="mt-2">
+                        <x-star-rating :rating="$lead->averageRating()" :count="$lead->ratingsCount()" light />
+                    </div>
                 </div>
             </div>
         </a>

@@ -113,6 +113,10 @@
         @apply mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm;
     }
 
+    .rating-star {
+        @apply cursor-pointer rounded-md p-0.5 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0071E3];
+    }
+
     .btn-primary {
         @apply inline-flex items-center justify-center gap-1.5 rounded-full bg-[#0071E3] px-4 py-1.5 text-[13px] font-semibold text-white transition-colors duration-150 cursor-pointer hover:bg-[#0077ED] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0071E3];
     }
