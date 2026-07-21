@@ -13,7 +13,7 @@ Route::get('/search', [HomeController::class, 'search'])->name('search');
 Route::get('/apps/{slug}', [HomeController::class, 'show'])->name('apps.public');
 Route::get('/categories/{slug}', [HomeController::class, 'category'])->name('categories.show');
 Route::get('/creators/{slug}', [CreatorController::class, 'show'])->name('creators.show');
-Route::get('/creators/{slug}/{app}', [CreatorController::class, 'app'])->name('creators.app');
+Route::get('/creators/{slug}/{appSlug}', [CreatorController::class, 'app'])->name('creators.app');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
