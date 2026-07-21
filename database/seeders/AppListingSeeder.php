@@ -144,6 +144,108 @@ class AppListingSeeder extends Seeder
                     'colors' => ['#30B0C7', '#5856D6'],
                 ],
             ],
+            'maps-navigation' => [
+                [
+                    'name' => 'RouteWise',
+                    'platform' => 'mobile',
+                    'description' => 'Turn-by-turn navigation with offline maps, transit alerts, and quieter routes for daily commuting.',
+                    'colors' => ['#0071E3', '#34C759'],
+                ],
+                [
+                    'name' => 'PinAtlas',
+                    'platform' => 'web',
+                    'description' => 'Save places, share maps with friends, and build custom layers for trips and local discovery.',
+                    'colors' => ['#FF9500', '#FF3B30'],
+                ],
+            ],
+            'travel' => [
+                [
+                    'name' => 'TripNest',
+                    'platform' => 'mobile',
+                    'description' => 'Packing lists, boarding passes, and day-by-day itineraries in one travel companion.',
+                    'colors' => ['#30B0C7', '#5856D6'],
+                ],
+            ],
+            'food-drink' => [
+                [
+                    'name' => 'PlatePlan',
+                    'platform' => 'mobile',
+                    'description' => 'Weekly meal plans, grocery lists, and recipes that adapt to what is already in your fridge.',
+                    'colors' => ['#FF2D55', '#FF9500'],
+                ],
+            ],
+            'photo-video' => [
+                [
+                    'name' => 'FrameLab',
+                    'platform' => 'desktop',
+                    'description' => 'Fast photo edits, batch exports, and light video cuts without the heavyweight studio suite.',
+                    'colors' => ['#AF52DE', '#0071E3'],
+                ],
+            ],
+            'music' => [
+                [
+                    'name' => 'ChordShelf',
+                    'platform' => 'web',
+                    'description' => 'Practice songs with interactive chords, tempo control, and a personal setlist library.',
+                    'colors' => ['#FF2D55', '#1D1D1F'],
+                ],
+            ],
+            'shopping' => [
+                [
+                    'name' => 'DealRadar',
+                    'platform' => 'mobile',
+                    'description' => 'Track price drops, compare listings, and get alerts when wishlist items hit your target.',
+                    'colors' => ['#34C759', '#0071E3'],
+                ],
+            ],
+            'news' => [
+                [
+                    'name' => 'BriefDaily',
+                    'platform' => 'web',
+                    'description' => 'A calm morning brief with topics you choose — no endless scroll, just what matters today.',
+                    'colors' => ['#1D1D1F', '#86868B'],
+                ],
+            ],
+            'lifestyle' => [
+                [
+                    'name' => 'HomeCue',
+                    'platform' => 'mobile',
+                    'description' => 'Household routines, shared chores, and gentle reminders that keep home life running smoothly.',
+                    'colors' => ['#FF9500', '#AF52DE'],
+                ],
+            ],
+            'graphics-design' => [
+                [
+                    'name' => 'VectorNest',
+                    'platform' => 'web',
+                    'description' => 'Lightweight vector drafting for icons, posters, and brand marks with export-ready SVG.',
+                    'colors' => ['#5856D6', '#30B0C7'],
+                ],
+            ],
+            'developer-tools' => [
+                [
+                    'name' => 'ApiShelf',
+                    'platform' => 'desktop',
+                    'description' => 'Inspect requests, mock endpoints, and keep environment secrets tidy while you ship APIs.',
+                    'colors' => ['#1D1D1F', '#34C759'],
+                ],
+            ],
+            'weather' => [
+                [
+                    'name' => 'SkylineCast',
+                    'platform' => 'mobile',
+                    'description' => 'Hyperlocal forecasts, precipitation timing, and severe weather alerts in a glanceable layout.',
+                    'colors' => ['#64D2FF', '#0071E3'],
+                ],
+            ],
+            'others' => [
+                [
+                    'name' => 'OddBox',
+                    'platform' => 'web',
+                    'description' => 'A playful sandbox of micro-tools that do not fit elsewhere — experiments, gadgets, and one-offs.',
+                    'colors' => ['#86868B', '#AF52DE'],
+                ],
+            ],
         ];
 
         foreach ($catalog as $categorySlug => $apps) {

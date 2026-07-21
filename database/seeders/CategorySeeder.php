@@ -19,6 +19,18 @@ class CategorySeeder extends Seeder
             ['name' => 'Entertainment', 'description' => 'Games, media, and creative fun.', 'sort_order' => 6],
             ['name' => 'Social', 'description' => 'Community and communication apps.', 'sort_order' => 7],
             ['name' => 'Utilities', 'description' => 'Everyday helpers and system tools.', 'sort_order' => 8],
+            ['name' => 'Maps & Navigation', 'description' => 'Directions, transit, and location tools.', 'sort_order' => 9],
+            ['name' => 'Travel', 'description' => 'Trips, bookings, and itineraries.', 'sort_order' => 10],
+            ['name' => 'Food & Drink', 'description' => 'Recipes, delivery, and dining guides.', 'sort_order' => 11],
+            ['name' => 'Photo & Video', 'description' => 'Capture, edit, and share media.', 'sort_order' => 12],
+            ['name' => 'Music', 'description' => 'Streaming, practice, and audio tools.', 'sort_order' => 13],
+            ['name' => 'Shopping', 'description' => 'Stores, deals, and wish lists.', 'sort_order' => 14],
+            ['name' => 'News', 'description' => 'Headlines, briefs, and journalism.', 'sort_order' => 15],
+            ['name' => 'Lifestyle', 'description' => 'Home, hobbies, and daily living.', 'sort_order' => 16],
+            ['name' => 'Graphics & Design', 'description' => 'Design, illustration, and creative tools.', 'sort_order' => 17],
+            ['name' => 'Developer Tools', 'description' => 'APIs, IDEs, and builder utilities.', 'sort_order' => 18],
+            ['name' => 'Weather', 'description' => 'Forecasts, alerts, and climate data.', 'sort_order' => 19],
+            ['name' => 'Others', 'description' => 'Apps that do not fit another category.', 'sort_order' => 20],
         ];
 
         foreach ($categories as $category) {
