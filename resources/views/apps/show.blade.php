@@ -27,7 +27,12 @@
             <div class="min-w-0 flex-1">
                 <h1 class="font-display text-[34px] font-bold leading-none tracking-tight sm:text-[42px]">{{ $app->name }}</h1>
                 <p class="mt-3 max-w-xl text-[17px] leading-snug text-white/90">{{ $tagline }}</p>
-                <p class="mt-2 text-[14px] text-white/70">Free · {{ $app->platformLabel() }}</p>
+                <p class="mt-2 text-[14px] text-white/70">
+                    Free · {{ $app->platformLabel() }}
+                    @if ($app->link)
+                        · <a href="{{ $app->link }}" target="_blank" rel="noopener noreferrer" class="underline decoration-white/40 underline-offset-2 hover:decoration-white cursor-pointer">{{ \Illuminate\Support\Str::of($app->link)->replaceMatches('#^https?://#', '')->trim('/') }}</a>
+                    @endif
+                </p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2 sm:self-start">
@@ -46,22 +51,8 @@
         </div>
     </section>
 
-    {{-- Stats bar --}}
-    <section class="stats-bar mt-1">
-        <div class="stat-cell">
-            <p class="stat-label">{{ $related->count() + 1 }}K Ratings</p>
-            <p class="stat-value">4.{{ ($app->id % 5) + 3 }}</p>
-            <div class="mt-1 flex gap-0.5 text-[#86868B]" aria-hidden="true">
-                @for ($i = 0; $i < 5; $i++)
-                    <svg class="h-2.5 w-2.5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.49 6.91l6.562-.954L10 0l2.948 5.956 6.562.954-4.755 4.635 1.123 6.545z"/></svg>
-                @endfor
-            </div>
-        </div>
-        <div class="stat-cell">
-            <p class="stat-label">Age Rating</p>
-            <p class="stat-value">4+</p>
-            <p class="stat-sub">Years</p>
-        </div>
+    {{-- Info bar --}}
+    <section class="mt-1 grid grid-cols-2 divide-x divide-[#D2D2D7] border-y border-[#D2D2D7] {{ $app->link ? 'sm:grid-cols-4' : 'sm:grid-cols-3' }}">
         <div class="stat-cell">
             <p class="stat-label">Category</p>
             <svg class="mt-1 h-6 w-6 text-[#86868B]" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h10M4 17h14"/></svg>
@@ -73,15 +64,19 @@
             <p class="stat-sub truncate max-w-full">{{ $app->authorName() }}</p>
         </div>
         <div class="stat-cell">
-            <p class="stat-label">Language</p>
-            <p class="stat-value">EN</p>
-            <p class="stat-sub">+ 2 More</p>
+            <p class="stat-label">Platform</p>
+            <svg class="mt-1 h-6 w-6 text-[#86868B]" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path stroke-linecap="round" d="M12 17h.01"/></svg>
+            <p class="stat-sub truncate max-w-full">{{ $app->platformLabel() }}</p>
         </div>
-        <div class="stat-cell">
-            <p class="stat-label">Size</p>
-            <p class="stat-value">{{ 80 + ($app->id * 17) % 120 }}.{{ $app->id % 9 }}</p>
-            <p class="stat-sub">MB</p>
-        </div>
+        @if ($app->link)
+            <div class="stat-cell">
+                <p class="stat-label">URL</p>
+                <svg class="mt-1 h-6 w-6 text-[#86868B]" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                <a href="{{ $app->link }}" target="_blank" rel="noopener noreferrer" class="stat-sub mt-1 truncate max-w-full text-[#0071E3] hover:underline cursor-pointer">
+                    {{ \Illuminate\Support\Str::of($app->link)->replaceMatches('#^https?://#', '')->trim('/') }}
+                </a>
+            </div>
+        @endif
     </section>
 
     {{-- Screenshot cards --}}
