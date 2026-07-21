@@ -1,8 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-            <h2 class="font-display text-xl font-semibold text-[#09090B]">Edit {{ $app->name }}</h2>
-            <a href="{{ route('dashboard') }}" class="btn-ghost">Back to dashboard</a>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('dashboard') }}" class="inline-flex h-8 w-8 items-center justify-center rounded-full text-[#86868B] transition hover:bg-black/5 hover:text-[#1D1D1F]" aria-label="Back to library">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </a>
+            <h2 class="font-display text-[22px] font-bold tracking-tight text-[#1D1D1F]">Edit {{ $app->name }}</h2>
         </div>
     </x-slot>
 
