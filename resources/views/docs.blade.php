@@ -95,7 +95,7 @@
             </p>
             <ul class="mt-3 space-y-2 text-[15px] text-[#86868B]">
                 <li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0071E3]"></span><span><span class="font-medium text-[#1D1D1F]">Creator portfolio</span> — published apps plus your CV (skills, experience, education)</span></li>
-                <li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0071E3]"></span><span><span class="font-medium text-[#1D1D1F]">CV PDF</span> — preview 3 designs (Classic, Executive, Showcase), then download or print with photo, app logos, and screenshots</span></li>
+                <li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0071E3]"></span><span><span class="font-medium text-[#1D1D1F]">CV PDF</span> — preview 3 designs (Classic, Executive, Showcase), then download or print with your photo and a text list of deployed apps</span></li>
                 <li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0071E3]"></span><span><span class="font-medium text-[#1D1D1F]">Single app page</span> — deep-link one project with screenshots, description, and access link</span></li>
             </ul>
             <p class="mt-3 text-[15px] leading-relaxed text-[#86868B]">

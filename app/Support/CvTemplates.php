@@ -22,7 +22,7 @@ class CvTemplates
         return [
             self::CLASSIC => [
                 'label' => 'Classic',
-                'blurb' => 'Clean single-column CV with photo, skills, and app logos.',
+                'blurb' => 'Clean single-column CV with photo, skills, and deployed apps.',
             ],
             self::EXECUTIVE => [
                 'label' => 'Executive',
@@ -30,7 +30,7 @@ class CvTemplates
             ],
             self::SHOWCASE => [
                 'label' => 'Showcase',
-                'blurb' => 'Portfolio-first design with large app screenshots and CV details.',
+                'blurb' => 'Portfolio-first layout — deployed apps listed prominently with CV details.',
             ],
         ];
     }
@@ -52,27 +52,12 @@ class CvTemplates
 
     /**
      * @param  Collection<int, AppListing>  $apps
-     * @return array{avatar: ?string, apps: array<int, array{logo: ?string, shots: list<string>}>}
+     * @return array{avatar: ?string}
      */
     public static function media(User $creator, Collection $apps): array
     {
-        $appMedia = [];
-
-        foreach ($apps as $app) {
-            $appMedia[$app->id] = [
-                'logo' => PdfImage::fromPublicDisk($app->logo, 240),
-                'shots' => collect($app->images ?? [])
-                    ->take(3)
-                    ->map(fn (string $path) => PdfImage::fromPublicDisk($path, 720))
-                    ->filter()
-                    ->values()
-                    ->all(),
-            ];
-        }
-
         return [
             'avatar' => PdfImage::fromUrl($creator->avatar, 320),
-            'apps' => $appMedia,
         ];
     }
 }

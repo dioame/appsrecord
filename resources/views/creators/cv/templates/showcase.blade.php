@@ -1,4 +1,4 @@
-{{-- Showcase: portfolio-first with large screenshots --}}
+{{-- Showcase: portfolio-first apps list (text only, no app pictures) --}}
 @php
     $avatar = $media['avatar'] ?? null;
 @endphp
@@ -20,13 +20,9 @@
     .cv-show .entry-title { font-weight: bold; font-size: 12px; color: #134E4A; }
     .cv-show .entry-period { float: right; color: #0F766E; font-size: 10px; }
     .cv-show .entry-sub { clear: both; color: #0F766E; font-size: 10px; margin: 2px 0 3px; }
-    .cv-show .app { margin-bottom: 14px; page-break-inside: avoid; border: 1px solid #99F6E4; background: #F0FDFA; padding: 10px; }
-    .cv-show .app-head { margin-bottom: 6px; }
-    .cv-show .app-logo { width: 36px; height: 36px; vertical-align: middle; margin-right: 8px; }
-    .cv-show .app-logo-fallback { display: inline-block; width: 36px; height: 36px; background: #99F6E4; text-align: center; line-height: 36px; font-size: 8px; color: #115E59; vertical-align: middle; margin-right: 8px; }
-    .cv-show .app-name { font-size: 13px; font-weight: bold; color: #134E4A; display: inline; }
-    .cv-show .app-meta { font-size: 9px; color: #0F766E; margin: 4px 0; }
-    .cv-show .shot { width: 165px; height: 100px; margin: 4px 6px 0 0; border: 1px solid #5EEAD4; }
+    .cv-show .app { margin-bottom: 10px; page-break-inside: avoid; border-bottom: 1px solid #99F6E4; padding-bottom: 8px; }
+    .cv-show .app-name { font-size: 13px; font-weight: bold; color: #134E4A; margin: 0 0 2px; }
+    .cv-show .app-meta { font-size: 9px; color: #0F766E; margin: 0 0 3px; }
     .cv-show .footer { margin-top: 16px; font-size: 8px; color: #5EEAD4; border-top: 1px solid #99F6E4; padding-top: 6px; }
 </style>
 
@@ -62,19 +58,8 @@
         @if ($apps->isNotEmpty())
             <h2>Deployed apps ({{ $apps->count() }})</h2>
             @foreach ($apps as $app)
-                @php
-                    $logo = $media['apps'][$app->id]['logo'] ?? null;
-                    $shots = $media['apps'][$app->id]['shots'] ?? [];
-                @endphp
                 <div class="app">
-                    <div class="app-head">
-                        @if ($logo)
-                            <img src="{{ $logo }}" class="app-logo" width="36" height="36" alt="">
-                        @else
-                            <span class="app-logo-fallback">App</span>
-                        @endif
-                        <span class="app-name">{{ $app->name }}</span>
-                    </div>
+                    <p class="app-name">{{ $app->name }}</p>
                     <p class="app-meta">
                         {{ $app->platformLabel() }}
                         @if ($app->category) · {{ $app->category->name }}@endif
@@ -82,18 +67,6 @@
                     </p>
                     @if ($app->description)
                         <p>{{ \Illuminate\Support\Str::limit($app->description, 150) }}</p>
-                    @endif
-                    @if (count($shots) > 0)
-                        <div>
-                            @foreach ($shots as $shot)
-                                <img src="{{ $shot }}" class="shot" width="165" height="100" alt="">
-                            @endforeach
-                        </div>
-                    @elseif ($logo)
-                        {{-- Always show logo at larger size when no screenshots --}}
-                        <div>
-                            <img src="{{ $logo }}" class="shot" width="100" height="100" alt="">
-                        </div>
                     @endif
                 </div>
             @endforeach

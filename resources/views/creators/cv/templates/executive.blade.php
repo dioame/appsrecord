@@ -21,12 +21,9 @@
     .cv-exec .entry-title { font-weight: bold; font-size: 11px; }
     .cv-exec .entry-period { float: right; color: #64748B; font-size: 9px; }
     .cv-exec .entry-sub { clear: both; color: #475569; font-size: 9.5px; margin: 1px 0 3px; }
-    .cv-exec .app { margin-bottom: 10px; page-break-inside: avoid; background: #FFFFFF; border: 1px solid #E2E8F0; padding: 8px; }
-    .cv-exec .app-logo { width: 40px; height: 40px; }
-    .cv-exec .app-logo-fallback { width: 40px; height: 40px; background: #E2E8F0; text-align: center; line-height: 40px; font-size: 8px; color: #64748B; }
+    .cv-exec .app { margin-bottom: 9px; page-break-inside: avoid; border-bottom: 1px solid #E2E8F0; padding-bottom: 7px; }
     .cv-exec .app-name { font-weight: bold; font-size: 11px; margin: 0 0 2px; }
     .cv-exec .app-meta { font-size: 8.5px; color: #64748B; margin: 0 0 3px; }
-    .cv-exec .shot { width: 120px; height: 72px; margin: 5px 5px 0 0; border: 1px solid #E2E8F0; }
     .cv-exec .footer { margin-top: 12px; font-size: 8px; color: #94A3B8; }
 </style>
 
@@ -85,38 +82,15 @@
                 @if ($apps->isNotEmpty())
                     <h2>Deployed apps ({{ $apps->count() }})</h2>
                     @foreach ($apps as $app)
-                        @php
-                            $logo = $media['apps'][$app->id]['logo'] ?? null;
-                            $shots = $media['apps'][$app->id]['shots'] ?? [];
-                        @endphp
                         <div class="app">
-                            <table cellpadding="0" cellspacing="0" width="100%">
-                                <tr>
-                                    <td width="48" valign="top">
-                                        @if ($logo)
-                                            <img src="{{ $logo }}" class="app-logo" width="40" height="40" alt="">
-                                        @else
-                                            <div class="app-logo-fallback">App</div>
-                                        @endif
-                                    </td>
-                                    <td valign="top">
-                                        <p class="app-name">{{ $app->name }}</p>
-                                        <p class="app-meta">
-                                            {{ $app->platformLabel() }}
-                                            @if ($app->category) · {{ $app->category->name }}@endif
-                                        </p>
-                                        @if ($app->description)
-                                            <p>{{ \Illuminate\Support\Str::limit($app->description, 140) }}</p>
-                                        @endif
-                                    </td>
-                                </tr>
-                            </table>
-                            @if (count($shots) > 0)
-                                <div>
-                                    @foreach ($shots as $shot)
-                                        <img src="{{ $shot }}" class="shot" width="120" height="72" alt="">
-                                    @endforeach
-                                </div>
+                            <p class="app-name">{{ $app->name }}</p>
+                            <p class="app-meta">
+                                {{ $app->platformLabel() }}
+                                @if ($app->category) · {{ $app->category->name }}@endif
+                                @if ($app->link) · {{ \Illuminate\Support\Str::limit($app->link, 40) }}@endif
+                            </p>
+                            @if ($app->description)
+                                <p>{{ \Illuminate\Support\Str::limit($app->description, 140) }}</p>
                             @endif
                         </div>
                     @endforeach

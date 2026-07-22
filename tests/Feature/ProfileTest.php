@@ -183,12 +183,6 @@ class ProfileTest extends TestCase
             'slug' => 'productivity',
         ]);
 
-        $logoPath = 'apps/logos/test-logo.jpg';
-        $shotPath = 'apps/screenshots/test-shot.jpg';
-
-        $this->createJpegFixture($logoPath, 80, 80, [0, 122, 255]);
-        $this->createJpegFixture($shotPath, 320, 200, [20, 180, 120]);
-
         \App\Models\AppListing::query()->create([
             'user_id' => $user->id,
             'category_id' => $category->id,
@@ -197,14 +191,8 @@ class ProfileTest extends TestCase
             'slug' => 'focus-board',
             'description' => 'A planning board for teams.',
             'link' => 'https://example.com/focus',
-            'logo' => $logoPath,
-            'images' => [$shotPath],
             'is_published' => true,
         ]);
-
-        $media = \App\Support\CvTemplates::media($user->fresh(), $user->publishedApps()->get());
-        $this->assertNotNull($media['apps'][$user->publishedApps()->first()->id]['logo']);
-        $this->assertNotEmpty($media['apps'][$user->publishedApps()->first()->id]['shots']);
 
         $response = $this->get('/creators/jane-doe/cv.pdf?template=showcase');
 
@@ -229,20 +217,6 @@ class ProfileTest extends TestCase
 
         $this->get('/creators/no-cv-yet/cv.pdf')->assertNotFound();
         $this->get('/creators/no-cv-yet/cv')->assertNotFound();
-    }
-
-    protected function createJpegFixture(string $relativePath, int $width, int $height, array $rgb): void
-    {
-        $fullPath = storage_path('app/public/'.$relativePath);
-        if (! is_dir(dirname($fullPath))) {
-            mkdir(dirname($fullPath), 0777, true);
-        }
-
-        $image = imagecreatetruecolor($width, $height);
-        $color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
-        imagefilledrectangle($image, 0, 0, $width, $height, $color);
-        imagejpeg($image, $fullPath, 90);
-        imagedestroy($image);
     }
 
     public function test_user_can_delete_their_account(): void

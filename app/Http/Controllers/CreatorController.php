@@ -62,7 +62,7 @@ class CreatorController extends Controller
     }
 
     /**
-     * @return array{0: User, 1: \Illuminate\Support\Collection<int, AppListing>, 2: array{avatar: ?string, apps: array<int, array{logo: ?string, shots: list<string>}>}, 3: string}
+     * @return array{0: User, 1: \Illuminate\Support\Collection<int, AppListing>, 2: array{avatar: ?string}, 3: string}
      */
     protected function cvPayload(Request $request, string $slug): array
     {
