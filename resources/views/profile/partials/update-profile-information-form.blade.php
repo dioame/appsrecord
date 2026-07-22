@@ -16,6 +16,7 @@
     <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
+        <input type="hidden" name="_section" value="profile">
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -29,7 +30,7 @@
                 <span class="shrink-0 text-sm text-gray-500">{{ url('/creators') }}/</span>
                 <x-text-input id="slug" name="slug" type="text" class="block w-full" :value="old('slug', $user->slug)" required autocomplete="off" />
             </div>
-            <p class="mt-1 text-sm text-gray-600">Share this page with clients: <a href="{{ $user->publicUrl() }}" class="text-[#0071E3] hover:underline" target="_blank" rel="noopener">{{ $user->publicUrl() }}</a></p>
+            <p class="mt-1 text-sm text-gray-600">Share this page with clients (apps + CV): <a href="{{ $user->publicUrl() }}" class="text-[#0071E3] hover:underline" target="_blank" rel="noopener">{{ $user->publicUrl() }}</a></p>
             <x-input-error class="mt-2" :messages="$errors->get('slug')" />
         </div>
 

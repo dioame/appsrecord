@@ -28,7 +28,9 @@ class ProfileTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->patch('/profile', [
+                '_section' => 'profile',
                 'name' => 'Test User',
+                'slug' => 'test-user',
                 'email' => 'test@example.com',
             ]);
 
@@ -39,6 +41,7 @@ class ProfileTest extends TestCase
         $user->refresh();
 
         $this->assertSame('Test User', $user->name);
+        $this->assertSame('test-user', $user->slug);
         $this->assertSame('test@example.com', $user->email);
         $this->assertNull($user->email_verified_at);
     }
@@ -50,7 +53,9 @@ class ProfileTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->patch('/profile', [
+                '_section' => 'profile',
                 'name' => 'Test User',
+                'slug' => $user->slug ?? 'test-user',
                 'email' => $user->email,
             ]);
 
@@ -59,6 +64,75 @@ class ProfileTest extends TestCase
             ->assertRedirect('/profile');
 
         $this->assertNotNull($user->refresh()->email_verified_at);
+    }
+
+    public function test_cv_details_can_be_updated(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/profile', [
+                '_section' => 'cv',
+                'headline' => 'Full-stack developer',
+                'location' => 'Manila',
+                'skills' => ['Laravel', 'React'],
+                'experience' => [
+                    [
+                        'title' => 'Developer',
+                        'company' => 'Acme',
+                        'period' => '2022 – Present',
+                        'description' => 'Built products',
+                    ],
+                ],
+                'education' => [
+                    [
+                        'school' => 'State University',
+                        'degree' => 'B.S. CS',
+                        'period' => '2018 – 2022',
+                        'description' => '',
+                    ],
+                ],
+            ]);
+
+        $response
+            ->assertSessionHasNoErrors()
+            ->assertRedirect('/profile');
+
+        $user->refresh();
+
+        $this->assertSame('Full-stack developer', $user->headline);
+        $this->assertSame('Manila', $user->location);
+        $this->assertSame(['Laravel', 'React'], $user->skillList());
+        $this->assertCount(1, $user->experienceEntries());
+        $this->assertSame('Developer', $user->experienceEntries()[0]['title']);
+        $this->assertTrue($user->hasCvContent());
+    }
+
+    public function test_clients_can_view_creator_cv_on_public_portfolio(): void
+    {
+        $user = User::factory()->create([
+            'slug' => 'jane-doe',
+            'headline' => 'Product designer',
+            'skills' => ['Figma', 'Research'],
+            'experience' => [
+                [
+                    'title' => 'Designer',
+                    'company' => 'Studio',
+                    'period' => '2021 – Present',
+                    'description' => 'Shipped apps',
+                ],
+            ],
+        ]);
+
+        $response = $this->get('/creators/jane-doe?tab=cv');
+
+        $response
+            ->assertOk()
+            ->assertSee('Product designer')
+            ->assertSee('Figma')
+            ->assertSee('Curriculum vitae')
+            ->assertSee('Designer');
     }
 
     public function test_user_can_delete_their_account(): void

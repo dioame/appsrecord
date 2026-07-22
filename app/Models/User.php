@@ -29,6 +29,11 @@ class User extends Authenticatable
         'avatar',
         'bio',
         'website',
+        'headline',
+        'location',
+        'skills',
+        'experience',
+        'education',
     ];
 
     /**
@@ -51,6 +56,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'skills' => 'array',
+            'experience' => 'array',
+            'education' => 'array',
         ];
     }
 
@@ -159,5 +167,62 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn (string $word) => mb_strtoupper(mb_substr($word, 0, 1)))
             ->implode('') ?: 'A';
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function skillList(): array
+    {
+        return collect($this->skills ?? [])
+            ->map(fn ($skill) => is_string($skill) ? trim($skill) : '')
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return list<array{title?: string, company?: string, period?: string, description?: string}>
+     */
+    public function experienceEntries(): array
+    {
+        return $this->normalizedCvEntries($this->experience);
+    }
+
+    /**
+     * @return list<array{school?: string, degree?: string, period?: string, description?: string}>
+     */
+    public function educationEntries(): array
+    {
+        return $this->normalizedCvEntries($this->education);
+    }
+
+    public function hasCvContent(): bool
+    {
+        return filled($this->headline)
+            || filled($this->location)
+            || filled($this->bio)
+            || count($this->skillList()) > 0
+            || count($this->experienceEntries()) > 0
+            || count($this->educationEntries()) > 0;
+    }
+
+    /**
+     * @param  mixed  $entries
+     * @return list<array<string, string>>
+     */
+    protected function normalizedCvEntries(mixed $entries): array
+    {
+        return collect(is_array($entries) ? $entries : [])
+            ->filter(fn ($entry) => is_array($entry))
+            ->map(function (array $entry) {
+                return collect($entry)
+                    ->map(fn ($value) => is_string($value) ? trim($value) : '')
+                    ->filter(fn ($value, $key) => is_string($key) && $value !== '')
+                    ->all();
+            })
+            ->filter(fn (array $entry) => $entry !== [])
+            ->values()
+            ->all();
     }
 }

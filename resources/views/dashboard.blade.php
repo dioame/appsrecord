@@ -31,7 +31,7 @@
                     </span>
                     <div class="min-w-0 shrink-0">
                         <p class="text-[13px] font-semibold leading-tight text-[#1D1D1F]">Client portfolio</p>
-                        <p class="text-[11px] leading-tight text-[#86868B]">Public showcase link</p>
+                        <p class="text-[11px] leading-tight text-[#86868B]">Apps, CV & skills — one link</p>
                     </div>
                     <div class="flex min-w-0 flex-1 items-center gap-1 rounded-xl bg-[#F5F5F7] px-2.5 py-1.5">
                         <p class="min-w-0 flex-1 truncate font-mono text-[12px] text-[#1D1D1F]">{{ $publicUrl }}</p>

@@ -30,7 +30,20 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $user->fill($request->validated());
+        $validated = $request->validated();
+        $section = $request->input('_section');
+
+        if ($section === 'profile') {
+            $validated = collect($validated)->only([
+                'name', 'slug', 'email', 'bio', 'website',
+            ])->all();
+        } elseif ($section === 'cv') {
+            $validated = collect($validated)->only([
+                'headline', 'location', 'skills', 'experience', 'education',
+            ])->all();
+        }
+
+        $user->fill($validated);
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;

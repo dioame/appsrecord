@@ -32,7 +32,7 @@
                         <x-dropdown-link :href="route('dashboard')">Library</x-dropdown-link>
                         <x-dropdown-link :href="route('profile.edit')">Profile</x-dropdown-link>
                         @if (Auth::user()->slug)
-                            <x-dropdown-link :href="route('creators.show', Auth::user()->slug)" target="_blank">Public portfolio</x-dropdown-link>
+                            <x-dropdown-link :href="route('creators.show', Auth::user()->slug)" target="_blank">Public portfolio & CV</x-dropdown-link>
                         @endif
                     </div>
                     <div class="border-t border-[#F0F0F2] py-1">
@@ -62,7 +62,7 @@
             <a href="{{ route('my-apps.create') }}" class="btn-ghost justify-start w-full">Submit</a>
             <a href="{{ route('profile.edit') }}" class="btn-ghost justify-start w-full">Profile</a>
             @if (Auth::user()->slug)
-                <a href="{{ route('creators.show', Auth::user()->slug) }}" target="_blank" class="btn-ghost justify-start w-full">Public portfolio</a>
+                <a href="{{ route('creators.show', Auth::user()->slug) }}" target="_blank" class="btn-ghost justify-start w-full">Public portfolio & CV</a>
             @endif
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
