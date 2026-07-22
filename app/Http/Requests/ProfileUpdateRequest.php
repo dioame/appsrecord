@@ -16,6 +16,16 @@ class ProfileUpdateRequest extends FormRequest
                 'slug' => \Illuminate\Support\Str::slug((string) $this->input('slug')),
             ]);
         }
+
+        if ($this->filled('website')) {
+            $website = trim((string) $this->input('website'));
+            if ($website !== '' && ! preg_match('#^https?://#i', $website)) {
+                $website = 'https://'.$website;
+            }
+            $this->merge(['website' => $website ?: null]);
+        } else {
+            $this->merge(['website' => null]);
+        }
     }
 
     /**
@@ -36,6 +46,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
             'bio' => ['nullable', 'string', 'max:500'],
+            'website' => ['nullable', 'string', 'max:500', 'url'],
             'email' => [
                 'required',
                 'string',

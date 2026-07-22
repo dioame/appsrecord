@@ -28,6 +28,7 @@ class User extends Authenticatable
         'google_id',
         'avatar',
         'bio',
+        'website',
     ];
 
     /**
@@ -106,6 +107,32 @@ class User extends Authenticatable
     public function publicUrl(): string
     {
         return route('creators.show', $this->ensureSlug());
+    }
+
+    public function websiteUrl(): ?string
+    {
+        if (! filled($this->website)) {
+            return null;
+        }
+
+        $url = trim($this->website);
+
+        if (! preg_match('#^https?://#i', $url)) {
+            $url = 'https://'.$url;
+        }
+
+        return $url;
+    }
+
+    public function websiteHost(): ?string
+    {
+        $url = $this->websiteUrl();
+
+        if (! $url) {
+            return null;
+        }
+
+        return preg_replace('#^www\.#i', '', parse_url($url, PHP_URL_HOST) ?: $url);
     }
 
     public function publishedApps(): HasMany
