@@ -6,6 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'AppsRecord') — {{ config('app.name', 'AppsRecord') }}</title>
     <meta name="description" content="@yield('meta_description', 'Discover and showcase apps by category — your portfolio app store.')">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body
@@ -29,7 +32,10 @@
             <button type="button" class="inline-flex cursor-pointer items-center justify-center rounded-lg p-2 text-[#1D1D1F] hover:bg-black/5" @click="mobileNav = !mobileNav" aria-label="Open menu">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
-            <a href="{{ route('home') }}" class="font-display text-[16px] font-semibold cursor-pointer">AppsRecord</a>
+            <a href="{{ route('home') }}" class="flex items-center gap-2 font-display text-[16px] font-semibold cursor-pointer">
+                <x-application-logo class="h-7 w-7 rounded-[8px]" />
+                <span>AppsRecord</span>
+            </a>
             @auth
                 <a href="{{ route('my-apps.create') }}" class="btn-primary !px-3 !py-1 text-[12px]">Submit</a>
             @else
@@ -46,6 +52,11 @@
             :class="mobileNav ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
             aria-label="Store navigation"
         >
+            <a href="{{ route('home') }}" class="mb-4 flex items-center gap-2.5 px-1 cursor-pointer" @click="mobileNav = false">
+                <x-application-logo class="h-9 w-9 rounded-[10px]" />
+                <span class="font-display text-[17px] font-semibold tracking-tight text-[#1D1D1F]">AppsRecord</span>
+            </a>
+
             <form action="{{ route('search') }}" method="GET" class="mb-4">
                 @if (request('author'))
                     <input type="hidden" name="author" value="{{ request('author') }}">

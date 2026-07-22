@@ -2,14 +2,7 @@
     <div class="mx-auto flex h-12 max-w-[980px] items-center justify-between px-4 sm:px-5">
         <div class="flex items-center gap-5">
             <a href="{{ route('home') }}" class="flex items-center gap-2 cursor-pointer">
-                <span class="flex h-7 w-7 items-center justify-center rounded-[8px] bg-gradient-to-br from-[#0071E3] to-[#5856D6] text-white">
-                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
-                        <rect x="3" y="3" width="7" height="7" rx="1.5"/>
-                        <rect x="14" y="3" width="7" height="7" rx="1.5"/>
-                        <rect x="3" y="14" width="7" height="7" rx="1.5"/>
-                        <rect x="14" y="14" width="7" height="7" rx="1.5"/>
-                    </svg>
-                </span>
+                <x-application-logo class="h-7 w-7 rounded-[8px]" />
                 <span class="font-display text-[17px] font-semibold tracking-tight">AppsRecord</span>
             </a>
 

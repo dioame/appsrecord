@@ -7,6 +7,9 @@
     <title>@yield('title', 'Portfolio') — {{ config('app.name', 'AppsRecord') }}</title>
     <meta name="description" content="@yield('meta_description', 'App portfolio')">
     <meta name="robots" content="index,follow">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-body antialiased text-[#1D1D1F] bg-[#F5F5F7]">
