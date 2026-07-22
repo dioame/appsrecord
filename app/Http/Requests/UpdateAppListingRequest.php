@@ -3,14 +3,24 @@
 namespace App\Http\Requests;
 
 use App\Models\AppListing;
+use App\Support\NormalizesSubAuthors;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateAppListingRequest extends FormRequest
 {
+    use NormalizesSubAuthors;
+
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'sub_authors' => $this->normalizedSubAuthors(),
+        ]);
     }
 
     public function rules(): array
@@ -28,6 +38,7 @@ class UpdateAppListingRequest extends FormRequest
             'remove_images' => ['nullable', 'array'],
             'remove_images.*' => ['string'],
             'is_published' => ['nullable', 'boolean'],
+            ...$this->subAuthorRules(),
         ];
     }
 
@@ -35,6 +46,7 @@ class UpdateAppListingRequest extends FormRequest
     {
         return [
             'images.max' => 'You can upload a maximum of 3 screenshots.',
+            'sub_authors.max' => 'You can add up to 20 sub authors.',
         ];
     }
 }

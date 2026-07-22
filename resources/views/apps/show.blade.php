@@ -89,6 +89,7 @@
     </section>
 
     @include('partials.app-rating', ['app' => $app, 'userRating' => $userRating ?? null])
+    @include('partials.app-sub-authors', ['app' => $app])
 
     {{-- Screenshot cards --}}
     <section

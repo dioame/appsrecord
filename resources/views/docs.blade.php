@@ -74,7 +74,7 @@
                 From <span class="font-medium text-[#1D1D1F]">Submit</span> or <span class="font-medium text-[#1D1D1F]">Library → + Add</span>, publish each project with:
             </p>
             <ul class="mt-3 space-y-2 text-[15px] text-[#86868B]">
-                <li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0071E3]"></span><span><span class="font-medium text-[#1D1D1F]">Name & author</span> — how it appears in the store</span></li>
+                <li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0071E3]"></span><span><span class="font-medium text-[#1D1D1F]">Name & author</span> — how it appears in the store; optional sub authors with email</span></li>
                 <li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0071E3]"></span><span><span class="font-medium text-[#1D1D1F]">Category & platform</span> — Mobile, Web, Desktop, or Others</span></li>
                 <li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0071E3]"></span><span><span class="font-medium text-[#1D1D1F]">Description</span> — what it does and who it’s for</span></li>
                 <li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0071E3]"></span><span><span class="font-medium text-[#1D1D1F]">Logo & screenshots</span> — up to 3 shots so clients get a quick glimpse</span></li>

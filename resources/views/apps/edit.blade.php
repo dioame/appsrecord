@@ -26,6 +26,8 @@
                     <x-input-error :messages="$errors->get('author')" class="mt-2" />
                 </div>
 
+                @include('apps.partials.sub-authors-fields', ['app' => $app])
+
                 <div>
                     <label for="category_id" class="form-label">Category</label>
                     <select id="category_id" name="category_id" required class="form-input">

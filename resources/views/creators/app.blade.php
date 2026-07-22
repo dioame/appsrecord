@@ -80,6 +80,7 @@
 
     <div class="bg-white px-0 sm:px-0">
         @include('partials.app-rating', ['app' => $app, 'userRating' => $userRating ?? null])
+        @include('partials.app-sub-authors', ['app' => $app])
     </div>
 
     <section

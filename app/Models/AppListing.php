@@ -15,6 +15,7 @@ class AppListing extends Model
         'platform',
         'name',
         'author',
+        'sub_authors',
         'slug',
         'description',
         'link',
@@ -36,6 +37,7 @@ class AppListing extends Model
     {
         return [
             'images' => 'array',
+            'sub_authors' => 'array',
             'is_published' => 'boolean',
         ];
     }
@@ -90,6 +92,31 @@ class AppListing extends Model
     public function authorName(): string
     {
         return filled($this->author) ? $this->author : ($this->user->name ?? 'Unknown');
+    }
+
+    /**
+     * @return list<array{name: string, email: ?string}>
+     */
+    public function subAuthorEntries(): array
+    {
+        return collect($this->sub_authors ?? [])
+            ->filter(fn ($entry) => is_array($entry))
+            ->map(function (array $entry) {
+                $name = trim((string) ($entry['name'] ?? ''));
+                $email = trim((string) ($entry['email'] ?? ''));
+
+                if ($name === '') {
+                    return null;
+                }
+
+                return [
+                    'name' => $name,
+                    'email' => $email !== '' ? $email : null,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
     }
 
     public function scopeByAuthor($query, string $author)

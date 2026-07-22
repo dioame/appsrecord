@@ -45,6 +45,7 @@ class AppListingController extends Controller
             'platform' => $data['platform'],
             'name' => $data['name'],
             'author' => $data['author'],
+            'sub_authors' => $data['sub_authors'] ?? [],
             'slug' => $slug,
             'description' => $data['description'],
             'link' => $data['link'] ?? null,
@@ -86,6 +87,7 @@ class AppListingController extends Controller
         $app->platform = $data['platform'];
         $app->name = $data['name'];
         $app->author = $data['author'];
+        $app->sub_authors = $data['sub_authors'] ?? [];
         $app->description = $data['description'];
         $app->link = $data['link'] ?? null;
         $app->is_published = $request->boolean('is_published');
