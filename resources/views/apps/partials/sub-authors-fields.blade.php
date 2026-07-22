@@ -1,8 +1,9 @@
 @php
-    $initialSubAuthors = old('sub_authors', isset($app) ? $app->subAuthorEntries() : []);
-    if ($initialSubAuthors === [] && old('_token') && ! old('sub_authors')) {
-        $initialSubAuthors = [];
-    }
+    $listing = $appListing ?? null;
+    $initialSubAuthors = old(
+        'sub_authors',
+        $listing instanceof \App\Models\AppListing ? $listing->subAuthorEntries() : []
+    );
     $initialSubAuthors = collect($initialSubAuthors)
         ->map(fn ($row) => [
             'name' => is_array($row) ? (string) ($row['name'] ?? '') : '',

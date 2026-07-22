@@ -26,7 +26,7 @@
                     <x-input-error :messages="$errors->get('author')" class="mt-2" />
                 </div>
 
-                @include('apps.partials.sub-authors-fields', ['app' => $app])
+                @include('apps.partials.sub-authors-fields', ['appListing' => $app])
 
                 <div>
                     <label for="category_id" class="form-label">Category</label>
