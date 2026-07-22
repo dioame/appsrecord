@@ -10,12 +10,15 @@
     </div>
 
     <div class="min-w-0 flex-1">
-        <h3 class="truncate text-[14px] font-normal leading-tight text-[#1D1D1F] sm:text-[15px]">{{ $app->name }}</h3>
+        <div class="flex min-w-0 items-center gap-2">
+            <h3 class="truncate text-[14px] font-normal leading-tight text-[#1D1D1F] sm:text-[15px]">{{ $app->name }}</h3>
+            <x-platform-badge :platform="$app->platform" />
+        </div>
         <p class="mt-0.5 truncate text-[12px] leading-tight text-[#86868B] sm:text-[13px]">
             @if (! empty($showAuthor))
-                {{ $app->authorName() }} · {{ $app->platformLabel() }}
+                {{ $app->authorName() }}
             @else
-                {{ $app->platformLabel() }} · {{ \Illuminate\Support\Str::limit($app->description, 40) }}
+                {{ \Illuminate\Support\Str::limit($app->description, 48) }}
             @endif
         </p>
         <div class="mt-1">

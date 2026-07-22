@@ -1,8 +1,7 @@
 @php
     $platform = $app->platform ?? 'mobile';
     $shotCardClass = match ($platform) {
-        'web' => 'shot-card shot-card-wide',
-        'desktop' => 'shot-card shot-card-wide',
+        'web', 'desktop', 'others' => 'shot-card shot-card-wide',
         default => 'shot-card',
     };
     $index = $index ?? 0;
@@ -36,6 +35,10 @@
                 </div>
                 <div class="desktop-stand"></div>
                 <div class="desktop-base"></div>
+            </div>
+        @elseif ($platform === 'others')
+            <div class="w-full overflow-hidden rounded-2xl bg-white shadow-[0_8px_24px_rgba(0,0,0,0.12)] ring-1 ring-black/5">
+                <img src="{{ $shot }}" alt="{{ $app->name }} screenshot {{ $index + 1 }}" class="aspect-[16/10] w-full object-cover object-top transition duration-200 group-hover:brightness-95">
             </div>
         @else
             <div class="phone-frame">

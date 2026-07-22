@@ -28,7 +28,10 @@
                     @endif
                 </div>
                 <div class="min-w-0 flex-1 text-white">
-                    <p class="text-[11px] font-semibold uppercase tracking-[0.1em] text-white/70 sm:text-[12px]">Featured</p>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.1em] text-white/70 sm:text-[12px]">Featured</p>
+                        <x-platform-badge :platform="$lead->platform" />
+                    </div>
                     <h2 class="mt-1 font-display text-[24px] font-bold leading-tight sm:text-[36px] sm:leading-none">{{ $lead->name }}</h2>
                     <p class="mt-2 max-w-xl text-[14px] text-white/85 sm:text-[15px]">{{ \Illuminate\Support\Str::limit($lead->description, 90) }}</p>
                     <p class="mt-2 text-[12px] text-white/60 sm:text-[13px]">Free · {{ $lead->category->name }}</p>

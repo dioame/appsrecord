@@ -89,6 +89,7 @@
                                     <div class="min-w-0 flex-1">
                                         <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
                                             <p class="truncate text-[15px] font-medium text-[#1D1D1F]">{{ $app->name }}</p>
+                                            <x-platform-badge :platform="$app->platform" />
                                             @if ($app->is_published)
                                                 <span class="inline-flex items-center rounded-full bg-[#E8F8EE] px-2 py-0.5 text-[11px] font-semibold text-[#248A3D]">Published</span>
                                             @else
@@ -96,7 +97,7 @@
                                             @endif
                                         </div>
                                         <p class="mt-0.5 truncate text-[12px] text-[#86868B]">
-                                            {{ $app->platformLabel() }} · {{ $app->category->name }}
+                                            {{ $app->category->name }}
                                             @if ($app->ratingsCount() > 0)
                                                 · {{ number_format($app->averageRating(), 1) }}★
                                             @endif

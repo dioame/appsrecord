@@ -159,9 +159,12 @@
                             @endif
                         </div>
                         <div class="min-w-0 flex-1">
-                            <h3 class="truncate text-[15px] text-[#1D1D1F]">{{ $relatedApp->name }}</h3>
+                            <div class="flex min-w-0 items-center gap-2">
+                                <h3 class="truncate text-[15px] text-[#1D1D1F]">{{ $relatedApp->name }}</h3>
+                                <x-platform-badge :platform="$relatedApp->platform" />
+                            </div>
                             <p class="mt-0.5 truncate text-[13px] text-[#86868B]">
-                                {{ $relatedApp->platformLabel() }} · {{ \Illuminate\Support\Str::limit($relatedApp->description, 40) }}
+                                {{ \Illuminate\Support\Str::limit($relatedApp->description, 40) }}
                             </p>
                             <div class="mt-1">
                                 <x-star-rating :rating="$relatedApp->averageRating()" :count="$relatedApp->ratingsCount()" />

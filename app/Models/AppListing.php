@@ -23,7 +23,14 @@ class AppListing extends Model
         'is_published',
     ];
 
-    public const PLATFORMS = ['mobile', 'web', 'desktop'];
+    public const PLATFORMS = ['mobile', 'web', 'desktop', 'others'];
+
+    public const PLATFORM_LABELS = [
+        'mobile' => 'Mobile',
+        'web' => 'Web',
+        'desktop' => 'Desktop',
+        'others' => 'Others',
+    ];
 
     protected function casts(): array
     {
@@ -77,11 +84,7 @@ class AppListing extends Model
 
     public function platformLabel(): string
     {
-        return match ($this->platform) {
-            'web' => 'Web',
-            'desktop' => 'Desktop',
-            default => 'Mobile',
-        };
+        return self::PLATFORM_LABELS[$this->platform] ?? self::PLATFORM_LABELS['mobile'];
     }
 
     public function authorName(): string
@@ -116,6 +119,11 @@ class AppListing extends Model
     public function isDesktop(): bool
     {
         return $this->platform === 'desktop';
+    }
+
+    public function isOthers(): bool
+    {
+        return $this->platform === 'others';
     }
 
     public function logoUrl(): ?string

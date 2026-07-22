@@ -41,9 +41,9 @@
                 <span class="mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">Platform</span>
                 <select name="platform" class="filter-select" onchange="this.form.submit()">
                     <option value="">All platforms</option>
-                    <option value="mobile" @selected($platform === 'mobile')>Mobile</option>
-                    <option value="web" @selected($platform === 'web')>Web</option>
-                    <option value="desktop" @selected($platform === 'desktop')>Desktop</option>
+                    @foreach (\App\Models\AppListing::PLATFORM_LABELS as $value => $label)
+                        <option value="{{ $value }}" @selected($platform === $value)>{{ $label }}</option>
+                    @endforeach
                 </select>
             </label>
 
@@ -90,7 +90,7 @@
                 · author <span class="font-medium text-[#1D1D1F]">{{ $author }}</span>
             @endif
             @if ($platform)
-                · {{ ucfirst($platform) }}
+                · {{ \App\Models\AppListing::PLATFORM_LABELS[$platform] ?? ucfirst($platform) }}
             @endif
             @if ($category)
                 · {{ $category->name }}

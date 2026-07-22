@@ -234,6 +234,26 @@
         @apply border-t border-[#D2D2D7]/70;
     }
 
+    .platform-badge {
+        @apply inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.04em] sm:text-[11px];
+    }
+
+    .platform-badge-mobile {
+        @apply bg-[#E8F1FF] text-[#0071E3];
+    }
+
+    .platform-badge-web {
+        @apply bg-[#E8F8EE] text-[#248A3D];
+    }
+
+    .platform-badge-desktop {
+        @apply bg-[#F2E8FF] text-[#5E5CE6];
+    }
+
+    .platform-badge-others {
+        @apply bg-[#F5F5F7] text-[#6E6E73];
+    }
+
     .featured-card {
         @apply relative block w-[min(240px,78vw)] shrink-0 overflow-hidden rounded-2xl bg-[#F5F5F7] transition-transform duration-200 cursor-pointer hover:scale-[1.015] sm:w-[280px];
     }

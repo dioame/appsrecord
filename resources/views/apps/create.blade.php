@@ -38,15 +38,16 @@
 
                 <div>
                     <p class="form-label mb-2">Platform</p>
-                    <div class="grid grid-cols-3 gap-2">
-                        @foreach (['mobile' => 'Mobile', 'web' => 'Web', 'desktop' => 'Desktop'] as $value => $label)
+                    <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                        @foreach (\App\Models\AppListing::PLATFORM_LABELS as $value => $label)
                             <label class="flex cursor-pointer flex-col items-center gap-1.5 rounded-xl border border-[#D2D2D7] bg-white px-3 py-3 text-center transition has-[:checked]:border-[#0071E3] has-[:checked]:bg-[#0071E3]/5 has-[:checked]:ring-2 has-[:checked]:ring-[#0071E3]/20">
                                 <input type="radio" name="platform" value="{{ $value }}" class="sr-only" @checked(old('platform', 'mobile') === $value) required>
                                 <span class="text-[13px] font-semibold text-[#1D1D1F]">{{ $label }}</span>
                                 <span class="text-[11px] text-[#86868B]">
                                     @if ($value === 'mobile') Phone frame
                                     @elseif ($value === 'web') Browser frame
-                                    @else Desktop frame
+                                    @elseif ($value === 'desktop') Desktop frame
+                                    @else Generic preview
                                     @endif
                                 </span>
                             </label>
