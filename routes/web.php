@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/docs', [HomeController::class, 'docs'])->name('docs');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 Route::get('/apps/{slug}', [HomeController::class, 'show'])->name('apps.public');
 Route::get('/categories/{slug}', [HomeController::class, 'category'])->name('categories.show');

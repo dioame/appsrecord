@@ -38,6 +38,11 @@ class HomeController extends Controller
         return view('home', compact('categories', 'featured', 'totalApps', 'topAuthors'));
     }
 
+    public function docs(): View
+    {
+        return view('docs');
+    }
+
     public function show(string $slug): View
     {
         $app = AppListing::query()
