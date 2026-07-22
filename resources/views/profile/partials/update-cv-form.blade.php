@@ -29,7 +29,7 @@
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Add details clients see on your public portfolio link — alongside your apps.') }}
+            {{ __('Add details clients see on your public portfolio link — alongside your apps. Clients can also download your CV as a PDF.') }}
         </p>
     </header>
 
@@ -154,6 +154,12 @@
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save CV') }}</x-primary-button>
+
+            @if ($user->hasCvContent())
+                <a href="{{ route('creators.cv', $user->slug) }}" class="text-sm font-medium text-[#0071E3] hover:underline">
+                    {{ __('Download PDF') }}
+                </a>
+            @endif
 
             @if (session('status') === 'profile-updated')
                 <p

@@ -238,20 +238,33 @@
     @if ($hasCv)
         <div x-show="tab === 'cv'" x-cloak class="space-y-6">
             <section class="rounded-2xl bg-white px-5 py-6 sm:px-6">
-                <p class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#86868B]">Curriculum vitae</p>
-                <h2 class="mt-1 font-display text-[22px] font-bold text-[#1D1D1F]">{{ $creator->name }}</h2>
-                @if ($creator->headline)
-                    <p class="mt-1 text-[15px] text-[#1D1D1F]">{{ $creator->headline }}</p>
-                @endif
-                @if ($creator->location || $creator->websiteHost())
-                    <p class="mt-2 text-[13px] text-[#86868B]">
-                        @if ($creator->location){{ $creator->location }}@endif
-                        @if ($creator->location && $creator->websiteHost()) · @endif
-                        @if ($creator->websiteUrl())
-                            <a href="{{ $creator->websiteUrl() }}" target="_blank" rel="noopener noreferrer" class="text-[#0071E3] hover:underline">{{ $creator->websiteHost() }}</a>
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#86868B]">Curriculum vitae</p>
+                        <h2 class="mt-1 font-display text-[22px] font-bold text-[#1D1D1F]">{{ $creator->name }}</h2>
+                        @if ($creator->headline)
+                            <p class="mt-1 text-[15px] text-[#1D1D1F]">{{ $creator->headline }}</p>
                         @endif
-                    </p>
-                @endif
+                        @if ($creator->location || $creator->websiteHost())
+                            <p class="mt-2 text-[13px] text-[#86868B]">
+                                @if ($creator->location){{ $creator->location }}@endif
+                                @if ($creator->location && $creator->websiteHost()) · @endif
+                                @if ($creator->websiteUrl())
+                                    <a href="{{ $creator->websiteUrl() }}" target="_blank" rel="noopener noreferrer" class="text-[#0071E3] hover:underline">{{ $creator->websiteHost() }}</a>
+                                @endif
+                            </p>
+                        @endif
+                    </div>
+                    <a
+                        href="{{ route('creators.cv', $creator->slug) }}"
+                        class="btn-primary shrink-0"
+                    >
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Download PDF
+                    </a>
+                </div>
                 @if ($creator->bio)
                     <p class="mt-4 text-[15px] leading-relaxed text-[#1D1D1F]">{{ $creator->bio }}</p>
                 @endif

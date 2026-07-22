@@ -132,7 +132,47 @@ class ProfileTest extends TestCase
             ->assertSee('Product designer')
             ->assertSee('Figma')
             ->assertSee('Curriculum vitae')
-            ->assertSee('Designer');
+            ->assertSee('Designer')
+            ->assertSee('Download PDF');
+    }
+
+    public function test_clients_can_download_creator_cv_as_pdf(): void
+    {
+        $user = User::factory()->create([
+            'name' => 'Jane Doe',
+            'slug' => 'jane-doe',
+            'headline' => 'Product designer',
+            'skills' => ['Figma', 'Research'],
+            'experience' => [
+                [
+                    'title' => 'Designer',
+                    'company' => 'Studio',
+                    'period' => '2021 – Present',
+                    'description' => 'Shipped apps',
+                ],
+            ],
+        ]);
+
+        $response = $this->get('/creators/jane-doe/cv.pdf');
+
+        $response
+            ->assertOk()
+            ->assertHeader('content-type', 'application/pdf')
+            ->assertHeader('content-disposition', 'attachment; filename=jane-doe-cv.pdf');
+    }
+
+    public function test_cv_pdf_returns_not_found_when_creator_has_no_cv(): void
+    {
+        User::factory()->create([
+            'slug' => 'no-cv-yet',
+            'bio' => null,
+            'headline' => null,
+            'skills' => null,
+            'experience' => null,
+            'education' => null,
+        ]);
+
+        $this->get('/creators/no-cv-yet/cv.pdf')->assertNotFound();
     }
 
     public function test_user_can_delete_their_account(): void

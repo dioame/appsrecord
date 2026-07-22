@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\AppListing;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CreatorController extends Controller
 {
@@ -36,6 +39,23 @@ class CreatorController extends Controller
             ->values();
 
         return view('creators.show', compact('creator', 'apps', 'categories'));
+    }
+
+    public function cvPdf(string $slug): Response
+    {
+        $creator = User::query()
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        if (! $creator->hasCvContent()) {
+            throw new NotFoundHttpException('This creator has not published a CV yet.');
+        }
+
+        $filename = \Illuminate\Support\Str::slug($creator->name ?: $creator->slug).'-cv.pdf';
+
+        return Pdf::loadView('creators.cv-pdf', compact('creator'))
+            ->setPaper('a4')
+            ->download($filename);
     }
 
     public function app(string $slug, string $appSlug): View
