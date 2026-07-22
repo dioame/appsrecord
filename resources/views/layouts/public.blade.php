@@ -116,8 +116,8 @@
                 }
             @endphp
 
-            <div class="mt-6 flex min-h-0 flex-1 flex-col">
-                <div class="mb-2 flex items-center justify-between px-2.5">
+            <div class="mt-6 flex min-h-0 flex-1 flex-col overflow-hidden">
+                <div class="mb-2 flex shrink-0 items-center justify-between px-2.5">
                     <p class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#86868B]">Categories</p>
                     <button
                         type="button"
@@ -126,7 +126,7 @@
                     >All</button>
                 </div>
 
-                <div class="space-y-0.5">
+                <div class="min-h-0 flex-1 space-y-0.5 overflow-y-auto overscroll-contain">
                     @foreach ($previewCategories as $navCategory)
                         <a href="{{ route('categories.show', $navCategory->slug) }}"
                            class="cat-link {{ $activeCategorySlug === $navCategory->slug ? 'cat-link-active' : '' }}"
@@ -141,7 +141,7 @@
                 @if ($allNavCategories->count() > $previewLimit)
                     <button
                         type="button"
-                        class="cat-more mt-2"
+                        class="cat-more mt-1 shrink-0"
                         @click="openCategories()"
                     >
                         <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#E8E8ED] text-[#0071E3]">
@@ -152,7 +152,7 @@
                 @endif
             </div>
 
-            <div class="mt-auto border-t border-[#D2D2D7] pt-3">
+            <div class="mt-3 shrink-0 border-t border-[#D2D2D7] bg-[#F5F5F7] pt-3">
                 <p class="px-2.5 text-[11px] leading-relaxed text-[#86868B]">&copy; {{ date('Y') }} AppsRecord</p>
             </div>
         </aside>

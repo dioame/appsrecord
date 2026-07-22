@@ -62,7 +62,7 @@
     }
 
     .store-sidebar {
-        @apply fixed bottom-0 left-0 z-40 flex w-[min(280px,86vw)] -translate-x-full flex-col overflow-y-auto overscroll-contain border-r border-[#E8E8ED] bg-[#F5F5F7] px-3 py-4 text-[#1D1D1F] lg:top-0 lg:w-[240px] lg:translate-x-0;
+        @apply fixed bottom-0 left-0 z-40 flex w-[min(280px,86vw)] -translate-x-full flex-col overflow-hidden border-r border-[#E8E8ED] bg-[#F5F5F7] px-3 py-4 text-[#1D1D1F] lg:top-0 lg:w-[240px] lg:translate-x-0;
         top: calc(3rem + env(safe-area-inset-top));
         padding-bottom: max(1rem, env(safe-area-inset-bottom));
     }
