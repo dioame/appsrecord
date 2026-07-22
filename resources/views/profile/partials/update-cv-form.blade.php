@@ -156,8 +156,8 @@
             <x-primary-button>{{ __('Save CV') }}</x-primary-button>
 
             @if ($user->hasCvContent())
-                <a href="{{ route('creators.cv', $user->slug) }}" class="text-sm font-medium text-[#0071E3] hover:underline">
-                    {{ __('Download PDF') }}
+                <a href="{{ route('creators.cv.preview', $user->slug) }}" class="text-sm font-medium text-[#0071E3] hover:underline">
+                    {{ __('Preview & download PDF') }}
                 </a>
             @endif
 

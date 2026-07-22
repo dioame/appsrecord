@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\AppListing;
 use App\Models\User;
+use App\Support\CvTemplates;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -41,7 +43,28 @@ class CreatorController extends Controller
         return view('creators.show', compact('creator', 'apps', 'categories'));
     }
 
-    public function cvPdf(string $slug): Response
+    public function cvPreview(Request $request, string $slug): View
+    {
+        [$creator, $apps, $media, $template] = $this->cvPayload($request, $slug);
+
+        return view('creators.cv.preview', compact('creator', 'apps', 'media', 'template'));
+    }
+
+    public function cvPdf(Request $request, string $slug): Response
+    {
+        [$creator, $apps, $media, $template] = $this->cvPayload($request, $slug);
+
+        $filename = \Illuminate\Support\Str::slug($creator->name ?: $creator->slug).'-cv-'.$template.'.pdf';
+
+        return Pdf::loadView('creators.cv-pdf', compact('creator', 'apps', 'media', 'template'))
+            ->setPaper('a4')
+            ->download($filename);
+    }
+
+    /**
+     * @return array{0: User, 1: \Illuminate\Support\Collection<int, AppListing>, 2: array{avatar: ?string, apps: array<int, array{logo: ?string, shots: list<string>}>}, 3: string}
+     */
+    protected function cvPayload(Request $request, string $slug): array
     {
         $creator = User::query()
             ->where('slug', $slug)
@@ -56,13 +79,10 @@ class CreatorController extends Controller
             ->latest()
             ->get();
 
-        $avatarDataUri = \App\Support\PdfImage::fromUrl($creator->avatar);
+        $template = CvTemplates::resolve($request->query('template'));
+        $media = CvTemplates::media($creator, $apps);
 
-        $filename = \Illuminate\Support\Str::slug($creator->name ?: $creator->slug).'-cv.pdf';
-
-        return Pdf::loadView('creators.cv-pdf', compact('creator', 'apps', 'avatarDataUri'))
-            ->setPaper('a4')
-            ->download($filename);
+        return [$creator, $apps, $media, $template];
     }
 
     public function app(string $slug, string $appSlug): View
