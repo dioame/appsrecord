@@ -153,12 +153,30 @@ class ProfileTest extends TestCase
             ],
         ]);
 
+        $category = \App\Models\Category::query()->create([
+            'name' => 'Productivity',
+            'slug' => 'productivity',
+        ]);
+
+        \App\Models\AppListing::query()->create([
+            'user_id' => $user->id,
+            'category_id' => $category->id,
+            'platform' => 'web',
+            'name' => 'Focus Board',
+            'slug' => 'focus-board',
+            'description' => 'A planning board for teams.',
+            'link' => 'https://example.com/focus',
+            'is_published' => true,
+        ]);
+
         $response = $this->get('/creators/jane-doe/cv.pdf');
 
         $response
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf')
             ->assertHeader('content-disposition', 'attachment; filename=jane-doe-cv.pdf');
+
+        $this->assertGreaterThan(1000, strlen($response->getContent()));
     }
 
     public function test_cv_pdf_returns_not_found_when_creator_has_no_cv(): void

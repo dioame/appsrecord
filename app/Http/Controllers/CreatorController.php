@@ -51,9 +51,16 @@ class CreatorController extends Controller
             throw new NotFoundHttpException('This creator has not published a CV yet.');
         }
 
+        $apps = $creator->publishedApps()
+            ->with('category')
+            ->latest()
+            ->get();
+
+        $avatarDataUri = \App\Support\PdfImage::fromUrl($creator->avatar);
+
         $filename = \Illuminate\Support\Str::slug($creator->name ?: $creator->slug).'-cv.pdf';
 
-        return Pdf::loadView('creators.cv-pdf', compact('creator'))
+        return Pdf::loadView('creators.cv-pdf', compact('creator', 'apps', 'avatarDataUri'))
             ->setPaper('a4')
             ->download($filename);
     }
