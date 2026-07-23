@@ -13,7 +13,7 @@
     @click="openAt({{ $index }})"
     aria-label="Zoom screenshot {{ $index + 1 }}"
 >
-    <p class="px-5 pt-5 text-[15px] font-semibold leading-snug text-[#00C7BE]">
+    <p class="line-clamp-2 min-h-[2.5rem] px-5 pt-5 text-[15px] font-semibold leading-snug text-[#00C7BE]">
         {{ $caption }}
     </p>
 
@@ -26,23 +26,31 @@
                     <span class="browser-dot bg-[#28C840]"></span>
                     <span class="browser-url">{{ \Illuminate\Support\Str::slug($app->name) }}.app</span>
                 </div>
-                <img src="{{ $shot }}" alt="{{ $app->name }} screenshot {{ $index + 1 }}" class="aspect-[16/10] w-full object-cover object-top transition duration-200 group-hover:brightness-95">
+                <div class="shot-media">
+                    <img src="{{ $shot }}" alt="{{ $app->name }} screenshot {{ $index + 1 }}" class="shot-media__img transition duration-200 group-hover:brightness-95">
+                </div>
             </div>
         @elseif ($platform === 'desktop')
             <div class="desktop-frame w-full">
                 <div class="desktop-bezel">
-                    <img src="{{ $shot }}" alt="{{ $app->name }} screenshot {{ $index + 1 }}" class="aspect-[16/10] w-full object-cover object-top transition duration-200 group-hover:brightness-95">
+                    <div class="shot-media shot-media--dark">
+                        <img src="{{ $shot }}" alt="{{ $app->name }} screenshot {{ $index + 1 }}" class="shot-media__img transition duration-200 group-hover:brightness-95">
+                    </div>
                 </div>
                 <div class="desktop-stand"></div>
                 <div class="desktop-base"></div>
             </div>
         @elseif ($platform === 'others')
             <div class="w-full overflow-hidden rounded-2xl bg-white shadow-[0_8px_24px_rgba(0,0,0,0.12)] ring-1 ring-black/5">
-                <img src="{{ $shot }}" alt="{{ $app->name }} screenshot {{ $index + 1 }}" class="aspect-[16/10] w-full object-cover object-top transition duration-200 group-hover:brightness-95">
+                <div class="shot-media">
+                    <img src="{{ $shot }}" alt="{{ $app->name }} screenshot {{ $index + 1 }}" class="shot-media__img transition duration-200 group-hover:brightness-95">
+                </div>
             </div>
         @else
             <div class="phone-frame">
-                <img src="{{ $shot }}" alt="{{ $app->name }} screenshot {{ $index + 1 }}" class="aspect-[9/19] w-full object-cover transition duration-200 group-hover:brightness-95">
+                <div class="shot-media shot-media--phone">
+                    <img src="{{ $shot }}" alt="{{ $app->name }} screenshot {{ $index + 1 }}" class="shot-media__img transition duration-200 group-hover:brightness-95">
+                </div>
             </div>
         @endif
 

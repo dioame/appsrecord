@@ -1,10 +1,10 @@
 <a href="{{ route('apps.public', $app->slug) }}" class="featured-card">
-    <div class="relative aspect-[16/10] overflow-hidden bg-[#E8E8ED]">
+    <div class="relative flex aspect-[16/10] items-center justify-center overflow-hidden bg-[#E8E8ED] p-1.5">
         @php $preview = $app->imageUrls()[0] ?? $app->logoUrl(); @endphp
         @if ($preview)
-            <img src="{{ $preview }}" alt="{{ $app->name }}" class="h-full w-full object-cover">
+            <img src="{{ $preview }}" alt="{{ $app->name }}" class="max-h-full max-w-full object-contain object-top">
         @else
-            <div class="flex h-full items-center justify-center bg-gradient-to-br from-[#0071E3] to-[#0040DD]">
+            <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#0071E3] to-[#0040DD]">
                 @if ($app->logoUrl())
                     <img src="{{ $app->logoUrl() }}" alt="" class="h-14 w-14 rounded-[22%] object-cover">
                 @endif
