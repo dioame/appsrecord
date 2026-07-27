@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAppListingRequest;
 use App\Http\Requests\UpdateAppListingRequest;
 use App\Models\AppListing;
 use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -39,7 +40,7 @@ class AppListingController extends Controller
             }
         }
 
-        AppListing::create([
+        $app = AppListing::create([
             'user_id' => $request->user()->id,
             'category_id' => $data['category_id'],
             'platform' => $data['platform'],
@@ -53,6 +54,9 @@ class AppListingController extends Controller
             'images' => $imagePaths,
             'is_published' => $request->boolean('is_published'),
         ]);
+
+        $tags = Tag::findOrCreateFromNames($data['tags'] ?? []);
+        $app->tags()->sync($tags->pluck('id'));
 
         return redirect()
             ->route('dashboard')
@@ -69,6 +73,7 @@ class AppListingController extends Controller
         $this->authorizeOwner($app);
 
         $categories = Category::query()->orderBy('sort_order')->orderBy('name')->get();
+        $app->load('tags');
 
         return view('apps.edit', compact('app', 'categories'));
     }
@@ -119,6 +124,9 @@ class AppListingController extends Controller
 
         $app->images = $images;
         $app->save();
+
+        $tags = Tag::findOrCreateFromNames($data['tags'] ?? []);
+        $app->tags()->sync($tags->pluck('id'));
 
         return redirect()
             ->route('dashboard')

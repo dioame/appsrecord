@@ -7,11 +7,14 @@
     <header class="mb-5 sm:mb-6">
         <h1 class="font-display text-[28px] font-bold tracking-tight text-[#1D1D1F] sm:text-[34px]">Search</h1>
         <p class="mt-2 text-[13px] text-[#86868B] sm:text-[15px]">
-            Find apps by name, description, or author — then narrow with filters.
+            Find apps by name, description, author, or tag — then narrow with filters.
         </p>
     </header>
 
     <form action="{{ route('search') }}" method="GET" class="mb-6 space-y-4">
+        @if (! empty($tagSlugs))
+            <input type="hidden" name="tags" value="{{ implode(',', $tagSlugs) }}">
+        @endif
         <label class="relative block max-w-xl">
             <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-[#86868B]">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"/></svg>
@@ -20,7 +23,7 @@
                 type="search"
                 name="q"
                 value="{{ $q }}"
-                placeholder="Search apps or authors…"
+                placeholder="Search apps, authors, or tags…"
                 class="store-search w-full pl-9"
                 autocomplete="off"
             >
@@ -66,13 +69,49 @@
         </div>
     </form>
 
+    @php
+        $filterBase = array_filter([
+            'q' => $q ?: null,
+            'author' => $author ?: null,
+            'platform' => $platform ?: null,
+            'category' => $category?->slug,
+        ]);
+        $toggleTag = function (string $slug) use ($tagSlugs) {
+            $next = in_array($slug, $tagSlugs, true)
+                ? array_values(array_filter($tagSlugs, fn ($s) => $s !== $slug))
+                : array_values(array_unique([...$tagSlugs, $slug]));
+
+            return $next === [] ? null : implode(',', $next);
+        };
+    @endphp
+
+    @if ($popularTags->isNotEmpty() || $activeTags->isNotEmpty())
+        <div class="mb-6">
+            <p class="mb-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">Tags</p>
+            <div class="flex flex-wrap gap-2">
+                @foreach ($popularTags as $tag)
+                    <a
+                        href="{{ route('search', array_filter([...$filterBase, 'tags' => $toggleTag($tag->slug)])) }}"
+                        class="filter-chip {{ in_array($tag->slug, $tagSlugs, true) ? 'filter-chip-active' : '' }}"
+                    >{{ $tag->name }}</a>
+                @endforeach
+                @foreach ($activeTags->whereNotIn('slug', $popularTags->pluck('slug')) as $tag)
+                    <a
+                        href="{{ route('search', array_filter([...$filterBase, 'tags' => $toggleTag($tag->slug)])) }}"
+                        class="filter-chip filter-chip-active"
+                    >{{ $tag->name }}</a>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
     @if ($authors->isNotEmpty())
         <div class="mb-6">
             <p class="mb-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">Browse by author</p>
             <div class="flex flex-wrap gap-2">
                 @foreach ($authors as $authorChip)
                     <a
-                        href="{{ route('search', array_filter(['author' => $authorChip, 'q' => $q ?: null, 'platform' => $platform ?: null, 'category' => $category?->slug])) }}"
+                        href="{{ route('search', array_filter([...$filterBase, 'author' => $authorChip, 'tags' => $tagSlugs ? implode(',', $tagSlugs) : null])) }}"
                         class="filter-chip {{ $author === $authorChip ? 'filter-chip-active' : '' }}"
                     >{{ $authorChip }}</a>
                 @endforeach
@@ -95,12 +134,15 @@
             @if ($category)
                 · {{ $category->name }}
             @endif
+            @if ($activeTags->isNotEmpty())
+                · tagged {{ $activeTags->pluck('name')->implode(', ') }}
+            @endif
         </p>
     @endif
 
     @if (! $hasFilters)
         <div class="rounded-[28px] bg-[#F5F5F7] px-6 py-14 text-center text-[15px] text-[#86868B]">
-            Type a search, pick an author, or use the filters above.
+            Type a search, pick a tag, or use the filters above.
         </div>
     @elseif ($apps->isEmpty())
         <div class="rounded-[28px] bg-[#F5F5F7] px-6 py-14 text-center text-[15px] text-[#86868B]">

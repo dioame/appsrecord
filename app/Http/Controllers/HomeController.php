@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AppListing;
 use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -15,7 +16,7 @@ class HomeController extends Controller
         $categories = Category::query()
             ->with(['publishedApps' => fn ($query) => $query
                 ->latest()
-                ->with('user')
+                ->with(['user', 'tags'])
                 ->withAvg('ratings', 'rating')
                 ->withCount('ratings')])
             ->orderBy('sort_order')
@@ -24,7 +25,7 @@ class HomeController extends Controller
 
         $featured = AppListing::query()
             ->where('is_published', true)
-            ->with(['category', 'user'])
+            ->with(['category', 'user', 'tags'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
             ->latest()
@@ -34,8 +35,9 @@ class HomeController extends Controller
         $totalApps = AppListing::query()->where('is_published', true)->count();
 
         $topAuthors = $this->topAuthors(12);
+        $popularTags = $this->popularTags(16);
 
-        return view('home', compact('categories', 'featured', 'totalApps', 'topAuthors'));
+        return view('home', compact('categories', 'featured', 'totalApps', 'topAuthors', 'popularTags'));
     }
 
     public function docs(): View
@@ -48,7 +50,7 @@ class HomeController extends Controller
         $app = AppListing::query()
             ->where('slug', $slug)
             ->where('is_published', true)
-            ->with(['category', 'user'])
+            ->with(['category', 'user', 'tags'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
             ->firstOrFail();
@@ -59,6 +61,7 @@ class HomeController extends Controller
             ->where('is_published', true)
             ->where('category_id', $app->category_id)
             ->where('id', '!=', $app->id)
+            ->with('tags')
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
             ->latest()
@@ -75,7 +78,7 @@ class HomeController extends Controller
             ->firstOrFail();
 
         $apps = $category->publishedApps()
-            ->with('user')
+            ->with(['user', 'tags'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
             ->latest()
@@ -95,6 +98,12 @@ class HomeController extends Controller
         $author = trim((string) $request->query('author', ''));
         $platform = trim((string) $request->query('platform', ''));
         $categorySlug = trim((string) $request->query('category', ''));
+        $tagSlugs = collect(explode(',', (string) $request->query('tags', '')))
+            ->map(fn ($slug) => trim($slug))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
 
         $validPlatforms = AppListing::PLATFORMS;
         if ($platform !== '' && ! in_array($platform, $validPlatforms, true)) {
@@ -105,11 +114,11 @@ class HomeController extends Controller
             ? Category::query()->where('slug', $categorySlug)->first()
             : null;
 
-        $hasFilters = $q !== '' || $author !== '' || $platform !== '' || $category !== null;
+        $hasFilters = $q !== '' || $author !== '' || $platform !== '' || $category !== null || $tagSlugs !== [];
 
         $apps = AppListing::query()
             ->where('is_published', true)
-            ->with(['category', 'user'])
+            ->with(['category', 'user', 'tags'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
             ->when($q !== '', function ($query) use ($q) {
@@ -117,12 +126,14 @@ class HomeController extends Controller
                     $inner->where('name', 'like', "%{$q}%")
                         ->orWhere('description', 'like', "%{$q}%")
                         ->orWhere('author', 'like', "%{$q}%")
-                        ->orWhereHas('user', fn ($user) => $user->where('name', 'like', "%{$q}%"));
+                        ->orWhereHas('user', fn ($user) => $user->where('name', 'like', "%{$q}%"))
+                        ->orWhereHas('tags', fn ($tags) => $tags->where('name', 'like', "%{$q}%"));
                 });
             })
             ->when($author !== '', fn ($query) => $query->byAuthor($author))
             ->when($platform !== '', fn ($query) => $query->where('platform', $platform))
             ->when($category !== null, fn ($query) => $query->where('category_id', $category->id))
+            ->when($tagSlugs !== [], fn ($query) => $query->withTagSlugs($tagSlugs))
             ->latest()
             ->take(48)
             ->get();
@@ -132,6 +143,10 @@ class HomeController extends Controller
             ->orderBy('sort_order')
             ->orderBy('name')
             ->get();
+        $popularTags = $this->popularTags(24);
+        $activeTags = $tagSlugs !== []
+            ? Tag::query()->whereIn('slug', $tagSlugs)->orderBy('name')->get()
+            : collect();
 
         return view('search', compact(
             'apps',
@@ -142,7 +157,24 @@ class HomeController extends Controller
             'categories',
             'authors',
             'hasFilters',
+            'tagSlugs',
+            'popularTags',
+            'activeTags',
         ));
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    private function popularTags(int $limit = 16): Collection
+    {
+        return Tag::query()
+            ->withCount(['appListings' => fn ($query) => $query->where('is_published', true)])
+            ->having('app_listings_count', '>', 0)
+            ->orderByDesc('app_listings_count')
+            ->orderBy('name')
+            ->take($limit)
+            ->get();
     }
 
     /**

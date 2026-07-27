@@ -58,6 +58,8 @@
                     <x-input-error :messages="$errors->get('platform')" class="mt-2" />
                 </div>
 
+                @include('apps.partials.tags-fields')
+
                 <div>
                     <label for="description" class="form-label">Description</label>
                     <textarea id="description" name="description" rows="6" required maxlength="5000" class="form-input" placeholder="What does this app do? Who is it for?">{{ old('description') }}</textarea>

@@ -23,6 +23,14 @@
         <div class="min-w-0 flex-1">
             <p class="truncate text-[13px] font-semibold text-[#1D1D1F]">{{ $app->name }}</p>
             <p class="truncate text-[11px] text-[#86868B] sm:text-[12px]">{{ $app->category->name ?? 'App' }}</p>
+            @if ($app->relationLoaded('tags') && $app->tags->isNotEmpty())
+                <p class="mt-0.5 truncate text-[10px] text-[#86868B]">
+                    {{ $app->tags->take(2)->pluck('name')->implode(' · ') }}
+                    @if ($app->tags->count() > 2)
+                        · +{{ $app->tags->count() - 2 }}
+                    @endif
+                </p>
+            @endif
             <div class="mt-0.5">
                 <x-star-rating :rating="$app->averageRating()" :count="$app->ratingsCount()" />
             </div>

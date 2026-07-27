@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\AppListing;
 use App\Models\Category;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
@@ -32,18 +33,21 @@ class AppListingSeeder extends Seeder
                     'platform' => 'mobile',
                     'description' => 'A calm deep-work timer with task batches, break reminders, and weekly focus reports so you stay in flow without burnout.',
                     'colors' => ['#0071E3', '#34C759'],
+                    'tags' => ['Productivity', 'Mobile First', 'Free'],
                 ],
                 [
                     'name' => 'NoteNest',
                     'platform' => 'web',
                     'description' => 'Capture quick notes, checklists, and voice memos in one place. Sync across devices and pin what matters today.',
                     'colors' => ['#5856D6', '#AF52DE'],
+                    'tags' => ['Productivity', 'Web App', 'Collaboration'],
                 ],
                 [
                     'name' => 'DayStack',
                     'platform' => 'desktop',
                     'description' => 'Plan your day in stacked time blocks. Drag tasks, set priorities, and close the loop every evening.',
                     'colors' => ['#FF9500', '#FF3B30'],
+                    'tags' => ['Productivity', 'Desktop', 'Free'],
                 ],
             ],
             'business' => [
@@ -52,12 +56,14 @@ class AppListingSeeder extends Seeder
                     'platform' => 'web',
                     'description' => 'Create polished invoices in seconds, track payments, and send reminders clients actually open.',
                     'colors' => ['#1D1D1F', '#0071E3'],
+                    'tags' => ['Finance', 'Web App', 'Automation'],
                 ],
                 [
                     'name' => 'LeadPulse',
                     'platform' => 'desktop',
                     'description' => 'Lightweight CRM for freelancers and small teams. Pipeline stages, follow-ups, and deal notes in one board.',
                     'colors' => ['#30B0C7', '#0071E3'],
+                    'tags' => ['Collaboration', 'Desktop', 'Analytics'],
                 ],
             ],
             'education' => [
@@ -66,12 +72,14 @@ class AppListingSeeder extends Seeder
                     'platform' => 'mobile',
                     'description' => 'Spaced-repetition flashcards with streaks and gentle reminders. Built for exams, languages, and lifelong learning.',
                     'colors' => ['#FF2D55', '#5856D6'],
+                    'tags' => ['Education', 'Mobile First', 'Offline'],
                 ],
                 [
                     'name' => 'LectureLoop',
                     'platform' => 'web',
                     'description' => 'Record lectures, auto-chapter them, and quiz yourself from the transcript. Perfect for students on the go.',
                     'colors' => ['#34C759', '#30B0C7'],
+                    'tags' => ['Education', 'AI', 'Web App'],
                 ],
             ],
             'health-fitness' => [
@@ -80,12 +88,14 @@ class AppListingSeeder extends Seeder
                     'platform' => 'mobile',
                     'description' => 'Log workouts, recovery, and sleep in a clean daily ring. Trends that help you train smarter, not harder.',
                     'colors' => ['#FF3B30', '#FF9500'],
+                    'tags' => ['Health', 'Mobile First', 'Analytics'],
                 ],
                 [
                     'name' => 'MindQuiet',
                     'platform' => 'mobile',
                     'description' => 'Guided breathing, short meditations, and mood check-ins designed for busy days and restless nights.',
                     'colors' => ['#5856D6', '#64D2FF'],
+                    'tags' => ['Health', 'Privacy', 'Offline'],
                 ],
             ],
             'finance' => [
@@ -94,12 +104,14 @@ class AppListingSeeder extends Seeder
                     'platform' => 'web',
                     'description' => 'See where your money goes with envelopes, smart categories, and a monthly forecast you can trust.',
                     'colors' => ['#34C759', '#1D1D1F'],
+                    'tags' => ['Finance', 'Web App', 'Analytics'],
                 ],
                 [
                     'name' => 'SplitFair',
                     'platform' => 'mobile',
                     'description' => 'Split bills with friends, settle up in one tap, and keep shared trips organized without the awkward math.',
                     'colors' => ['#0071E3', '#FF9500'],
+                    'tags' => ['Finance', 'Social', 'Mobile First'],
                 ],
             ],
             'entertainment' => [
@@ -108,12 +120,14 @@ class AppListingSeeder extends Seeder
                     'platform' => 'mobile',
                     'description' => 'A cozy pixel adventure with daily quests, collectible characters, and offline play for short sessions.',
                     'colors' => ['#AF52DE', '#FF2D55'],
+                    'tags' => ['Offline', 'Mobile First', 'Free'],
                 ],
                 [
                     'name' => 'ReelRoom',
                     'platform' => 'web',
                     'description' => 'Curate watchlists, rate scenes, and share short reviews with friends who love the same shows.',
                     'colors' => ['#FF3B30', '#1D1D1F'],
+                    'tags' => ['Social', 'Web App'],
                 ],
             ],
             'social' => [
@@ -122,12 +136,14 @@ class AppListingSeeder extends Seeder
                     'platform' => 'mobile',
                     'description' => 'Private circles for close friends. Share updates, plans, and photos without the public feed noise.',
                     'colors' => ['#0071E3', '#AF52DE'],
+                    'tags' => ['Social', 'Privacy', 'Mobile First'],
                 ],
                 [
                     'name' => 'HangSoon',
                     'platform' => 'web',
                     'description' => 'Propose hangouts, vote on times, and lock plans fast. Calendar-friendly invites for real-life meetups.',
                     'colors' => ['#FF9500', '#FF2D55'],
+                    'tags' => ['Social', 'Collaboration', 'Web App'],
                 ],
             ],
             'utilities' => [
@@ -136,12 +152,14 @@ class AppListingSeeder extends Seeder
                     'platform' => 'desktop',
                     'description' => 'Scan documents, receipts, and IDs into tidy folders. OCR search finds anything in seconds.',
                     'colors' => ['#86868B', '#0071E3'],
+                    'tags' => ['Utilities', 'Desktop', 'AI'],
                 ],
                 [
                     'name' => 'WidgetBox',
                     'platform' => 'mobile',
                     'description' => 'Home-screen widgets for weather, transit, and quick actions. Customize layouts without clutter.',
                     'colors' => ['#30B0C7', '#5856D6'],
+                    'tags' => ['Utilities', 'Mobile First', 'Weather'],
                 ],
             ],
             'maps-navigation' => [
@@ -150,12 +168,14 @@ class AppListingSeeder extends Seeder
                     'platform' => 'mobile',
                     'description' => 'Turn-by-turn navigation with offline maps, transit alerts, and quieter routes for daily commuting.',
                     'colors' => ['#0071E3', '#34C759'],
+                    'tags' => ['Maps', 'Offline', 'Mobile First'],
                 ],
                 [
                     'name' => 'PinAtlas',
                     'platform' => 'web',
                     'description' => 'Save places, share maps with friends, and build custom layers for trips and local discovery.',
                     'colors' => ['#FF9500', '#FF3B30'],
+                    'tags' => ['Maps', 'Travel', 'Web App'],
                 ],
             ],
             'travel' => [
@@ -164,6 +184,7 @@ class AppListingSeeder extends Seeder
                     'platform' => 'mobile',
                     'description' => 'Packing lists, boarding passes, and day-by-day itineraries in one travel companion.',
                     'colors' => ['#30B0C7', '#5856D6'],
+                    'tags' => ['Travel', 'Offline', 'Mobile First'],
                 ],
             ],
             'food-drink' => [
@@ -172,6 +193,7 @@ class AppListingSeeder extends Seeder
                     'platform' => 'mobile',
                     'description' => 'Weekly meal plans, grocery lists, and recipes that adapt to what is already in your fridge.',
                     'colors' => ['#FF2D55', '#FF9500'],
+                    'tags' => ['Food', 'Mobile First', 'Automation'],
                 ],
             ],
             'photo-video' => [
@@ -180,6 +202,7 @@ class AppListingSeeder extends Seeder
                     'platform' => 'desktop',
                     'description' => 'Fast photo edits, batch exports, and light video cuts without the heavyweight studio suite.',
                     'colors' => ['#AF52DE', '#0071E3'],
+                    'tags' => ['Photo', 'Desktop', 'Design'],
                 ],
             ],
             'music' => [
@@ -188,6 +211,7 @@ class AppListingSeeder extends Seeder
                     'platform' => 'web',
                     'description' => 'Practice songs with interactive chords, tempo control, and a personal setlist library.',
                     'colors' => ['#FF2D55', '#1D1D1F'],
+                    'tags' => ['Music', 'Education', 'Web App'],
                 ],
             ],
             'shopping' => [
@@ -196,6 +220,7 @@ class AppListingSeeder extends Seeder
                     'platform' => 'mobile',
                     'description' => 'Track price drops, compare listings, and get alerts when wishlist items hit your target.',
                     'colors' => ['#34C759', '#0071E3'],
+                    'tags' => ['Shopping', 'Realtime', 'Mobile First'],
                 ],
             ],
             'news' => [
@@ -204,6 +229,7 @@ class AppListingSeeder extends Seeder
                     'platform' => 'web',
                     'description' => 'A calm morning brief with topics you choose — no endless scroll, just what matters today.',
                     'colors' => ['#1D1D1F', '#86868B'],
+                    'tags' => ['News', 'Web App', 'Free'],
                 ],
             ],
             'lifestyle' => [
@@ -212,6 +238,7 @@ class AppListingSeeder extends Seeder
                     'platform' => 'mobile',
                     'description' => 'Household routines, shared chores, and gentle reminders that keep home life running smoothly.',
                     'colors' => ['#FF9500', '#AF52DE'],
+                    'tags' => ['Collaboration', 'Mobile First', 'Automation'],
                 ],
             ],
             'graphics-design' => [
@@ -220,6 +247,7 @@ class AppListingSeeder extends Seeder
                     'platform' => 'web',
                     'description' => 'Lightweight vector drafting for icons, posters, and brand marks with export-ready SVG.',
                     'colors' => ['#5856D6', '#30B0C7'],
+                    'tags' => ['Design', 'Web App', 'Open Source'],
                 ],
             ],
             'developer-tools' => [
@@ -228,6 +256,7 @@ class AppListingSeeder extends Seeder
                     'platform' => 'desktop',
                     'description' => 'Inspect requests, mock endpoints, and keep environment secrets tidy while you ship APIs.',
                     'colors' => ['#1D1D1F', '#34C759'],
+                    'tags' => ['Developer', 'Desktop', 'Open Source'],
                 ],
             ],
             'weather' => [
@@ -236,6 +265,7 @@ class AppListingSeeder extends Seeder
                     'platform' => 'mobile',
                     'description' => 'Hyperlocal forecasts, precipitation timing, and severe weather alerts in a glanceable layout.',
                     'colors' => ['#64D2FF', '#0071E3'],
+                    'tags' => ['Weather', 'Realtime', 'Mobile First'],
                 ],
             ],
             'others' => [
@@ -244,6 +274,7 @@ class AppListingSeeder extends Seeder
                     'platform' => 'web',
                     'description' => 'A playful sandbox of micro-tools that do not fit elsewhere — experiments, gadgets, and one-offs.',
                     'colors' => ['#86868B', '#AF52DE'],
+                    'tags' => ['Open Source', 'Web App', 'Free'],
                 ],
             ],
         ];
@@ -265,6 +296,7 @@ class AppListingSeeder extends Seeder
                         'platform' => $appData['platform'] ?? 'mobile',
                         'author' => $existing->author ?: ($appData['author'] ?? $user->name),
                     ]);
+                    $this->syncAppTags($existing, $appData['tags'] ?? []);
                     continue;
                 }
 
@@ -275,7 +307,7 @@ class AppListingSeeder extends Seeder
                     $this->makeScreenshot($slug, 3, $appData['name'], $appData['colors'][0], 'Activity'),
                 ];
 
-                AppListing::query()->create([
+                $app = AppListing::query()->create([
                     'user_id' => $user->id,
                     'category_id' => $category->id,
                     'platform' => $appData['platform'] ?? 'mobile',
@@ -287,8 +319,23 @@ class AppListingSeeder extends Seeder
                     'images' => $screenshots,
                     'is_published' => true,
                 ]);
+
+                $this->syncAppTags($app, $appData['tags'] ?? []);
             }
         }
+    }
+
+    /**
+     * @param  list<string>  $tagNames
+     */
+    private function syncAppTags(AppListing $app, array $tagNames): void
+    {
+        if ($tagNames === []) {
+            return;
+        }
+
+        $tags = Tag::findOrCreateFromNames($tagNames);
+        $app->tags()->sync($tags->pluck('id'));
     }
 
     private function makeLogo(string $slug, string $name, string $from, string $to): string

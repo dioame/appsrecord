@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
@@ -55,6 +57,31 @@ class AppListing extends Model
     public function ratings(): HasMany
     {
         return $this->hasMany(AppRating::class);
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class)->orderBy('name');
+    }
+
+    /**
+     * @param  Builder<AppListing>  $query
+     * @param  list<string>  $slugs
+     * @return Builder<AppListing>
+     */
+    public function scopeWithTagSlugs(Builder $query, array $slugs): Builder
+    {
+        $slugs = array_values(array_filter($slugs));
+
+        if ($slugs === []) {
+            return $query;
+        }
+
+        foreach ($slugs as $slug) {
+            $query->whereHas('tags', fn (Builder $tags) => $tags->where('slug', $slug));
+        }
+
+        return $query;
     }
 
     public function averageRating(): float

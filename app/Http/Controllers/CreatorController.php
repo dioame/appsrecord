@@ -20,7 +20,7 @@ class CreatorController extends Controller
             ->firstOrFail();
 
         $apps = $creator->publishedApps()
-            ->with(['category', 'user'])
+            ->with(['category', 'user', 'tags'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
             ->latest()
@@ -93,7 +93,7 @@ class CreatorController extends Controller
 
         $app = $creator->publishedApps()
             ->where('slug', $appSlug)
-            ->with(['category', 'user'])
+            ->with(['category', 'user', 'tags'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
             ->firstOrFail();
@@ -103,6 +103,7 @@ class CreatorController extends Controller
         $related = $creator->publishedApps()
             ->where('id', '!=', $app->id)
             ->where('category_id', $app->category_id)
+            ->with('tags')
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
             ->latest()

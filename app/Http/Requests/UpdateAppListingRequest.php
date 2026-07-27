@@ -4,12 +4,14 @@ namespace App\Http\Requests;
 
 use App\Models\AppListing;
 use App\Support\NormalizesSubAuthors;
+use App\Support\NormalizesTags;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateAppListingRequest extends FormRequest
 {
     use NormalizesSubAuthors;
+    use NormalizesTags;
 
     public function authorize(): bool
     {
@@ -20,6 +22,7 @@ class UpdateAppListingRequest extends FormRequest
     {
         $this->merge([
             'sub_authors' => $this->normalizedSubAuthors(),
+            'tags' => $this->normalizedTags(),
         ]);
     }
 
@@ -39,6 +42,7 @@ class UpdateAppListingRequest extends FormRequest
             'remove_images.*' => ['string'],
             'is_published' => ['nullable', 'boolean'],
             ...$this->subAuthorRules(),
+            ...$this->tagRules(),
         ];
     }
 
@@ -47,6 +51,8 @@ class UpdateAppListingRequest extends FormRequest
         return [
             'images.max' => 'You can upload a maximum of 3 screenshots.',
             'sub_authors.max' => 'You can add up to 20 sub authors.',
+            'tags.max' => 'You can add up to 12 tags.',
+            'tags.*.max' => 'Each tag can be at most 40 characters.',
         ];
     }
 }

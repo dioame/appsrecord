@@ -83,6 +83,17 @@
         @include('partials.app-sub-authors', ['app' => $app])
     </div>
 
+    @if ($app->tags->isNotEmpty())
+        <section class="mt-6">
+            <h2 class="section-title">Tags</h2>
+            <div class="mt-2 flex flex-wrap gap-2">
+                @foreach ($app->tags as $tag)
+                    <x-tag-chip :tag="$tag" />
+                @endforeach
+            </div>
+        </section>
+    @endif
+
     <section
         class="mt-8"
         x-data="{
@@ -100,7 +111,7 @@
         @keydown.right.window="if (isOpen) next()"
     >
         @if (count($shots))
-            <div class="store-shelf !gap-5">
+            <x-shelf-scroller gap-class="!gap-5" :scroll-step="400">
                 @foreach (array_values($shots) as $index => $shot)
                     @include('partials.device-preview', [
                         'app' => $app,
@@ -109,7 +120,7 @@
                         'caption' => $captions[$index] ?? 'A closer look at '.$app->name.'.',
                     ])
                 @endforeach
-            </div>
+            </x-shelf-scroller>
 
             <div
                 x-show="isOpen"

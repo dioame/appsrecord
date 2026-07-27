@@ -72,6 +72,20 @@
         </section>
     @endif
 
+    @if (($popularTags ?? collect())->isNotEmpty())
+        <section class="mb-6 sm:mb-8">
+            <div class="mb-2 flex items-baseline justify-between gap-3">
+                <h2 class="section-title">Popular tags</h2>
+                <a href="{{ route('search') }}" class="see-all">Browse</a>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                @foreach ($popularTags as $tag)
+                    <x-tag-chip :tag="$tag" />
+                @endforeach
+            </div>
+        </section>
+    @endif
+
     <div id="apps" class="space-y-6 sm:space-y-8">
         @foreach ($categories as $category)
             @if ($category->publishedApps->isNotEmpty())
@@ -121,12 +135,14 @@
                         const el = this.$refs.shelf;
                         if (!el) return;
                         el.scrollBy({ left: dir * Math.min(320, el.clientWidth * 0.8), behavior: 'smooth' });
+                        this.$nextTick(() => this.update());
                     },
                 }"
                 x-init="
                     update();
                     $refs.shelf.addEventListener('scroll', () => update(), { passive: true });
                     new ResizeObserver(() => update()).observe($refs.shelf);
+                    requestAnimationFrame(() => update());
                 "
             >
                 <button

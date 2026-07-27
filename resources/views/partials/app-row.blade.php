@@ -21,6 +21,16 @@
                 {{ \Illuminate\Support\Str::limit($app->description, 48) }}
             @endif
         </p>
+        @if ($app->relationLoaded('tags') && $app->tags->isNotEmpty())
+            <div class="mt-1 flex flex-wrap gap-1">
+                @foreach ($app->tags->take(3) as $tag)
+                    <span class="inline-flex rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-medium text-[#6E6E73] ring-1 ring-[#D2D2D7]/80">{{ $tag->name }}</span>
+                @endforeach
+                @if ($app->tags->count() > 3)
+                    <span class="inline-flex rounded-full px-1.5 py-0.5 text-[10px] font-medium text-[#86868B]">+{{ $app->tags->count() - 3 }}</span>
+                @endif
+            </div>
+        @endif
         <div class="mt-1">
             <x-star-rating :rating="$app->averageRating()" :count="$app->ratingsCount()" />
         </div>
