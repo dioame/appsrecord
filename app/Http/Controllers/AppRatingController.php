@@ -13,7 +13,7 @@ class AppRatingController extends Controller
     {
         $app = AppListing::query()
             ->where('slug', $slug)
-            ->where('is_published', true)
+            ->publiclyVisible()
             ->firstOrFail();
 
         $validated = $request->validate([

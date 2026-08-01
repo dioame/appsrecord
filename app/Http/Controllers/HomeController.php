@@ -24,7 +24,7 @@ class HomeController extends Controller
             ->get();
 
         $featured = AppListing::query()
-            ->where('is_published', true)
+            ->publiclyVisible()
             ->with(['category', 'user', 'tags'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
@@ -32,7 +32,7 @@ class HomeController extends Controller
             ->take(6)
             ->get();
 
-        $totalApps = AppListing::query()->where('is_published', true)->count();
+        $totalApps = AppListing::query()->publiclyVisible()->count();
 
         $topAuthors = $this->topAuthors(12);
         $popularTags = $this->popularTags(16);
@@ -49,7 +49,7 @@ class HomeController extends Controller
     {
         $app = AppListing::query()
             ->where('slug', $slug)
-            ->where('is_published', true)
+            ->publiclyVisible()
             ->with(['category', 'user', 'tags'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
@@ -58,7 +58,7 @@ class HomeController extends Controller
         $userRating = $app->ratingFor(auth()->user());
 
         $related = AppListing::query()
-            ->where('is_published', true)
+            ->publiclyVisible()
             ->where('category_id', $app->category_id)
             ->where('id', '!=', $app->id)
             ->with('tags')
@@ -117,7 +117,7 @@ class HomeController extends Controller
         $hasFilters = $q !== '' || $author !== '' || $platform !== '' || $category !== null || $tagSlugs !== [];
 
         $apps = AppListing::query()
-            ->where('is_published', true)
+            ->publiclyVisible()
             ->with(['category', 'user', 'tags'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
@@ -169,7 +169,7 @@ class HomeController extends Controller
     private function popularTags(int $limit = 16): Collection
     {
         return Tag::query()
-            ->withCount(['appListings' => fn ($query) => $query->where('is_published', true)])
+            ->withCount(['appListings' => fn ($query) => $query->publiclyVisible()])
             ->having('app_listings_count', '>', 0)
             ->orderByDesc('app_listings_count')
             ->orderBy('name')
@@ -183,7 +183,7 @@ class HomeController extends Controller
     private function publishedAuthors(): Collection
     {
         return AppListing::query()
-            ->where('is_published', true)
+            ->publiclyVisible()
             ->with('user:id,name')
             ->get(['id', 'user_id', 'author'])
             ->map(fn (AppListing $app) => $app->authorName())
@@ -199,8 +199,8 @@ class HomeController extends Controller
     private function topAuthors(int $limit = 12): Collection
     {
         return AppListing::query()
-            ->where('is_published', true)
-            ->with('user:id,name,avatar,slug')
+            ->publiclyVisible()
+            ->with('user:id,name,avatar,slug,is_trusted,role')
             ->latest()
             ->get()
             ->groupBy(fn (AppListing $app) => $app->authorName())
@@ -218,7 +218,8 @@ class HomeController extends Controller
                     'slug' => $lead?->user?->slug,
                     'apps_count' => $apps->count(),
                     'logo' => $lead?->logoUrl(),
-                    'avatar' => $lead?->user?->avatar,
+                    'avatar' => $lead?->user?->avatarUrl(),
+                    'is_trusted' => (bool) ($lead?->user?->isTrusted()),
                     'initials' => $initials !== '' ? $initials : 'A',
                 ];
             })

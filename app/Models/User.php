@@ -8,12 +8,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    public const ROLE_USER = 'user';
+
+    public const ROLE_ADMIN = 'admin';
 
     /**
      * The attributes that are mass assignable.
@@ -56,10 +61,51 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_trusted' => 'boolean',
             'skills' => 'array',
             'experience' => 'array',
             'education' => 'array',
         ];
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isTrusted(): bool
+    {
+        return $this->is_trusted || $this->isAdmin();
+    }
+
+    public function canPublishWithoutApproval(): bool
+    {
+        return $this->isTrusted();
+    }
+
+    public function avatarUrl(): ?string
+    {
+        if (! filled($this->avatar)) {
+            return null;
+        }
+
+        if (preg_match('#^https?://#i', $this->avatar)) {
+            return $this->avatar;
+        }
+
+        return Storage::disk('public')->url($this->avatar);
+    }
+
+    public function hasStoredAvatar(): bool
+    {
+        return filled($this->avatar) && ! preg_match('#^https?://#i', $this->avatar);
+    }
+
+    public function deleteStoredAvatar(): void
+    {
+        if ($this->hasStoredAvatar()) {
+            Storage::disk('public')->delete($this->avatar);
+        }
     }
 
     protected static function booted(): void
@@ -145,7 +191,7 @@ class User extends Authenticatable
 
     public function publishedApps(): HasMany
     {
-        return $this->appListings()->where('is_published', true);
+        return $this->appListings()->publiclyVisible();
     }
 
     public function appListings(): HasMany

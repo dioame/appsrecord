@@ -22,7 +22,7 @@ class Tag extends Model
     public function publishedApps(): BelongsToMany
     {
         return $this->belongsToMany(AppListing::class)
-            ->where('is_published', true);
+            ->publiclyVisible();
     }
 
     /**

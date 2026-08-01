@@ -13,10 +13,28 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
         <input type="hidden" name="_section" value="profile">
+
+        <div>
+            <x-input-label for="avatar" :value="__('Profile photo')" />
+            <div class="mt-2 flex items-center gap-4">
+                <x-developer-avatar :user="$user" size="lg" class="!h-16 !w-16 !text-[16px]" />
+                <div class="min-w-0 flex-1">
+                    <input id="avatar" name="avatar" type="file" accept="image/*" class="block w-full text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-zinc-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-[#18181B] file:cursor-pointer">
+                    <p class="mt-1 text-sm text-gray-600">Shown on your apps as the developer photo. Max 2MB.</p>
+                    @if ($user->avatarUrl())
+                        <label class="mt-2 inline-flex items-center gap-2 text-sm text-gray-700">
+                            <input type="checkbox" name="remove_avatar" value="1" class="rounded border-gray-300 text-[#2563EB] focus:ring-[#2563EB]">
+                            Remove current photo
+                        </label>
+                    @endif
+                </div>
+            </div>
+            <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />

@@ -88,10 +88,17 @@
                     <x-input-error :messages="$errors->get('images.*')" class="mt-2" />
                 </div>
 
-                <div class="flex items-center gap-3">
+                <div class="flex items-start gap-3">
                     <input type="hidden" name="is_published" value="0">
-                    <input id="is_published" name="is_published" type="checkbox" value="1" class="h-4 w-4 rounded border-[#E4E4E7] text-[#2563EB] focus:ring-[#2563EB]" @checked(old('is_published', true))>
-                    <label for="is_published" class="text-sm text-[#18181B] cursor-pointer">Publish on landing page</label>
+                    <input id="is_published" name="is_published" type="checkbox" value="1" class="mt-0.5 h-4 w-4 rounded border-[#E4E4E7] text-[#2563EB] focus:ring-[#2563EB]" @checked(old('is_published', true))>
+                    <div>
+                        <label for="is_published" class="text-sm text-[#18181B] cursor-pointer">Publish on landing page</label>
+                        @if (auth()->user()->canPublishWithoutApproval())
+                            <p class="mt-1 text-xs text-[#71717A]">Trusted account — your app goes live immediately when published.</p>
+                        @else
+                            <p class="mt-1 text-xs text-[#71717A]">Publishing submits your app for admin approval before it appears on Apps.</p>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="flex flex-wrap gap-3 border-t border-[#E4E4E7] pt-6">

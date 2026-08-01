@@ -45,6 +45,18 @@ class ProfileController extends Controller
 
         $user->fill($validated);
 
+        if ($section === 'profile') {
+            if ($request->boolean('remove_avatar') && ! $request->hasFile('avatar')) {
+                $user->deleteStoredAvatar();
+                $user->avatar = null;
+            }
+
+            if ($request->hasFile('avatar')) {
+                $user->deleteStoredAvatar();
+                $user->avatar = $request->file('avatar')->store('avatars', 'public');
+            }
+        }
+
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }

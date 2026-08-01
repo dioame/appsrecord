@@ -21,6 +21,6 @@ class Category extends Model
 
     public function publishedApps(): HasMany
     {
-        return $this->hasMany(AppListing::class)->where('is_published', true);
+        return $this->hasMany(AppListing::class)->publiclyVisible();
     }
 }

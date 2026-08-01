@@ -30,6 +30,8 @@ class AppListingController extends Controller
     {
         $data = $request->validated();
         $slug = $this->uniqueSlug($data['name']);
+        $wantsPublish = $request->boolean('is_published');
+        $approvalStatus = AppListing::approvalFor($request->user(), $wantsPublish);
 
         $logoPath = $request->file('logo')->store('apps/logos', 'public');
 
@@ -52,7 +54,8 @@ class AppListingController extends Controller
             'link' => $data['link'] ?? null,
             'logo' => $logoPath,
             'images' => $imagePaths,
-            'is_published' => $request->boolean('is_published'),
+            'is_published' => $wantsPublish,
+            'approval_status' => $approvalStatus,
         ]);
 
         $tags = Tag::findOrCreateFromNames($data['tags'] ?? []);
@@ -60,7 +63,7 @@ class AppListingController extends Controller
 
         return redirect()
             ->route('dashboard')
-            ->with('status', 'App published successfully.');
+            ->with('status', $this->storeStatusMessage($wantsPublish, $approvalStatus));
     }
 
     public function show(AppListing $app): RedirectResponse
@@ -83,6 +86,8 @@ class AppListingController extends Controller
         $this->authorizeOwner($app);
 
         $data = $request->validated();
+        $wantsPublish = $request->boolean('is_published');
+        $approvalStatus = AppListing::approvalFor($request->user(), $wantsPublish);
 
         if ($app->name !== $data['name']) {
             $app->slug = $this->uniqueSlug($data['name'], $app->id);
@@ -95,7 +100,8 @@ class AppListingController extends Controller
         $app->sub_authors = $data['sub_authors'] ?? [];
         $app->description = $data['description'];
         $app->link = $data['link'] ?? null;
-        $app->is_published = $request->boolean('is_published');
+        $app->is_published = $wantsPublish;
+        $app->approval_status = $approvalStatus;
 
         if ($request->hasFile('logo')) {
             if ($app->logo) {
@@ -130,7 +136,7 @@ class AppListingController extends Controller
 
         return redirect()
             ->route('dashboard')
-            ->with('status', 'App updated successfully.');
+            ->with('status', $this->storeStatusMessage($wantsPublish, $approvalStatus, updated: true));
     }
 
     public function destroy(AppListing $app): RedirectResponse
@@ -143,6 +149,21 @@ class AppListingController extends Controller
         return redirect()
             ->route('dashboard')
             ->with('status', 'App deleted successfully.');
+    }
+
+    private function storeStatusMessage(bool $wantsPublish, string $approvalStatus, bool $updated = false): string
+    {
+        $verb = $updated ? 'updated' : 'saved';
+
+        if (! $wantsPublish) {
+            return "App {$verb} as a draft.";
+        }
+
+        if ($approvalStatus === AppListing::APPROVAL_PENDING) {
+            return "App {$verb} and submitted for approval. It will appear on Apps once an admin approves it.";
+        }
+
+        return $updated ? 'App updated successfully.' : 'App published successfully.';
     }
 
     private function authorizeOwner(AppListing $app): void

@@ -57,7 +57,9 @@ class CvTemplates
     public static function media(User $creator, Collection $apps): array
     {
         return [
-            'avatar' => PdfImage::fromUrl($creator->avatar, 320),
+            'avatar' => filled($creator->avatar) && preg_match('#^https?://#i', $creator->avatar)
+                ? PdfImage::fromUrl($creator->avatar, 320)
+                : PdfImage::fromPublicDisk($creator->hasStoredAvatar() ? $creator->avatar : null, 320),
         ];
     }
 }

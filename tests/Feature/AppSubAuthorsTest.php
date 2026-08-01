@@ -71,6 +71,7 @@ class AppSubAuthorsTest extends TestCase
             'slug' => 'team-app',
             'description' => 'Built with collaborators.',
             'is_published' => true,
+            'approval_status' => AppListing::APPROVAL_APPROVED,
         ]);
 
         $this->get(route('apps.public', $app->slug))

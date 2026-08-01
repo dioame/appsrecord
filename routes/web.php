@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AppApprovalController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AppListingController;
 use App\Http\Controllers\AppRatingController;
 use App\Http\Controllers\CreatorController;
@@ -32,6 +34,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::patch('/users/{user}/trusted', [AdminUserController::class, 'toggleTrusted'])->name('users.trusted');
+
+    Route::get('/apps', [AppApprovalController::class, 'index'])->name('apps.index');
+    Route::patch('/apps/{app}/approve', [AppApprovalController::class, 'approve'])->name('apps.approve');
+    Route::patch('/apps/{app}/reject', [AppApprovalController::class, 'reject'])->name('apps.reject');
 });
 
 require __DIR__.'/auth.php';

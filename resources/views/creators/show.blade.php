@@ -15,15 +15,18 @@
 >
     <header class="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-center sm:gap-5">
         <div class="author-avatar !h-16 !w-16 !text-[18px] sm:!h-20 sm:!w-20 sm:!text-[20px]">
-            @if ($creator->avatar)
-                <img src="{{ $creator->avatar }}" alt="" class="h-full w-full object-cover">
+            @if ($creator->avatarUrl())
+                <img src="{{ $creator->avatarUrl() }}" alt="" class="h-full w-full object-cover">
             @else
                 <span>{{ $creator->initials() }}</span>
             @endif
         </div>
         <div class="min-w-0 flex-1">
             <p class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#86868B]">Creator portfolio</p>
-            <h1 class="mt-1 font-display text-[28px] font-bold tracking-tight text-[#1D1D1F] sm:text-[34px]">{{ $creator->name }}</h1>
+            <div class="mt-1 flex flex-wrap items-center gap-2">
+                <h1 class="font-display text-[28px] font-bold tracking-tight text-[#1D1D1F] sm:text-[34px]">{{ $creator->name }}</h1>
+                <x-trusted-badge :user="$creator" class="!text-[11px]" />
+            </div>
             @if ($creator->headline)
                 <p class="mt-1 text-[15px] font-medium text-[#1D1D1F] sm:text-[16px]">{{ $creator->headline }}</p>
             @endif
@@ -91,8 +94,8 @@
             <div class="flex items-start justify-between gap-3 border-b border-[#E8E8ED] px-5 py-4">
                 <div class="flex min-w-0 items-center gap-3">
                     <div class="author-avatar !h-12 !w-12 !text-[14px]">
-                        @if ($creator->avatar)
-                            <img src="{{ $creator->avatar }}" alt="" class="h-full w-full object-cover">
+                        @if ($creator->avatarUrl())
+                            <img src="{{ $creator->avatarUrl() }}" alt="" class="h-full w-full object-cover">
                         @else
                             <span>{{ $creator->initials() }}</span>
                         @endif

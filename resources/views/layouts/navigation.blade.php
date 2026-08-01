@@ -6,10 +6,14 @@
                 <span class="font-display text-[17px] font-semibold tracking-tight">AppsRecord</span>
             </a>
 
-            <div class="hidden items-center gap-0.5 sm:flex">
+                <div class="hidden items-center gap-0.5 sm:flex">
                 <a href="{{ route('home') }}" class="btn-ghost">Apps</a>
                 <a href="{{ route('dashboard') }}" class="btn-ghost {{ request()->routeIs('dashboard') ? 'bg-black/5' : '' }}">Library</a>
                 <a href="{{ route('my-apps.create') }}" class="btn-ghost {{ request()->routeIs('my-apps.*') ? 'bg-black/5' : '' }}">Submit</a>
+                @if (Auth::user()->isAdmin())
+                    <a href="{{ route('admin.users.index') }}" class="btn-ghost {{ request()->routeIs('admin.users.*') ? 'bg-black/5' : '' }}">Users</a>
+                    <a href="{{ route('admin.apps.index') }}" class="btn-ghost {{ request()->routeIs('admin.apps.*') ? 'bg-black/5' : '' }}">Approvals</a>
+                @endif
             </div>
         </div>
 
@@ -31,6 +35,10 @@
                     <div class="py-1">
                         <x-dropdown-link :href="route('dashboard')">Library</x-dropdown-link>
                         <x-dropdown-link :href="route('profile.edit')">Profile</x-dropdown-link>
+                        @if (Auth::user()->isAdmin())
+                            <x-dropdown-link :href="route('admin.users.index')">Users</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.apps.index')">Pending apps</x-dropdown-link>
+                        @endif
                         @if (Auth::user()->slug)
                             <x-dropdown-link :href="route('creators.show', Auth::user()->slug)" target="_blank">Public portfolio & CV</x-dropdown-link>
                         @endif
@@ -60,6 +68,10 @@
             <a href="{{ route('home') }}" class="btn-ghost justify-start w-full">Apps</a>
             <a href="{{ route('dashboard') }}" class="btn-ghost justify-start w-full">Library</a>
             <a href="{{ route('my-apps.create') }}" class="btn-ghost justify-start w-full">Submit</a>
+            @if (Auth::user()->isAdmin())
+                <a href="{{ route('admin.users.index') }}" class="btn-ghost justify-start w-full">Users</a>
+                <a href="{{ route('admin.apps.index') }}" class="btn-ghost justify-start w-full">Pending apps</a>
+            @endif
             <a href="{{ route('profile.edit') }}" class="btn-ghost justify-start w-full">Profile</a>
             @if (Auth::user()->slug)
                 <a href="{{ route('creators.show', Auth::user()->slug) }}" target="_blank" class="btn-ghost justify-start w-full">Public portfolio & CV</a>

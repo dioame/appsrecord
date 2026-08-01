@@ -24,6 +24,7 @@ class AppListing extends Model
         'logo',
         'images',
         'is_published',
+        'approval_status',
     ];
 
     public const PLATFORMS = ['mobile', 'web', 'desktop', 'others'];
@@ -35,6 +36,12 @@ class AppListing extends Model
         'others' => 'Others',
     ];
 
+    public const APPROVAL_PENDING = 'pending';
+
+    public const APPROVAL_APPROVED = 'approved';
+
+    public const APPROVAL_REJECTED = 'rejected';
+
     protected function casts(): array
     {
         return [
@@ -42,6 +49,68 @@ class AppListing extends Model
             'sub_authors' => 'array',
             'is_published' => 'boolean',
         ];
+    }
+
+    /**
+     * @param  Builder<AppListing>  $query
+     * @return Builder<AppListing>
+     */
+    public function scopePubliclyVisible(Builder $query): Builder
+    {
+        return $query
+            ->where('is_published', true)
+            ->where('approval_status', self::APPROVAL_APPROVED);
+    }
+
+    /**
+     * @param  Builder<AppListing>  $query
+     * @return Builder<AppListing>
+     */
+    public function scopePendingApproval(Builder $query): Builder
+    {
+        return $query
+            ->where('is_published', true)
+            ->where('approval_status', self::APPROVAL_PENDING);
+    }
+
+    public function isPendingApproval(): bool
+    {
+        return $this->is_published && $this->approval_status === self::APPROVAL_PENDING;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->approval_status === self::APPROVAL_APPROVED;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->approval_status === self::APPROVAL_REJECTED;
+    }
+
+    public function isLive(): bool
+    {
+        return $this->is_published && $this->isApproved();
+    }
+
+    public function approvalLabel(): string
+    {
+        return match ($this->approval_status) {
+            self::APPROVAL_PENDING => 'Pending approval',
+            self::APPROVAL_REJECTED => 'Rejected',
+            default => 'Approved',
+        };
+    }
+
+    public static function approvalFor(User $user, bool $wantsPublish): string
+    {
+        if (! $wantsPublish) {
+            return self::APPROVAL_APPROVED;
+        }
+
+        return $user->canPublishWithoutApproval()
+            ? self::APPROVAL_APPROVED
+            : self::APPROVAL_PENDING;
     }
 
     public function user(): BelongsTo

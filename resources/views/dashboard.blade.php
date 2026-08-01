@@ -68,7 +68,10 @@
                             {{ $apps->count() }} {{ \Illuminate\Support\Str::plural('app', $apps->count()) }}
                         </h3>
                         <p class="text-[12px] text-[#86868B]">
-                            {{ $apps->where('is_published', true)->count() }} published
+                            {{ $apps->filter->isLive()->count() }} published
+                            @if ($apps->filter->isPendingApproval()->count() > 0)
+                                · {{ $apps->filter->isPendingApproval()->count() }} pending
+                            @endif
                         </p>
                     </div>
 
@@ -90,8 +93,12 @@
                                         <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
                                             <p class="truncate text-[15px] font-medium text-[#1D1D1F]">{{ $app->name }}</p>
                                             <x-platform-badge :platform="$app->platform" />
-                                            @if ($app->is_published)
+                                            @if ($app->isLive())
                                                 <span class="inline-flex items-center rounded-full bg-[#E8F8EE] px-2 py-0.5 text-[11px] font-semibold text-[#248A3D]">Published</span>
+                                            @elseif ($app->isPendingApproval())
+                                                <span class="inline-flex items-center rounded-full bg-[#FFF4E5] px-2 py-0.5 text-[11px] font-semibold text-[#C93400]">Pending approval</span>
+                                            @elseif ($app->isRejected())
+                                                <span class="inline-flex items-center rounded-full bg-[#FFF2F1] px-2 py-0.5 text-[11px] font-semibold text-[#FF3B30]">Rejected</span>
                                             @else
                                                 <span class="inline-flex items-center rounded-full bg-[#FFF4E5] px-2 py-0.5 text-[11px] font-semibold text-[#C93400]">Draft</span>
                                             @endif
@@ -105,7 +112,7 @@
                                     </div>
 
                                     <div class="hidden shrink-0 items-center gap-1 sm:flex">
-                                        @if ($app->is_published)
+                                        @if ($app->isLive())
                                             <a href="{{ route('apps.public', $app->slug) }}" class="rounded-full px-3 py-1.5 text-[13px] font-medium text-[#0071E3] hover:bg-[#F5F5F7]" target="_blank" rel="noopener">View</a>
                                         @endif
                                         <a href="{{ route('my-apps.edit', $app) }}" class="rounded-full px-3 py-1.5 text-[13px] font-medium text-[#1D1D1F] hover:bg-[#F5F5F7]">Edit</a>
@@ -119,7 +126,7 @@
 
                                 {{-- Mobile actions --}}
                                 <div class="mt-3 flex gap-2 sm:hidden">
-                                    @if ($app->is_published)
+                                    @if ($app->isLive())
                                         <a href="{{ route('apps.public', $app->slug) }}" class="flex-1 rounded-xl bg-[#F5F5F7] py-2 text-center text-[13px] font-semibold text-[#0071E3]" target="_blank" rel="noopener">View</a>
                                     @endif
                                     <a href="{{ route('my-apps.edit', $app) }}" class="flex-1 rounded-xl bg-[#F5F5F7] py-2 text-center text-[13px] font-semibold text-[#1D1D1F]">Edit</a>
