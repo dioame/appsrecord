@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AppListing;
 use App\Models\Category;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -194,37 +195,23 @@ class HomeController extends Controller
     }
 
     /**
-     * @return Collection<int, object{name: string, apps_count: int, logo: ?string, initials: string}>
+     * @return Collection<int, object{name: string, slug: ?string, apps_count: int, avatar: ?string, is_trusted: bool, initials: string}>
      */
     private function topAuthors(int $limit = 12): Collection
     {
-        return AppListing::query()
-            ->publiclyVisible()
-            ->with('user:id,name,avatar,slug,is_trusted,role')
-            ->latest()
-            ->get()
-            ->groupBy(fn (AppListing $app) => $app->authorName())
-            ->map(function (Collection $apps, string $name) {
-                $lead = $apps->first(fn (AppListing $app) => $app->logoUrl()) ?? $apps->first();
-                $words = preg_split('/\s+/', trim($name)) ?: [];
-                $initials = collect($words)
-                    ->filter()
-                    ->take(2)
-                    ->map(fn (string $word) => mb_strtoupper(mb_substr($word, 0, 1)))
-                    ->implode('');
-
-                return (object) [
-                    'name' => $name,
-                    'slug' => $lead?->user?->slug,
-                    'apps_count' => $apps->count(),
-                    'logo' => $lead?->logoUrl(),
-                    'avatar' => $lead?->user?->avatarUrl(),
-                    'is_trusted' => (bool) ($lead?->user?->isTrusted()),
-                    'initials' => $initials !== '' ? $initials : 'A',
-                ];
-            })
-            ->sortByDesc('apps_count')
+        return User::query()
+            ->withCount(['appListings as apps_count' => fn ($query) => $query->publiclyVisible()])
+            ->orderByDesc('apps_count')
+            ->orderBy('name')
             ->take($limit)
-            ->values();
+            ->get()
+            ->map(fn (User $user) => (object) [
+                'name' => $user->name,
+                'slug' => $user->slug,
+                'apps_count' => (int) $user->apps_count,
+                'avatar' => $user->avatarUrl(),
+                'is_trusted' => $user->isTrusted(),
+                'initials' => $user->initials(),
+            ]);
     }
 }

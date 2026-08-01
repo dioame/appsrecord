@@ -55,22 +55,26 @@
                         href="{{ $topAuthor->slug ? route('creators.show', $topAuthor->slug) : route('search', ['author' => $topAuthor->name]) }}"
                         class="author-chip group"
                     >
-                        <div class="relative">
-                            <div class="author-avatar">
+                        <div class="relative shrink-0">
+                            <div class="author-avatar !h-10 !w-10 !text-[12px]">
                                 @if ($topAuthor->avatar)
                                     <img src="{{ $topAuthor->avatar }}" alt="" class="h-full w-full object-cover">
-                                @elseif ($topAuthor->logo)
-                                    <img src="{{ $topAuthor->logo }}" alt="" class="h-full w-full object-cover">
                                 @else
                                     <span>{{ $topAuthor->initials }}</span>
                                 @endif
                             </div>
                             @if ($topAuthor->is_trusted)
-                                <x-trusted-check class="absolute bottom-0 right-0" />
+                                <x-trusted-check size="sm" class="absolute bottom-0 right-0" />
                             @endif
                         </div>
-                        <p class="mt-1.5 w-full truncate text-center text-[12px] font-medium text-[#1D1D1F] group-hover:text-[#0071E3]">{{ $topAuthor->name }}</p>
-                        <p class="text-[10px] text-[#86868B]">{{ $topAuthor->apps_count }} {{ \Illuminate\Support\Str::plural('app', $topAuthor->apps_count) }}</p>
+                        <div class="min-w-0 flex-1">
+                            <p class="truncate text-[13px] font-medium leading-tight text-[#1D1D1F] group-hover:text-[#0071E3]">{{ $topAuthor->name }}</p>
+                            @if ($topAuthor->apps_count > 0)
+                                <p class="mt-0.5 truncate text-[11px] leading-tight text-[#86868B]">
+                                    {{ $topAuthor->apps_count }} {{ \Illuminate\Support\Str::plural('app', $topAuthor->apps_count) }}
+                                </p>
+                            @endif
+                        </div>
                     </a>
                 @endforeach
             </div>

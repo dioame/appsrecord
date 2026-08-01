@@ -221,7 +221,7 @@
     }
 
     .author-chip {
-        @apply flex w-[68px] shrink-0 cursor-pointer flex-col items-center text-center transition-opacity duration-150 hover:opacity-80;
+        @apply flex w-[min(200px,72vw)] shrink-0 cursor-pointer items-center gap-2.5 rounded-2xl bg-[#F5F5F7] px-2.5 py-2 text-left transition-opacity duration-150 hover:opacity-80;
     }
 
     .author-avatar {
