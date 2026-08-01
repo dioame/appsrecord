@@ -170,7 +170,7 @@ class HomeController extends Controller
     {
         return Tag::query()
             ->withCount(['appListings' => fn ($query) => $query->publiclyVisible()])
-            ->having('app_listings_count', '>', 0)
+            ->whereHas('appListings', fn ($query) => $query->publiclyVisible())
             ->orderByDesc('app_listings_count')
             ->orderBy('name')
             ->take($limit)

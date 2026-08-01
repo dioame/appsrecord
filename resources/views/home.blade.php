@@ -55,18 +55,18 @@
                         href="{{ $topAuthor->slug ? route('creators.show', $topAuthor->slug) : route('search', ['author' => $topAuthor->name]) }}"
                         class="author-chip group"
                     >
-                        <div class="author-avatar relative">
-                            @if ($topAuthor->avatar)
-                                <img src="{{ $topAuthor->avatar }}" alt="" class="h-full w-full object-cover">
-                            @elseif ($topAuthor->logo)
-                                <img src="{{ $topAuthor->logo }}" alt="" class="h-full w-full object-cover">
-                            @else
-                                <span>{{ $topAuthor->initials }}</span>
-                            @endif
+                        <div class="relative">
+                            <div class="author-avatar">
+                                @if ($topAuthor->avatar)
+                                    <img src="{{ $topAuthor->avatar }}" alt="" class="h-full w-full object-cover">
+                                @elseif ($topAuthor->logo)
+                                    <img src="{{ $topAuthor->logo }}" alt="" class="h-full w-full object-cover">
+                                @else
+                                    <span>{{ $topAuthor->initials }}</span>
+                                @endif
+                            </div>
                             @if ($topAuthor->is_trusted)
-                                <span class="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#0071E3] text-white ring-2 ring-white" title="Trusted">
-                                    <svg class="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                                </span>
+                                <x-trusted-check class="absolute bottom-0 right-0" />
                             @endif
                         </div>
                         <p class="mt-1.5 w-full truncate text-center text-[12px] font-medium text-[#1D1D1F] group-hover:text-[#0071E3]">{{ $topAuthor->name }}</p>
