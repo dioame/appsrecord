@@ -17,7 +17,6 @@ class CreatorController extends Controller
     {
         $creators = User::query()
             ->withCount(['appListings as apps_count' => fn ($query) => $query->publiclyVisible()])
-            ->whereHas('appListings', fn ($query) => $query->publiclyVisible())
             ->orderByDesc('apps_count')
             ->orderBy('name')
             ->get();

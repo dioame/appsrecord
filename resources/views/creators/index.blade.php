@@ -7,7 +7,7 @@
     <header class="mb-5 sm:mb-6">
         <h1 class="font-display text-[28px] font-bold tracking-tight text-[#1D1D1F] sm:text-[34px]">Authors</h1>
         <p class="mt-2 text-[13px] text-[#86868B] sm:text-[15px]">
-            {{ $creators->count() }} {{ \Illuminate\Support\Str::plural('author', $creators->count()) }} with published apps.
+            {{ $creators->count() }} {{ \Illuminate\Support\Str::plural('author', $creators->count()) }}.
         </p>
     </header>
 
@@ -37,7 +37,11 @@
                     <div class="min-w-0 flex-1">
                         <p class="truncate text-[14px] font-medium leading-tight text-[#1D1D1F] group-hover:text-[#0071E3]">{{ $creator->name }}</p>
                         <p class="mt-0.5 truncate text-[12px] leading-tight text-[#86868B]">
-                            {{ $creator->apps_count }} {{ \Illuminate\Support\Str::plural('app', $creator->apps_count) }}
+                            @if ($creator->apps_count > 0)
+                                {{ $creator->apps_count }} {{ \Illuminate\Support\Str::plural('app', $creator->apps_count) }}
+                            @else
+                                No published apps
+                            @endif
                         </p>
                     </div>
                 </a>
