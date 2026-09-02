@@ -47,7 +47,7 @@
         <section class="mb-8">
             <div class="mb-2 flex items-baseline justify-between gap-3">
                 <h2 class="text-[17px] font-semibold tracking-tight text-[#1D1D1F]">Top Authors</h2>
-                <a href="{{ route('search') }}" class="see-all !text-[13px]">Browse</a>
+                <a href="{{ route('creators.index') }}" class="see-all !text-[13px]">Browse</a>
             </div>
             <div class="store-shelf !gap-3 !pb-1">
                 @foreach ($topAuthors as $topAuthor)

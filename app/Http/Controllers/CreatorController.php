@@ -13,6 +13,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CreatorController extends Controller
 {
+    public function index(): View
+    {
+        $creators = User::query()
+            ->withCount(['appListings as apps_count' => fn ($query) => $query->publiclyVisible()])
+            ->whereHas('appListings', fn ($query) => $query->publiclyVisible())
+            ->orderByDesc('apps_count')
+            ->orderBy('name')
+            ->get();
+
+        return view('creators.index', compact('creators'));
+    }
+
     public function show(string $slug): View
     {
         $creator = User::query()
