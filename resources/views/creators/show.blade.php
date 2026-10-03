@@ -14,9 +14,16 @@
     @keydown.escape.window="aboutOpen = false"
 >
     <header class="portfolio-hero mb-8 sm:mb-10">
-        <div class="portfolio-hero-banner" aria-hidden="true"></div>
-        <div class="relative px-5 pb-6 sm:px-8 sm:pb-8">
-            <div class="-mt-12 flex flex-col gap-4 sm:-mt-14 sm:flex-row sm:items-end sm:justify-between">
+        <div class="mac-titlebar">
+            <div class="flex items-center gap-2" aria-hidden="true">
+                <span class="mac-dot bg-[#FF5F57]"></span>
+                <span class="mac-dot bg-[#FEBC2E]"></span>
+                <span class="mac-dot bg-[#28C840]"></span>
+            </div>
+            <p class="absolute inset-x-0 text-center text-[12px] font-medium text-[#6E6E73]">{{ $creator->name }} — Portfolio</p>
+        </div>
+        <div class="relative px-5 py-6 sm:px-8 sm:py-8">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div class="author-avatar portfolio-avatar !h-24 !w-24 !text-[26px] sm:!h-28 sm:!w-28 sm:!text-[30px]">
                     @if ($creator->avatarUrl())
                         <img src="{{ $creator->avatarUrl() }}" alt="{{ $creator->name }}" class="h-full w-full object-cover">
@@ -207,7 +214,7 @@
                 @foreach ($categories as $category)
                     <section id="cat-{{ $category->slug ?? 'apps' }}">
                         <div class="mb-4 flex items-center justify-between gap-3">
-                            <h2 class="section-title">{{ $category->name }}</h2>
+                            <h2 class="mac-section-title">{{ $category->name }}</h2>
                             <span class="rounded-full bg-white px-2.5 py-0.5 text-[12px] font-semibold tabular-nums text-[#86868B] ring-1 ring-black/5">{{ $category->apps->count() }}</span>
                         </div>
                         <div class="grid gap-3 sm:grid-cols-2 sm:gap-4">
@@ -246,7 +253,7 @@
 
     @if ($hasCv)
         <div x-show="tab === 'cv'" x-cloak class="space-y-6">
-            <section class="rounded-2xl bg-white px-5 py-6 sm:px-6">
+            <section class="mac-panel">
                 <div class="flex flex-wrap items-start justify-between gap-3">
                     <div class="min-w-0">
                         <p class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#86868B]">Curriculum vitae</p>
@@ -280,26 +287,27 @@
             </section>
 
             @if (count($creator->skillList()) > 0)
-                <section class="rounded-2xl bg-white px-5 py-6 sm:px-6">
+                <section class="mac-panel">
                     <h3 class="section-title">Skills</h3>
                     <div class="mt-3 flex flex-wrap gap-2">
                         @foreach ($creator->skillList() as $skill)
-                            <span class="rounded-full bg-[#F5F5F7] px-3 py-1.5 text-[13px] font-medium text-[#1D1D1F]">{{ $skill }}</span>
+                            <span class="mac-pill">{{ $skill }}</span>
                         @endforeach
                     </div>
                 </section>
             @endif
 
             @if (count($creator->experienceEntries()) > 0)
-                <section class="rounded-2xl bg-white px-5 py-6 sm:px-6">
+                <section class="mac-panel">
                     <h3 class="section-title">Experience</h3>
-                    <ul class="mt-4 space-y-5">
+                    <ul class="mt-5 space-y-6 border-l border-[#E5E5EA] pl-5">
                         @foreach ($creator->experienceEntries() as $job)
-                            <li class="border-b border-[#F0F0F2] pb-5 last:border-0 last:pb-0">
+                            <li class="relative">
+                                <span class="absolute -left-[26px] top-1.5 h-2.5 w-2.5 rounded-full bg-[#0071E3] ring-4 ring-white"></span>
                                 <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
                                     <h4 class="text-[15px] font-semibold text-[#1D1D1F]">{{ $job['title'] ?? 'Role' }}</h4>
                                     @if (! empty($job['period']))
-                                        <span class="text-[12px] text-[#86868B]">{{ $job['period'] }}</span>
+                                        <span class="rounded-md bg-[#F5F5F7] px-2 py-0.5 text-[12px] font-medium text-[#6E6E73]">{{ $job['period'] }}</span>
                                     @endif
                                 </div>
                                 @if (! empty($job['company']))
@@ -315,15 +323,16 @@
             @endif
 
             @if (count($creator->educationEntries()) > 0)
-                <section class="rounded-2xl bg-white px-5 py-6 sm:px-6">
+                <section class="mac-panel">
                     <h3 class="section-title">Education</h3>
-                    <ul class="mt-4 space-y-5">
+                    <ul class="mt-5 space-y-6 border-l border-[#E5E5EA] pl-5">
                         @foreach ($creator->educationEntries() as $item)
-                            <li class="border-b border-[#F0F0F2] pb-5 last:border-0 last:pb-0">
+                            <li class="relative">
+                                <span class="absolute -left-[26px] top-1.5 h-2.5 w-2.5 rounded-full bg-[#34C759] ring-4 ring-white"></span>
                                 <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
                                     <h4 class="text-[15px] font-semibold text-[#1D1D1F]">{{ $item['school'] ?? 'School' }}</h4>
                                     @if (! empty($item['period']))
-                                        <span class="text-[12px] text-[#86868B]">{{ $item['period'] }}</span>
+                                        <span class="rounded-md bg-[#F5F5F7] px-2 py-0.5 text-[12px] font-medium text-[#6E6E73]">{{ $item['period'] }}</span>
                                     @endif
                                 </div>
                                 @if (! empty($item['degree']))
