@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="{{ asset('images/arlogo.jpg') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-body antialiased text-[#1D1D1F] bg-[#F3F2EF]">
+<body class="font-body antialiased text-[#1D1D1F] bg-[#F2F2F7]">
     <main class="min-h-screen">
         @yield('content')
     </main>

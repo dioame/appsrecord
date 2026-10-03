@@ -4,20 +4,20 @@
 @endphp
 <style>
     .cv-classic { font-family: DejaVu Sans, Helvetica, Arial, sans-serif; color: #09090B; font-size: 11px; line-height: 1.45; }
-    .cv-classic .hero { width: 100%; margin-bottom: 14px; border-bottom: 2px solid #18181B; padding-bottom: 12px; }
+    .cv-classic .hero { width: 100%; margin-bottom: 16px; border-bottom: 3px solid #1E3A5F; padding-bottom: 14px; }
     .cv-classic .hero td { vertical-align: middle; }
     .cv-classic .photo { width: 78px; height: 78px; border-radius: 39px; }
     .cv-classic .photo-fallback { width: 78px; height: 78px; border-radius: 39px; background: #E4E4E7; text-align: center; line-height: 78px; font-size: 22px; font-weight: bold; color: #18181B; }
-    .cv-classic h1 { font-size: 24px; margin: 0 0 4px; font-weight: bold; color: #18181B; }
-    .cv-classic .headline { font-size: 13px; margin: 0 0 4px; color: #3F3F46; }
+    .cv-classic h1 { font-size: 26px; margin: 0 0 4px; font-weight: bold; color: #0F172A; letter-spacing: -0.01em; }
+    .cv-classic .headline { font-size: 13px; margin: 0 0 5px; color: #334155; font-weight: bold; }
     .cv-classic .meta { font-size: 10px; color: #71717A; margin: 0; }
     .cv-classic .bio { margin: 0 0 12px; }
-    .cv-classic h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #2563EB; border-bottom: 1px solid #E4E4E7; padding-bottom: 4px; margin: 16px 0 8px; }
-    .cv-classic .skill { display: inline-block; background: #F4F4F5; padding: 3px 8px; margin: 0 4px 5px 0; border-radius: 10px; font-size: 10px; }
+    .cv-classic h2 { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.14em; color: #1E3A5F; border-bottom: 1px solid #CBD5E1; padding-bottom: 5px; margin: 20px 0 10px; }
+    .cv-classic .skill { display: inline-block; background: #F1F5F9; border: 1px solid #E2E8F0; padding: 3px 9px; margin: 0 4px 5px 0; border-radius: 4px; font-size: 10px; color: #0F172A; }
     .cv-classic .entry { margin-bottom: 10px; }
     .cv-classic .entry-title { font-weight: bold; font-size: 12px; }
     .cv-classic .entry-period { float: right; color: #71717A; font-size: 10px; }
-    .cv-classic .entry-sub { color: #52525B; font-size: 10px; margin: 2px 0 3px; clear: both; }
+    .cv-classic .entry-sub { color: #1E3A5F; font-size: 10.5px; font-weight: bold; margin: 2px 0 3px; clear: both; }
     .cv-classic .app { margin-bottom: 10px; page-break-inside: avoid; border-bottom: 1px solid #E4E4E7; padding-bottom: 8px; }
     .cv-classic .app-name { font-size: 12px; font-weight: bold; margin: 0 0 2px; }
     .cv-classic .app-meta { font-size: 9px; color: #71717A; margin: 0 0 3px; }
@@ -100,5 +100,5 @@
         @endforeach
     @endif
 
-    <div class="footer">Generated from {{ $creator->publicUrl() }} · Classic template</div>
+    <div class="footer">{{ $creator->publicUrl() }} · Classic template</div>
 </div>

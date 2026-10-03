@@ -7,10 +7,10 @@
 @php
     $templates = \App\Support\CvTemplates::all();
 @endphp
-<div class="mx-auto w-full max-w-[1100px] px-4 py-6 sm:px-6 sm:py-8" x-data="{ printing: false }">
+<div class="mx-auto w-full max-w-[1100px] px-4 py-6 print:max-w-none print:p-0 sm:px-6 sm:py-8" x-data="{ printing: false }">
     <div class="mb-5 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <div>
-            <a href="{{ route('creators.show', ['slug' => $creator->slug, 'tab' => 'cv']) }}" class="mb-2 inline-flex items-center gap-1.5 text-[13px] font-medium text-[#0071E3] hover:opacity-70">
+            <a href="{{ route('creators.show', $creator->slug) }}" class="mb-2 inline-flex items-center gap-1.5 text-[13px] font-medium text-[#0071E3] hover:opacity-70">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                 Back to portfolio
             </a>
@@ -54,14 +54,12 @@
         @endforeach
     </div>
 
-    <div class="overflow-hidden rounded-[18px] bg-white shadow-sm print:rounded-none print:shadow-none">
-        <div class="border-b border-[#E8E8ED] px-4 py-2.5 print:hidden">
-            <p class="text-[12px] text-[#86868B]">
-                Previewing <span class="font-semibold text-[#1D1D1F]">{{ $templates[$template]['label'] }}</span>
-                · What you see here matches the downloaded PDF
-            </p>
-        </div>
-        <div class="cv-preview-sheet mx-auto max-w-[820px] px-4 py-6 sm:px-8 sm:py-8">
+    <p class="mb-3 text-center text-[12px] text-[#86868B] print:hidden">
+        Previewing <span class="font-semibold text-[#1D1D1F]">{{ $templates[$template]['label'] }}</span>
+        · A4 · matches the downloaded PDF
+    </p>
+    <div class="cv-paper-wrap">
+        <div class="cv-preview-sheet">
             @include(\App\Support\CvTemplates::view($template), [
                 'creator' => $creator,
                 'apps' => $apps,
@@ -72,9 +70,40 @@
 </div>
 
 <style>
+    .cv-paper-wrap { overflow-x: auto; padding: 4px 0 24px; }
+    .cv-preview-sheet {
+        width: 210mm;
+        max-width: 100%;
+        min-height: 297mm;
+        margin: 0 auto;
+        padding: 14mm;
+        background: #fff;
+        box-shadow: 0 0 0 1px rgba(0,0,0,0.06), 0 12px 40px -8px rgba(0,0,0,0.18);
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    @media (max-width: 800px) {
+        .cv-preview-sheet { padding: 20px 16px; min-height: 0; }
+    }
+    .cv-preview-sheet .entry,
+    .cv-preview-sheet .app { break-inside: avoid; page-break-inside: avoid; }
+    .cv-preview-sheet h2 { break-after: avoid; page-break-after: avoid; }
+
+    @page { size: A4; margin: 14mm 15mm; }
     @media print {
-        body { background: white !important; }
-        .cv-preview-sheet { max-width: none !important; padding: 0 !important; }
+        html, body { background: #fff !important; }
+        * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        main { min-height: 0 !important; }
+        .cv-paper-wrap { overflow: visible; padding: 0; }
+        .cv-preview-sheet {
+            width: auto !important;
+            max-width: none !important;
+            min-height: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+        }
     }
 </style>
 @endsection

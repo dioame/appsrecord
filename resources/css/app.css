@@ -232,66 +232,118 @@
         @apply shrink-0 overflow-hidden rounded-[22%] bg-[#E8E8ED] shadow-[0_2px_8px_rgba(0,0,0,0.12)];
     }
 
-    .li-card {
-        @apply bg-white sm:rounded-lg;
-        box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+    .ios-cover {
+        @apply relative flex h-[150px] items-center justify-center overflow-hidden rounded-[28px] sm:h-[200px];
+        background-color: #1C1C1E;
+        background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px);
+        background-size: 18px 18px;
     }
 
-    .li-section {
-        @apply px-5 py-5 sm:px-6;
+    .ios-cover-brand {
+        @apply font-display text-[20px] font-semibold tracking-tight text-white/95 sm:text-[28px];
     }
 
-    .li-cover {
-        @apply h-[100px] w-full sm:h-[200px];
-        background-color: #B9CBDD;
-        background-image: radial-gradient(rgba(255,255,255,0.35) 1.5px, transparent 1.5px);
-        background-size: 22px 22px;
+    .ios-back {
+        @apply absolute left-3.5 top-3.5 inline-flex items-center gap-0.5 rounded-full bg-white/15 py-1.5 pl-2.5 pr-3.5 text-[14px] font-medium text-white backdrop-blur-md transition hover:bg-white/25;
     }
 
-    .li-avatar {
-        @apply bg-white shadow-none;
-        border: 4px solid #fff;
-        box-shadow: 0 0 0 1px rgba(0,0,0,0.12);
+    .ios-avatar {
+        @apply bg-[#E5E5EA];
+        border: 5px solid #F2F2F7;
+        border-radius: 28%;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.16);
     }
 
-    .li-heading {
-        @apply text-[20px] font-semibold text-[#191919];
+    .ios-avatar img {
+        border-radius: 0;
     }
 
-    .li-btn {
-        @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-full px-4 py-1.5 text-[15px] font-semibold transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0A66C2];
+    .ios-btn {
+        @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[15px] font-semibold transition active:scale-[0.97] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0A84FF];
     }
 
-    .li-btn-primary {
-        @apply bg-[#0A66C2] text-white hover:bg-[#004182];
+    .ios-btn-filled {
+        @apply bg-[#0A84FF] text-white hover:bg-[#0077ED];
     }
 
-    .li-btn-outline {
-        @apply border border-[#0A66C2] text-[#0A66C2] hover:bg-[#EAF4FE] hover:shadow-[inset_0_0_0_1px_#0A66C2];
+    .ios-btn-tinted {
+        @apply bg-[#0A84FF]/10 text-[#0A84FF] hover:bg-[#0A84FF]/15;
     }
 
-    .li-btn-ghost {
-        @apply border border-[#666666] text-[#666666] hover:bg-[#F3F2EF] hover:shadow-[inset_0_0_0_1px_#666666];
+    .ios-widget {
+        @apply rounded-[22px] bg-white px-4 py-4 text-center shadow-[0_1px_2px_rgba(0,0,0,0.04)];
     }
 
-    .li-chip {
-        @apply inline-flex cursor-pointer items-center rounded-full border border-[#666666] px-3 py-1 text-[14px] font-semibold text-[#666666] transition hover:bg-[#F3F2EF] hover:shadow-[inset_0_0_0_1px_#666666];
+    .ios-widget-num {
+        @apply font-display text-[32px] font-bold leading-none tabular-nums sm:text-[38px];
     }
 
-    .li-chip-active {
-        @apply border-[#01754F] bg-[#01754F] text-white hover:bg-[#014D34] hover:shadow-none;
+    .ios-widget-label {
+        @apply mt-1.5 text-[13px] font-medium text-[#8E8E93];
     }
 
-    .li-item {
-        @apply flex cursor-pointer gap-3.5 py-4;
+    .ios-header {
+        @apply mb-2 px-4 text-[22px] font-bold tracking-tight text-[#1C1C1E];
     }
 
-    .li-app-icon {
-        @apply shrink-0 overflow-hidden rounded-[10px] bg-white ring-1 ring-black/10;
+    .ios-group {
+        @apply block overflow-hidden rounded-[22px] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)];
     }
 
-    .li-logo-tile {
-        @apply flex h-12 w-12 shrink-0 items-center justify-center rounded bg-[#EEF3F8] text-[#666666];
+    .ios-row {
+        @apply flex cursor-pointer items-center gap-3.5 pl-4 transition-colors duration-150 active:bg-[#E5E5EA]/70;
+    }
+
+    a.ios-row:hover {
+        background-color: rgba(0,0,0,0.025);
+    }
+
+    .ios-row-body {
+        @apply py-3.5 pr-2;
+    }
+
+    ul.ios-group > li + li .ios-row-body,
+    ul.ios-group > li + li > .ios-row {
+        border-top: 0;
+    }
+
+    ul.ios-group > li + li {
+        position: relative;
+    }
+
+    ul.ios-group > li + li::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 72px;
+        height: 1px;
+        background: rgba(60,60,67,0.14);
+    }
+
+    .ios-row > .app-icon,
+    .ios-row > .ios-glyph {
+        @apply my-3.5;
+    }
+
+    .ios-chevron {
+        @apply mr-4 h-4 w-4 shrink-0 text-[#C7C7CC];
+    }
+
+    .ios-glyph {
+        @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-white;
+    }
+
+    .ios-pill {
+        @apply inline-flex shrink-0 cursor-pointer items-center rounded-full bg-white px-4 py-2 text-[14px] font-semibold text-[#1C1C1E] shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition active:scale-95;
+    }
+
+    .ios-pill-active {
+        @apply bg-[#0A84FF] text-white;
+    }
+
+    .ios-tag {
+        @apply inline-flex items-center rounded-full bg-[#F2F2F7] px-3.5 py-1.5 text-[14px] font-medium text-[#1C1C1E];
     }
 
     .app-row {

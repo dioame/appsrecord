@@ -105,6 +105,6 @@
             @endforeach
         @endif
 
-        <div class="footer">Generated from {{ $creator->publicUrl() }} · Showcase template</div>
+        <div class="footer">{{ $creator->publicUrl() }} · Showcase template</div>
     </div>
 </div>

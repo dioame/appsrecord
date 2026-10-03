@@ -96,7 +96,7 @@
                     @endforeach
                 @endif
 
-                <div class="footer">Generated from {{ $creator->publicUrl() }} · Executive template</div>
+                <div class="footer">{{ $creator->publicUrl() }} · Executive template</div>
             </td>
         </tr>
     </table>
