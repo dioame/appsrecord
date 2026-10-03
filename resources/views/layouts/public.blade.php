@@ -6,9 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'AppsRecord') — {{ config('app.name', 'AppsRecord') }}</title>
     <meta name="description" content="@yield('meta_description', 'Discover and showcase apps by category — your portfolio app store.')">
-    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/arlogo.jpg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/arlogo.jpg') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body

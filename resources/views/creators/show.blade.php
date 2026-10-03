@@ -9,63 +9,69 @@
     $defaultTab = request('tab') === 'cv' && $hasCv ? 'cv' : 'apps';
 @endphp
 <div
-    class="mx-auto w-full max-w-[980px] px-4 py-8 sm:px-6 sm:py-10"
+    class="mx-auto w-full max-w-[1040px] px-4 py-8 sm:px-6 sm:py-10"
     x-data="{ aboutOpen: false, tab: @js($defaultTab) }"
     @keydown.escape.window="aboutOpen = false"
 >
-    <header class="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-center sm:gap-5">
-        <div class="author-avatar !h-16 !w-16 !text-[18px] sm:!h-20 sm:!w-20 sm:!text-[20px]">
-            @if ($creator->avatarUrl())
-                <img src="{{ $creator->avatarUrl() }}" alt="" class="h-full w-full object-cover">
-            @else
-                <span>{{ $creator->initials() }}</span>
-            @endif
-        </div>
-        <div class="min-w-0 flex-1">
-            <p class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#86868B]">Creator portfolio</p>
-            <div class="mt-1 flex flex-wrap items-center gap-2">
-                <h1 class="font-display text-[28px] font-bold tracking-tight text-[#1D1D1F] sm:text-[34px]">{{ $creator->name }}</h1>
-                <x-trusted-badge :user="$creator" class="!text-[11px]" />
-            </div>
-            @if ($creator->headline)
-                <p class="mt-1 text-[15px] font-medium text-[#1D1D1F] sm:text-[16px]">{{ $creator->headline }}</p>
-            @endif
-            @if ($creator->bio)
-                <p class="mt-1.5 max-w-2xl text-[14px] text-[#86868B] sm:text-[15px]">{{ \Illuminate\Support\Str::limit($creator->bio, 140) }}</p>
-            @endif
-            <p class="mt-2 text-[13px] text-[#86868B]">
-                {{ $apps->count() }} {{ \Illuminate\Support\Str::plural('app', $apps->count()) }}
-                @if ($categories->isNotEmpty())
-                    · {{ $categories->count() }} {{ \Illuminate\Support\Str::plural('category', $categories->count()) }}
-                @endif
-                @if ($creator->location)
-                    · {{ $creator->location }}
-                @endif
-            </p>
-            <div class="mt-4 flex flex-wrap items-center gap-2">
-                <button
-                    type="button"
-                    class="btn-secondary"
-                    @click="aboutOpen = true"
-                >
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    About author
-                </button>
-                @if ($creator->websiteUrl())
-                    <a
-                        href="{{ $creator->websiteUrl() }}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="btn-primary"
-                    >
+    <header class="portfolio-hero mb-8 sm:mb-10">
+        <div class="portfolio-hero-banner" aria-hidden="true"></div>
+        <div class="relative px-5 pb-6 sm:px-8 sm:pb-8">
+            <div class="-mt-12 flex flex-col gap-4 sm:-mt-14 sm:flex-row sm:items-end sm:justify-between">
+                <div class="author-avatar portfolio-avatar !h-24 !w-24 !text-[26px] sm:!h-28 sm:!w-28 sm:!text-[30px]">
+                    @if ($creator->avatarUrl())
+                        <img src="{{ $creator->avatarUrl() }}" alt="{{ $creator->name }}" class="h-full w-full object-cover">
+                    @else
+                        <span>{{ $creator->initials() }}</span>
+                    @endif
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" class="btn-secondary !px-4 !py-2" @click="aboutOpen = true">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
-                        Website
-                    </a>
+                        About author
+                    </button>
+                    @if ($creator->websiteUrl())
+                        <a href="{{ $creator->websiteUrl() }}" target="_blank" rel="noopener noreferrer" class="btn-primary !px-4 !py-2">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                            </svg>
+                            Website
+                        </a>
+                    @endif
+                </div>
+            </div>
+
+            <div class="mt-4 min-w-0">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <h1 class="font-display text-[28px] font-bold leading-tight tracking-tight text-[#1D1D1F] sm:text-[36px]">{{ $creator->name }}</h1>
+                    <x-trusted-badge :user="$creator" class="!text-[11px]" />
+                </div>
+                @if ($creator->headline)
+                    <p class="mt-1 text-[16px] font-medium text-[#0071E3] sm:text-[18px]">{{ $creator->headline }}</p>
                 @endif
+                @if ($creator->bio)
+                    <p class="mt-3 max-w-2xl text-[14px] leading-relaxed text-[#515154] sm:text-[15px]">{{ \Illuminate\Support\Str::limit($creator->bio, 180) }}</p>
+                @endif
+
+                <div class="mt-4 flex flex-wrap items-center gap-2">
+                    <span class="portfolio-chip">
+                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+                        {{ $apps->count() }} {{ \Illuminate\Support\Str::plural('app', $apps->count()) }}
+                    </span>
+                    @if ($categories->isNotEmpty())
+                        <span class="portfolio-chip">
+                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5a1.99 1.99 0 011.41.59l7 7a2 2 0 010 2.82l-5 5a2 2 0 01-2.82 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+                            {{ $categories->count() }} {{ \Illuminate\Support\Str::plural('category', $categories->count()) }}
+                        </span>
+                    @endif
+                    @if ($creator->location)
+                        <span class="portfolio-chip">
+                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            {{ $creator->location }}
+                        </span>
+                    @endif
+                </div>
             </div>
         </div>
     </header>
@@ -171,20 +177,20 @@
     </div>
 
     @if ($hasCv)
-        <div class="mb-6 flex gap-1 rounded-2xl bg-[#F5F5F7] p-1" role="tablist" aria-label="Portfolio sections">
+        <div class="portfolio-tabs mb-8" role="tablist" aria-label="Portfolio sections">
             <button
                 type="button"
                 role="tab"
-                class="flex-1 rounded-xl px-3 py-2.5 text-[13px] font-semibold transition"
-                :class="tab === 'apps' ? 'bg-white text-[#1D1D1F] shadow-sm' : 'text-[#86868B] hover:text-[#1D1D1F]'"
+                class="portfolio-tab"
+                :class="tab === 'apps' ? 'portfolio-tab-active' : ''"
                 :aria-selected="tab === 'apps'"
                 @click="tab = 'apps'"
             >Apps</button>
             <button
                 type="button"
                 role="tab"
-                class="flex-1 rounded-xl px-3 py-2.5 text-[13px] font-semibold transition"
-                :class="tab === 'cv' ? 'bg-white text-[#1D1D1F] shadow-sm' : 'text-[#86868B] hover:text-[#1D1D1F]'"
+                class="portfolio-tab"
+                :class="tab === 'cv' ? 'portfolio-tab-active' : ''"
                 :aria-selected="tab === 'cv'"
                 @click="tab = 'cv'"
             >CV</button>
@@ -197,17 +203,17 @@
                 No published apps yet.
             </div>
         @else
-            <div class="space-y-8">
+            <div class="space-y-10">
                 @foreach ($categories as $category)
                     <section id="cat-{{ $category->slug ?? 'apps' }}">
-                        <div class="mb-2 flex items-baseline justify-between gap-3">
+                        <div class="mb-4 flex items-center justify-between gap-3">
                             <h2 class="section-title">{{ $category->name }}</h2>
-                            <span class="text-[13px] text-[#86868B]">{{ $category->apps->count() }}</span>
+                            <span class="rounded-full bg-white px-2.5 py-0.5 text-[12px] font-semibold tabular-nums text-[#86868B] ring-1 ring-black/5">{{ $category->apps->count() }}</span>
                         </div>
-                        <div class="rounded-[18px] bg-white px-2.5 sm:rounded-[22px] sm:px-4">
+                        <div class="grid gap-3 sm:grid-cols-2 sm:gap-4">
                             @foreach ($category->apps as $app)
-                                <a href="{{ route('creators.app', [$creator->slug, $app->slug]) }}" class="app-row group">
-                                    <div class="app-icon h-12 w-12 sm:h-[60px] sm:w-[60px]">
+                                <a href="{{ route('creators.app', [$creator->slug, $app->slug]) }}" class="portfolio-card group">
+                                    <div class="app-icon h-14 w-14 sm:h-16 sm:w-16">
                                         @if ($app->logoUrl())
                                             <img src="{{ $app->logoUrl() }}" alt="" class="h-full w-full object-cover">
                                         @else
@@ -218,17 +224,17 @@
                                     </div>
                                     <div class="min-w-0 flex-1">
                                         <div class="flex min-w-0 items-center gap-2">
-                                            <h3 class="truncate text-[14px] font-normal leading-tight text-[#1D1D1F] sm:text-[15px]">{{ $app->name }}</h3>
+                                            <h3 class="truncate text-[15px] font-semibold leading-tight text-[#1D1D1F] sm:text-[16px]">{{ $app->name }}</h3>
                                             <x-platform-badge :platform="$app->platform" />
                                         </div>
-                                        <p class="mt-0.5 truncate text-[12px] leading-tight text-[#86868B] sm:text-[13px]">
-                                            {{ \Illuminate\Support\Str::limit($app->description, 48) }}
+                                        <p class="mt-1 line-clamp-2 text-[13px] leading-snug text-[#6E6E73]">
+                                            {{ \Illuminate\Support\Str::limit($app->description, 90) }}
                                         </p>
-                                        <div class="mt-1">
+                                        <div class="mt-1.5">
                                             <x-star-rating :rating="$app->averageRating()" :count="$app->ratingsCount()" />
                                         </div>
                                     </div>
-                                    <span class="btn-get" tabindex="-1">View</span>
+                                    <svg class="h-5 w-5 shrink-0 text-[#C7C7CC] transition group-hover:translate-x-0.5 group-hover:text-[#0071E3]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                                 </a>
                             @endforeach
                         </div>
