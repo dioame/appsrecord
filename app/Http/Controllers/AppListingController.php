@@ -52,6 +52,7 @@ class AppListingController extends Controller
             'slug' => $slug,
             'description' => $data['description'],
             'link' => $data['link'] ?? null,
+            'video_url' => $data['video_url'] ?? null,
             'logo' => $logoPath,
             'images' => $imagePaths,
             'is_published' => $wantsPublish,
@@ -100,6 +101,7 @@ class AppListingController extends Controller
         $app->sub_authors = $data['sub_authors'] ?? [];
         $app->description = $data['description'];
         $app->link = $data['link'] ?? null;
+        $app->video_url = $data['video_url'] ?? null;
         $app->is_published = $wantsPublish;
         $app->approval_status = $approvalStatus;
 

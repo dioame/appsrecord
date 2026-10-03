@@ -19,8 +19,41 @@
 
     {{-- Lead with a featured hero if we have apps --}}
     @if ($featured->isNotEmpty())
-        @php $lead = $featured->first(); @endphp
-        <a href="{{ route('apps.public', $lead->slug) }}" class="hero-banner mb-6 block cursor-pointer transition hover:opacity-95 sm:mb-8">
+        @php
+            $lead = $featured->first();
+            $directVideoUrl = $lead->directVideoUrl();
+            $videoEmbedUrl = $lead->videoEmbedUrl();
+            $autoplayEmbedUrl = $lead->videoEmbedUrl(true);
+            $hasPlayableVideo = $directVideoUrl || $videoEmbedUrl;
+        @endphp
+        <article class="hero-banner mb-6 overflow-hidden sm:mb-8">
+            @if ($hasPlayableVideo)
+                <div class="relative aspect-video w-full overflow-hidden bg-black">
+                    @if ($directVideoUrl)
+                        <video
+                            class="h-full w-full object-cover"
+                            src="{{ $directVideoUrl }}"
+                            controls
+                            muted
+                            playsinline
+                            preload="metadata"
+                            aria-label="{{ $lead->name }} featured video"
+                            x-data
+                            x-init="if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) $el.play().catch(() => {})"
+                        ></video>
+                    @else
+                        <iframe
+                            class="h-full w-full"
+                            x-data="{ src: @js($videoEmbedUrl) }"
+                            x-init="if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) src = @js($autoplayEmbedUrl)"
+                            x-bind:src="src"
+                            title="{{ $lead->name }} featured video"
+                            allow="autoplay; encrypted-media; picture-in-picture"
+                            allowfullscreen
+                        ></iframe>
+                    @endif
+                </div>
+            @endif
             <div class="relative flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-8 sm:p-8">
                 <div class="app-icon h-[88px] w-[88px] ring-1 ring-white/20 sm:h-[120px] sm:w-[120px]">
                     @if ($lead->logoUrl())
@@ -38,9 +71,12 @@
                     <div class="mt-2">
                         <x-star-rating :rating="$lead->averageRating()" :count="$lead->ratingsCount()" light />
                     </div>
+                    <a href="{{ route('apps.public', $lead->slug) }}" class="mt-4 inline-flex min-h-11 cursor-pointer items-center rounded-full bg-white px-5 text-[13px] font-semibold text-[#1D1D1F] transition hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#1D1D1F]">
+                        View app
+                    </a>
                 </div>
             </div>
-        </a>
+        </article>
     @endif
 
     @if ($topAuthors->isNotEmpty())

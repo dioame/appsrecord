@@ -29,6 +29,7 @@ class HomeController extends Controller
             ->with(['category', 'user', 'tags'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
+            ->orderByRaw("CASE WHEN video_url IS NOT NULL AND video_url <> '' THEN 0 ELSE 1 END")
             ->latest()
             ->take(6)
             ->get();

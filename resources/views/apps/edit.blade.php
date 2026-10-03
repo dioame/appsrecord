@@ -74,6 +74,13 @@
                 </div>
 
                 <div>
+                    <label for="video_url" class="form-label">Video link <span class="font-normal text-[#86868B]">(optional)</span></label>
+                    <input id="video_url" name="video_url" type="url" value="{{ old('video_url', $app->video_url) }}" maxlength="2048" class="form-input" placeholder="https://youtube.com/watch?v=...">
+                    <p class="mt-2 text-xs text-[#71717A]">YouTube, Vimeo, or a direct MP4, WebM, or Ogg link. Published apps with video are prioritized in the homepage feature.</p>
+                    <x-input-error :messages="$errors->get('video_url')" class="mt-2" />
+                </div>
+
+                <div>
                     <label for="logo" class="form-label">Logo</label>
                     @if ($app->logoUrl())
                         <div class="mb-3 flex items-center gap-3">

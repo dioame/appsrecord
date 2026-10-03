@@ -21,6 +21,7 @@ class AppListing extends Model
         'slug',
         'description',
         'link',
+        'video_url',
         'logo',
         'images',
         'is_published',
@@ -259,6 +260,50 @@ class AppListing extends Model
         return collect($this->images ?? [])
             ->map(fn (string $path) => Storage::disk('public')->url($path))
             ->all();
+    }
+
+    public function directVideoUrl(): ?string
+    {
+        if (! $this->video_url) {
+            return null;
+        }
+
+        $path = parse_url($this->video_url, PHP_URL_PATH) ?: '';
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        return in_array($extension, ['mp4', 'webm', 'ogg'], true) ? $this->video_url : null;
+    }
+
+    public function videoEmbedUrl(bool $autoplay = false): ?string
+    {
+        if (! $this->video_url) {
+            return null;
+        }
+
+        $host = strtolower((string) parse_url($this->video_url, PHP_URL_HOST));
+        $path = trim((string) parse_url($this->video_url, PHP_URL_PATH), '/');
+        parse_str((string) parse_url($this->video_url, PHP_URL_QUERY), $query);
+
+        $videoId = null;
+        if (in_array($host, ['youtube.com', 'www.youtube.com', 'm.youtube.com'], true)) {
+            $videoId = $query['v'] ?? null;
+            if (! $videoId && preg_match('~^(?:shorts|embed)/([^/]+)~', $path, $matches)) {
+                $videoId = $matches[1];
+            }
+        } elseif ($host === 'youtu.be') {
+            $videoId = explode('/', $path)[0] ?? null;
+        }
+
+        if (is_string($videoId) && preg_match('/^[A-Za-z0-9_-]{6,20}$/', $videoId)) {
+            return 'https://www.youtube-nocookie.com/embed/'.$videoId.'?rel=0&playsinline=1'.($autoplay ? '&autoplay=1&mute=1' : '');
+        }
+
+        if (in_array($host, ['vimeo.com', 'www.vimeo.com', 'player.vimeo.com'], true)
+            && preg_match('~(?:video/)?(\d+)~', $path, $matches)) {
+            return 'https://player.vimeo.com/video/'.$matches[1].'?playsinline=1'.($autoplay ? '&autoplay=1&muted=1' : '');
+        }
+
+        return null;
     }
 
     public function deleteFiles(): void

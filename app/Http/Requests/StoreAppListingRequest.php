@@ -33,6 +33,7 @@ class StoreAppListingRequest extends FormRequest
             'author' => ['required', 'string', 'max:120'],
             'description' => ['required', 'string', 'max:5000'],
             'link' => ['nullable', 'url', 'max:500'],
+            'video_url' => ['nullable', 'url:http,https', 'max:2048'],
             'category_id' => ['required', 'exists:categories,id'],
             'platform' => ['required', Rule::in(AppListing::PLATFORMS)],
             'logo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
