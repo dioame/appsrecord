@@ -26,34 +26,7 @@
             $autoplayEmbedUrl = $lead->videoEmbedUrl(true);
             $hasPlayableVideo = $directVideoUrl || $videoEmbedUrl;
         @endphp
-        <article class="hero-banner mb-6 overflow-hidden sm:mb-8">
-            @if ($hasPlayableVideo)
-                <div class="relative aspect-video w-full overflow-hidden bg-black">
-                    @if ($directVideoUrl)
-                        <video
-                            class="h-full w-full object-cover"
-                            src="{{ $directVideoUrl }}"
-                            controls
-                            muted
-                            playsinline
-                            preload="metadata"
-                            aria-label="{{ $lead->name }} featured video"
-                            x-data
-                            x-init="if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) $el.play().catch(() => {})"
-                        ></video>
-                    @else
-                        <iframe
-                            class="h-full w-full"
-                            x-data="{ src: @js($videoEmbedUrl) }"
-                            x-init="if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) src = @js($autoplayEmbedUrl)"
-                            x-bind:src="src"
-                            title="{{ $lead->name }} featured video"
-                            allow="autoplay; encrypted-media; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
-                    @endif
-                </div>
-            @endif
+        <article class="hero-banner mb-6 overflow-hidden">
             <div class="relative flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-8 sm:p-8">
                 <div class="app-icon h-[88px] w-[88px] ring-1 ring-white/20 sm:h-[120px] sm:w-[120px]">
                     @if ($lead->logoUrl())
@@ -77,6 +50,57 @@
                 </div>
             </div>
         </article>
+
+        @if ($hasPlayableVideo)
+            <section class="mb-6 sm:mb-8" aria-labelledby="featured-video-title">
+                <div class="mb-2 flex items-baseline justify-between gap-3">
+                    <h2 id="featured-video-title" class="section-title">Featured video</h2>
+                    <a href="{{ route('apps.public', $lead->slug) }}" class="see-all">View app</a>
+                </div>
+
+                <div class="grid overflow-hidden rounded-[18px] border border-[#E4E4E7] bg-white sm:rounded-[22px] md:grid-cols-[minmax(0,1.45fr)_minmax(240px,0.75fr)]">
+                    <div class="relative aspect-video min-w-0 overflow-hidden bg-black">
+                        @if ($directVideoUrl)
+                            <video
+                                class="h-full w-full object-contain"
+                                src="{{ $directVideoUrl }}"
+                                controls
+                                muted
+                                playsinline
+                                preload="metadata"
+                                aria-label="{{ $lead->name }} featured video"
+                                x-data
+                                x-init="if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) $el.play().catch(() => {})"
+                            ></video>
+                        @else
+                            <iframe
+                                class="h-full w-full"
+                                x-data="{ src: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? @js($videoEmbedUrl) : @js($autoplayEmbedUrl) }"
+                                x-bind:src="src"
+                                title="{{ $lead->name }} featured video"
+                                allow="autoplay; encrypted-media; picture-in-picture"
+                                allowfullscreen
+                            ></iframe>
+                        @endif
+                    </div>
+
+                    <div class="flex min-w-0 flex-col justify-center p-5 sm:p-6">
+                        <div class="flex items-center gap-3">
+                            <div class="app-icon h-12 w-12 shrink-0">
+                                @if ($lead->logoUrl())
+                                    <img src="{{ $lead->logoUrl() }}" alt="" class="h-full w-full object-cover">
+                                @endif
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#86868B]">App demo</p>
+                                <h3 class="truncate font-display text-[18px] font-bold text-[#1D1D1F]">{{ $lead->name }}</h3>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-[14px] leading-6 text-[#515154]">{{ \Illuminate\Support\Str::limit($lead->description, 220) }}</p>
+                    </div>
+                </div>
+            </section>
+        @endif
     @endif
 
     @if ($topAuthors->isNotEmpty())
