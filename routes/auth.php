@@ -28,6 +28,12 @@ Route::middleware('guest')->group(function () {
     Route::get('auth/google/callback', [\App\Http\Controllers\Auth\GoogleAuthController::class, 'callback'])
         ->name('auth.google.callback');
 
+    Route::get('auth/wamisso', [\App\Http\Controllers\Auth\WamissoAuthController::class, 'redirect'])
+        ->name('auth.wamisso');
+
+    Route::get('auth/wamisso/callback', [\App\Http\Controllers\Auth\WamissoAuthController::class, 'callback'])
+        ->name('auth.wamisso.callback');
+
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 

@@ -31,6 +31,7 @@ class User extends Authenticatable
         'email',
         'password',
         'google_id',
+        'wamisso_id',
         'avatar',
         'bio',
         'website',

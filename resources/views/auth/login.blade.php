@@ -4,6 +4,7 @@
 
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <x-wamisso-login-button />
     <x-google-login-button />
 
     <form method="POST" action="{{ route('login') }}" class="space-y-4">

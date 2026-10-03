@@ -41,4 +41,11 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', env('APP_URL').'/auth/google/callback'),
     ],
 
+    'wamisso' => [
+        'base_url' => env('WAMISSO_BASE_URL'),
+        'client_id' => env('WAMISSO_CLIENT_ID'),
+        'client_secret' => env('WAMISSO_CLIENT_SECRET'),
+        'redirect' => env('WAMISSO_REDIRECT_URI', env('APP_URL').'/auth/wamisso/callback'),
+    ],
+
 ];

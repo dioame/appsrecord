@@ -2,6 +2,7 @@
     <h1 class="mb-1 font-display text-[22px] font-bold tracking-tight text-[#1D1D1F]">Create Account</h1>
     <p class="mb-5 text-[13px] text-[#86868B]">Publish apps to the AppsRecord store</p>
 
+    <x-wamisso-login-button />
     <x-google-login-button />
 
     <form method="POST" action="{{ route('register') }}" class="space-y-4">

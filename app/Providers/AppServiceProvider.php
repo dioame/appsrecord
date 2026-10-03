@@ -6,7 +6,9 @@ use App\Models\AppListing;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use App\Socialite\WamissoProvider;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Socialite\Facades\Socialite;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Socialite::extend('wamisso', fn ($app) => Socialite::buildProvider(
+            WamissoProvider::class,
+            $app['config']['services.wamisso'],
+        ));
+
         Route::bind('app', function (string $value) {
             return AppListing::query()->findOrFail($value);
         });
