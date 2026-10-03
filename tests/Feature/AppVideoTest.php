@@ -38,30 +38,33 @@ class AppVideoTest extends TestCase
         ]);
     }
 
-    public function test_latest_app_with_video_is_featured_ahead_of_newer_apps_without_video(): void
+    public function test_homepage_shows_multiple_published_app_videos(): void
     {
         $user = User::factory()->create();
         $category = Category::query()->create(['name' => 'Tools', 'slug' => 'tools']);
 
         $videoApp = $this->createPublishedApp($user, $category, [
-            'name' => 'Video App',
-            'slug' => 'video-app',
-            'video_url' => 'https://cdn.example.com/demo.mp4',
+            'name' => 'First Video App',
+            'slug' => 'first-video-app',
+            'video_url' => 'https://cdn.example.com/first-demo.mp4',
             'created_at' => now()->subDay(),
             'updated_at' => now()->subDay(),
         ]);
-        $this->createPublishedApp($user, $category, [
-            'name' => 'Newer App',
-            'slug' => 'newer-app',
+        $newerVideoApp = $this->createPublishedApp($user, $category, [
+            'name' => 'Second Video App',
+            'slug' => 'second-video-app',
+            'video_url' => 'https://cdn.example.com/second-demo.webm',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('Video App')
+            ->assertSee('Featured videos')
+            ->assertSee('First Video App')
+            ->assertSee('Second Video App')
             ->assertSee($videoApp->video_url, false)
-            ->assertSee('featured video');
+            ->assertSee($newerVideoApp->video_url, false);
     }
 
     public function test_video_helpers_only_embed_supported_providers(): void
@@ -76,6 +79,24 @@ class AppVideoTest extends TestCase
         $app->video_url = 'https://example.com/video-page';
         $this->assertNull($app->videoEmbedUrl());
         $this->assertNull($app->directVideoUrl());
+    }
+
+    public function test_public_app_page_displays_its_video_when_available(): void
+    {
+        $user = User::factory()->create();
+        $category = Category::query()->create(['name' => 'Tools', 'slug' => 'tools']);
+        $app = $this->createPublishedApp($user, $category, [
+            'name' => 'Demo App',
+            'slug' => 'demo-app',
+            'video_url' => 'https://youtu.be/dQw4w9WgXcQ',
+        ]);
+
+        $this->get(route('apps.public', $app->slug))
+            ->assertOk()
+            ->assertSee('App video')
+            ->assertSee('See Demo App in action.')
+            ->assertSee('youtube-nocookie.com', false)
+            ->assertSee('Demo App app video');
     }
 
     private function createPublishedApp(User $user, Category $category, array $attributes): AppListing

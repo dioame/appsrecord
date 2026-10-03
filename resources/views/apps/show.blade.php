@@ -7,6 +7,10 @@
 @php
     $shots = $app->imageUrls();
     $tagline = \Illuminate\Support\Str::limit($app->description, 70);
+    $directVideoUrl = $app->directVideoUrl();
+    $videoEmbedUrl = $app->videoEmbedUrl();
+    $autoplayEmbedUrl = $app->videoEmbedUrl(true);
+    $hasPlayableVideo = $directVideoUrl || $videoEmbedUrl;
     $captions = [
         'Discover what makes '.$app->name.' special.',
         'Built for everyday use — simple and focused.',
@@ -88,6 +92,40 @@
                 @foreach ($app->tags as $tag)
                     <x-tag-chip :tag="$tag" />
                 @endforeach
+            </div>
+        </section>
+    @endif
+
+    @if ($hasPlayableVideo)
+        <section class="mt-8 max-w-4xl" aria-labelledby="app-video-title">
+            <div class="mb-3">
+                <h2 id="app-video-title" class="section-title">App video</h2>
+                <p class="mt-1 text-[13px] text-[#86868B]">See {{ $app->name }} in action.</p>
+            </div>
+
+            <div class="relative aspect-video overflow-hidden rounded-[18px] bg-black shadow-sm ring-1 ring-black/5 sm:rounded-[22px]">
+                @if ($directVideoUrl)
+                    <video
+                        class="h-full w-full object-contain"
+                        src="{{ $directVideoUrl }}"
+                        controls
+                        muted
+                        playsinline
+                        preload="metadata"
+                        aria-label="{{ $app->name }} app video"
+                        x-data
+                        x-init="if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) $el.play().catch(() => {})"
+                    ></video>
+                @else
+                    <iframe
+                        class="h-full w-full"
+                        x-data="{ src: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? @js($videoEmbedUrl) : @js($autoplayEmbedUrl) }"
+                        x-bind:src="src"
+                        title="{{ $app->name }} app video"
+                        allow="autoplay; encrypted-media; picture-in-picture"
+                        allowfullscreen
+                    ></iframe>
+                @endif
             </div>
         </section>
     @endif
