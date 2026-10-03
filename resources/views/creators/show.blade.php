@@ -6,347 +6,253 @@
 @section('content')
 @php
     $hasCv = $creator->hasCvContent();
-    $defaultTab = request('tab') === 'cv' && $hasCv ? 'cv' : 'apps';
+    $skills = $creator->skillList();
+    $experience = $creator->experienceEntries();
+    $education = $creator->educationEntries();
 @endphp
-<div
-    class="mx-auto w-full max-w-[1040px] px-4 py-8 sm:px-6 sm:py-10"
-    x-data="{ aboutOpen: false, tab: @js($defaultTab) }"
-    @keydown.escape.window="aboutOpen = false"
->
-    <header class="portfolio-hero mb-8 sm:mb-10">
-        <div class="mac-titlebar">
-            <div class="flex items-center gap-2" aria-hidden="true">
-                <span class="mac-dot bg-[#FF5F57]"></span>
-                <span class="mac-dot bg-[#FEBC2E]"></span>
-                <span class="mac-dot bg-[#28C840]"></span>
-            </div>
-            <p class="absolute inset-x-0 text-center text-[12px] font-medium text-[#6E6E73]">{{ $creator->name }} — Portfolio</p>
-        </div>
-        <div class="relative px-5 py-6 sm:px-8 sm:py-8">
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div class="author-avatar portfolio-avatar !h-24 !w-24 !text-[26px] sm:!h-28 sm:!w-28 sm:!text-[30px]">
-                    @if ($creator->avatarUrl())
-                        <img src="{{ $creator->avatarUrl() }}" alt="{{ $creator->name }}" class="h-full w-full object-cover">
-                    @else
-                        <span>{{ $creator->initials() }}</span>
-                    @endif
-                </div>
-                <div class="flex flex-wrap items-center gap-2">
-                    <button type="button" class="btn-secondary !px-4 !py-2" @click="aboutOpen = true">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        About author
-                    </button>
-                    @if ($creator->websiteUrl())
-                        <a href="{{ $creator->websiteUrl() }}" target="_blank" rel="noopener noreferrer" class="btn-primary !px-4 !py-2">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                            </svg>
-                            Website
-                        </a>
-                    @endif
-                </div>
-            </div>
+<div class="mx-auto w-full max-w-[1128px] px-0 py-0 sm:px-6 sm:py-6" x-data="{ cat: 'all' }">
+    <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
 
-            <div class="mt-4 min-w-0">
-                <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-                    <h1 class="font-display text-[28px] font-bold leading-tight tracking-tight text-[#1D1D1F] sm:text-[36px]">{{ $creator->name }}</h1>
-                    <x-trusted-badge :user="$creator" class="!text-[11px]" />
-                </div>
-                @if ($creator->headline)
-                    <p class="mt-1 text-[16px] font-medium text-[#0071E3] sm:text-[18px]">{{ $creator->headline }}</p>
-                @endif
-                @if ($creator->bio)
-                    <p class="mt-3 max-w-2xl text-[14px] leading-relaxed text-[#515154] sm:text-[15px]">{{ \Illuminate\Support\Str::limit($creator->bio, 180) }}</p>
-                @endif
+        {{-- ============ Main column ============ --}}
+        <div class="min-w-0 space-y-2 sm:space-y-4">
 
-                <div class="mt-4 flex flex-wrap items-center gap-2">
-                    <span class="portfolio-chip">
-                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
-                        {{ $apps->count() }} {{ \Illuminate\Support\Str::plural('app', $apps->count()) }}
-                    </span>
-                    @if ($categories->isNotEmpty())
-                        <span class="portfolio-chip">
-                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5a1.99 1.99 0 011.41.59l7 7a2 2 0 010 2.82l-5 5a2 2 0 01-2.82 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
-                            {{ $categories->count() }} {{ \Illuminate\Support\Str::plural('category', $categories->count()) }}
-                        </span>
-                    @endif
-                    @if ($creator->location)
-                        <span class="portfolio-chip">
-                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            {{ $creator->location }}
-                        </span>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </header>
-
-    {{-- About author sheet --}}
-    <div
-        x-show="aboutOpen"
-        x-cloak
-        class="fixed inset-0 z-[70] flex items-end justify-center p-0 sm:items-center sm:p-6"
-        role="dialog"
-        aria-modal="true"
-        aria-label="About {{ $creator->name }}"
-    >
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" @click="aboutOpen = false" x-transition.opacity></div>
-
-        <div
-            class="relative z-10 flex max-h-[88vh] w-full max-w-lg flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:rounded-[28px]"
-            x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="translate-y-6 opacity-0 sm:translate-y-0 sm:scale-95"
-            x-transition:enter-end="translate-y-0 opacity-100 sm:scale-100"
-            x-transition:leave="transition ease-in duration-150"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="translate-y-4 opacity-0 sm:scale-95"
-            @click.stop
-        >
-            <div class="flex items-start justify-between gap-3 border-b border-[#E8E8ED] px-5 py-4">
-                <div class="flex min-w-0 items-center gap-3">
-                    <div class="author-avatar !h-12 !w-12 !text-[14px]">
+            {{-- Profile card --}}
+            <header class="li-card overflow-hidden">
+                <div class="li-cover" aria-hidden="true"></div>
+                <div class="relative px-5 pb-6 sm:px-6">
+                    <div class="li-avatar author-avatar -mt-[68px] !h-[120px] !w-[120px] !text-[34px] sm:-mt-[84px] sm:!h-[152px] sm:!w-[152px] sm:!text-[42px]">
                         @if ($creator->avatarUrl())
-                            <img src="{{ $creator->avatarUrl() }}" alt="" class="h-full w-full object-cover">
+                            <img src="{{ $creator->avatarUrl() }}" alt="{{ $creator->name }}" class="h-full w-full object-cover">
                         @else
                             <span>{{ $creator->initials() }}</span>
                         @endif
                     </div>
-                    <div class="min-w-0">
-                        <h2 class="truncate font-display text-[18px] font-bold text-[#1D1D1F]">{{ $creator->name }}</h2>
-                        <p class="text-[13px] text-[#86868B]">{{ $creator->headline ?: 'Author' }}</p>
-                    </div>
-                </div>
-                <button type="button" class="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#F5F5F7] text-[#1D1D1F] hover:bg-[#E8E8ED]" @click="aboutOpen = false" aria-label="Close">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-            </div>
 
-            <div class="overflow-y-auto px-5 py-5">
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="rounded-2xl bg-[#F5F5F7] px-4 py-3">
-                        <p class="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">Apps</p>
-                        <p class="mt-1 text-[22px] font-semibold tabular-nums text-[#1D1D1F]">{{ $apps->count() }}</p>
-                    </div>
-                    <div class="rounded-2xl bg-[#F5F5F7] px-4 py-3">
-                        <p class="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">Skills</p>
-                        <p class="mt-1 text-[22px] font-semibold tabular-nums text-[#1D1D1F]">{{ count($creator->skillList()) }}</p>
-                    </div>
-                </div>
-
-                <div class="mt-5">
-                    <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">About</p>
-                    @if ($creator->bio)
-                        <p class="mt-2 text-[15px] leading-relaxed text-[#1D1D1F]">{{ $creator->bio }}</p>
-                    @else
-                        <p class="mt-2 text-[15px] leading-relaxed text-[#86868B]">{{ $creator->name }} hasn’t added a bio yet.</p>
-                    @endif
-                </div>
-
-                @if (count($creator->skillList()) > 0)
-                    <div class="mt-5">
-                        <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">Skills</p>
-                        <div class="mt-2 flex flex-wrap gap-2">
-                            @foreach ($creator->skillList() as $skill)
-                                <span class="rounded-full bg-[#F5F5F7] px-3 py-1 text-[13px] font-medium text-[#1D1D1F]">{{ $skill }}</span>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-
-                @if ($creator->websiteUrl())
-                    <div class="mt-5">
-                        <p class="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">Website</p>
-                        <a
-                            href="{{ $creator->websiteUrl() }}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="mt-2 inline-flex items-center gap-2 text-[15px] font-medium text-[#0071E3] hover:underline"
-                        >
-                            {{ $creator->websiteHost() }}
-                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                        </a>
-                    </div>
-                @endif
-            </div>
-
-            <div class="flex flex-wrap gap-2 border-t border-[#E8E8ED] px-5 py-4">
-                @if ($hasCv)
-                    <button type="button" class="btn-primary" @click="tab = 'cv'; aboutOpen = false">View CV</button>
-                @endif
-                @if ($creator->websiteUrl())
-                    <a href="{{ $creator->websiteUrl() }}" target="_blank" rel="noopener noreferrer" class="btn-secondary">Visit website</a>
-                @endif
-                <button type="button" class="btn-secondary" @click="aboutOpen = false">Close</button>
-            </div>
-        </div>
-    </div>
-
-    @if ($hasCv)
-        <div class="portfolio-tabs mb-8" role="tablist" aria-label="Portfolio sections">
-            <button
-                type="button"
-                role="tab"
-                class="portfolio-tab"
-                :class="tab === 'apps' ? 'portfolio-tab-active' : ''"
-                :aria-selected="tab === 'apps'"
-                @click="tab = 'apps'"
-            >Apps</button>
-            <button
-                type="button"
-                role="tab"
-                class="portfolio-tab"
-                :class="tab === 'cv' ? 'portfolio-tab-active' : ''"
-                :aria-selected="tab === 'cv'"
-                @click="tab = 'cv'"
-            >CV</button>
-        </div>
-    @endif
-
-    <div @if ($hasCv) x-show="tab === 'apps'" @endif>
-        @if ($apps->isEmpty())
-            <div class="rounded-2xl bg-white px-6 py-14 text-center text-[15px] text-[#86868B]">
-                No published apps yet.
-            </div>
-        @else
-            <div class="space-y-10">
-                @foreach ($categories as $category)
-                    <section id="cat-{{ $category->slug ?? 'apps' }}">
-                        <div class="mb-4 flex items-center justify-between gap-3">
-                            <h2 class="mac-section-title">{{ $category->name }}</h2>
-                            <span class="rounded-full bg-white px-2.5 py-0.5 text-[12px] font-semibold tabular-nums text-[#86868B] ring-1 ring-black/5">{{ $category->apps->count() }}</span>
-                        </div>
-                        <div class="grid gap-3 sm:grid-cols-2 sm:gap-4">
-                            @foreach ($category->apps as $app)
-                                <a href="{{ route('creators.app', [$creator->slug, $app->slug]) }}" class="portfolio-card group">
-                                    <div class="app-icon h-14 w-14 sm:h-16 sm:w-16">
-                                        @if ($app->logoUrl())
-                                            <img src="{{ $app->logoUrl() }}" alt="" class="h-full w-full object-cover">
-                                        @else
-                                            <div class="flex h-full w-full items-center justify-center bg-[#E8E8ED] text-[#86868B]">
-                                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" stroke-width="1.5"/></svg>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="min-w-0 flex-1">
-                                        <div class="flex min-w-0 items-center gap-2">
-                                            <h3 class="truncate text-[15px] font-semibold leading-tight text-[#1D1D1F] sm:text-[16px]">{{ $app->name }}</h3>
-                                            <x-platform-badge :platform="$app->platform" />
-                                        </div>
-                                        <p class="mt-1 line-clamp-2 text-[13px] leading-snug text-[#6E6E73]">
-                                            {{ \Illuminate\Support\Str::limit($app->description, 90) }}
-                                        </p>
-                                        <div class="mt-1.5">
-                                            <x-star-rating :rating="$app->averageRating()" :count="$app->ratingsCount()" />
-                                        </div>
-                                    </div>
-                                    <svg class="h-5 w-5 shrink-0 text-[#C7C7CC] transition group-hover:translate-x-0.5 group-hover:text-[#0071E3]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                                </a>
-                            @endforeach
-                        </div>
-                    </section>
-                @endforeach
-            </div>
-        @endif
-    </div>
-
-    @if ($hasCv)
-        <div x-show="tab === 'cv'" x-cloak class="space-y-6">
-            <section class="mac-panel">
-                <div class="flex flex-wrap items-start justify-between gap-3">
-                    <div class="min-w-0">
-                        <p class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#86868B]">Curriculum vitae</p>
-                        <h2 class="mt-1 font-display text-[22px] font-bold text-[#1D1D1F]">{{ $creator->name }}</h2>
-                        @if ($creator->headline)
-                            <p class="mt-1 text-[15px] text-[#1D1D1F]">{{ $creator->headline }}</p>
-                        @endif
-                        @if ($creator->location || $creator->websiteHost())
-                            <p class="mt-2 text-[13px] text-[#86868B]">
-                                @if ($creator->location){{ $creator->location }}@endif
-                                @if ($creator->location && $creator->websiteHost()) · @endif
+                    <div class="mt-3 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div class="min-w-0">
+                            <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                                <h1 class="font-display text-[24px] font-semibold leading-tight text-[#191919] sm:text-[26px]">{{ $creator->name }}</h1>
+                                <x-trusted-badge :user="$creator" class="!text-[11px]" />
+                            </div>
+                            @if ($creator->headline)
+                                <p class="mt-1 text-[16px] leading-snug text-[#191919]">{{ $creator->headline }}</p>
+                            @endif
+                            <p class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-[#666666]">
+                                @if ($creator->location)
+                                    <span>{{ $creator->location }}</span>
+                                    <span aria-hidden="true">·</span>
+                                @endif
                                 @if ($creator->websiteUrl())
-                                    <a href="{{ $creator->websiteUrl() }}" target="_blank" rel="noopener noreferrer" class="text-[#0071E3] hover:underline">{{ $creator->websiteHost() }}</a>
+                                    <a href="{{ $creator->websiteUrl() }}" target="_blank" rel="noopener noreferrer" class="font-semibold text-[#0A66C2] hover:underline">{{ $creator->websiteHost() }}</a>
+                                @else
+                                    <span>Contact info unavailable</span>
                                 @endif
                             </p>
-                        @endif
+                            <p class="mt-1.5 text-[14px] font-semibold text-[#0A66C2]">
+                                {{ $apps->count() }} {{ \Illuminate\Support\Str::plural('app', $apps->count()) }}
+                                @if ($categories->isNotEmpty())
+                                    <span class="font-normal text-[#666666]">· {{ $categories->count() }} {{ \Illuminate\Support\Str::plural('category', $categories->count()) }}</span>
+                                @endif
+                            </p>
+                        </div>
+
+                        <div class="flex shrink-0 flex-wrap items-center gap-2">
+                            @if ($hasCv)
+                                <a href="{{ route('creators.cv.preview', $creator->slug) }}" class="li-btn li-btn-primary">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"/></svg>
+                                    Download CV
+                                </a>
+                            @endif
+                            @if ($creator->websiteUrl())
+                                <a href="{{ $creator->websiteUrl() }}" target="_blank" rel="noopener noreferrer" class="li-btn li-btn-outline">Visit website</a>
+                            @endif
+                            <a href="#about" class="li-btn li-btn-ghost">More</a>
+                        </div>
                     </div>
-                    <a
-                        href="{{ route('creators.cv.preview', $creator->slug) }}"
-                        class="btn-primary shrink-0"
-                    >
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                        Preview & download
-                    </a>
                 </div>
-                @if ($creator->bio)
-                    <p class="mt-4 text-[15px] leading-relaxed text-[#1D1D1F]">{{ $creator->bio }}</p>
+            </header>
+
+            {{-- About --}}
+            @if ($creator->bio)
+                <section id="about" class="li-card li-section">
+                    <h2 class="li-heading">About</h2>
+                    <p class="mt-3 whitespace-pre-line text-[14px] leading-relaxed text-[#191919]">{{ $creator->bio }}</p>
+                </section>
+            @endif
+
+            {{-- Apps / Projects --}}
+            <section id="apps" class="li-card li-section">
+                <div class="flex items-baseline justify-between gap-3">
+                    <h2 class="li-heading">Apps &amp; projects</h2>
+                    <span class="text-[13px] text-[#666666]">{{ $apps->count() }} total</span>
+                </div>
+
+                @if ($apps->isEmpty())
+                    <p class="mt-4 text-[14px] text-[#666666]">No published apps yet.</p>
+                @else
+                    @if ($categories->count() > 1)
+                        <div class="mt-4 flex flex-wrap gap-2" role="tablist" aria-label="Filter by category">
+                            <button type="button" class="li-chip" :class="cat === 'all' ? 'li-chip-active' : ''" @click="cat = 'all'">All</button>
+                            @foreach ($categories as $category)
+                                <button type="button" class="li-chip" :class="cat === '{{ $category->slug ?? 'apps' }}' ? 'li-chip-active' : ''" @click="cat = '{{ $category->slug ?? 'apps' }}'">{{ $category->name }}</button>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <div class="mt-2">
+                        @foreach ($categories as $category)
+                            <div x-show="cat === 'all' || cat === '{{ $category->slug ?? 'apps' }}'" id="cat-{{ $category->slug ?? 'apps' }}">
+                                @if ($categories->count() > 1)
+                                    <p class="mt-5 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#666666]" x-show="cat === 'all'">{{ $category->name }}</p>
+                                @endif
+                                <ul class="divide-y divide-[#E0DFDC]">
+                                    @foreach ($category->apps as $app)
+                                        <li>
+                                            <a href="{{ route('creators.app', [$creator->slug, $app->slug]) }}" class="li-item group">
+                                                <div class="li-app-icon h-12 w-12 sm:h-14 sm:w-14">
+                                                    @if ($app->logoUrl())
+                                                        <img src="{{ $app->logoUrl() }}" alt="" class="h-full w-full object-cover">
+                                                    @else
+                                                        <div class="flex h-full w-full items-center justify-center bg-[#EEF3F8] text-[#666666]">
+                                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" stroke-width="1.5"/></svg>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div class="min-w-0 flex-1">
+                                                    <div class="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                                                        <h3 class="truncate text-[15px] font-semibold text-[#191919] group-hover:text-[#0A66C2] group-hover:underline">{{ $app->name }}</h3>
+                                                        <x-platform-badge :platform="$app->platform" />
+                                                    </div>
+                                                    <p class="mt-0.5 line-clamp-2 text-[14px] leading-snug text-[#666666]">{{ \Illuminate\Support\Str::limit($app->description, 110) }}</p>
+                                                    <div class="mt-1.5">
+                                                        <x-star-rating :rating="$app->averageRating()" :count="$app->ratingsCount()" />
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endforeach
+                    </div>
                 @endif
             </section>
 
-            @if (count($creator->skillList()) > 0)
-                <section class="mac-panel">
-                    <h3 class="section-title">Skills</h3>
-                    <div class="mt-3 flex flex-wrap gap-2">
-                        @foreach ($creator->skillList() as $skill)
-                            <span class="mac-pill">{{ $skill }}</span>
-                        @endforeach
-                    </div>
-                </section>
-            @endif
-
-            @if (count($creator->experienceEntries()) > 0)
-                <section class="mac-panel">
-                    <h3 class="section-title">Experience</h3>
-                    <ul class="mt-5 space-y-6 border-l border-[#E5E5EA] pl-5">
-                        @foreach ($creator->experienceEntries() as $job)
-                            <li class="relative">
-                                <span class="absolute -left-[26px] top-1.5 h-2.5 w-2.5 rounded-full bg-[#0071E3] ring-4 ring-white"></span>
-                                <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                                    <h4 class="text-[15px] font-semibold text-[#1D1D1F]">{{ $job['title'] ?? 'Role' }}</h4>
+            {{-- Experience --}}
+            @if (count($experience) > 0)
+                <section id="experience" class="li-card li-section">
+                    <h2 class="li-heading">Experience</h2>
+                    <ul class="mt-4 space-y-5">
+                        @foreach ($experience as $job)
+                            <li class="flex gap-3.5">
+                                <div class="li-logo-tile" aria-hidden="true">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                </div>
+                                <div class="min-w-0 flex-1 border-b border-[#E0DFDC] pb-5 last:border-0 last:pb-0">
+                                    <h3 class="text-[15px] font-semibold text-[#191919]">{{ $job['title'] ?? 'Role' }}</h3>
+                                    @if (! empty($job['company']))
+                                        <p class="text-[14px] text-[#191919]">{{ $job['company'] }}</p>
+                                    @endif
                                     @if (! empty($job['period']))
-                                        <span class="rounded-md bg-[#F5F5F7] px-2 py-0.5 text-[12px] font-medium text-[#6E6E73]">{{ $job['period'] }}</span>
+                                        <p class="text-[13px] text-[#666666]">{{ $job['period'] }}</p>
+                                    @endif
+                                    @if (! empty($job['description']))
+                                        <p class="mt-2 whitespace-pre-line text-[14px] leading-relaxed text-[#191919]">{{ $job['description'] }}</p>
                                     @endif
                                 </div>
-                                @if (! empty($job['company']))
-                                    <p class="mt-0.5 text-[14px] text-[#86868B]">{{ $job['company'] }}</p>
-                                @endif
-                                @if (! empty($job['description']))
-                                    <p class="mt-2 text-[14px] leading-relaxed text-[#1D1D1F]">{{ $job['description'] }}</p>
-                                @endif
                             </li>
                         @endforeach
                     </ul>
                 </section>
             @endif
 
-            @if (count($creator->educationEntries()) > 0)
-                <section class="mac-panel">
-                    <h3 class="section-title">Education</h3>
-                    <ul class="mt-5 space-y-6 border-l border-[#E5E5EA] pl-5">
-                        @foreach ($creator->educationEntries() as $item)
-                            <li class="relative">
-                                <span class="absolute -left-[26px] top-1.5 h-2.5 w-2.5 rounded-full bg-[#34C759] ring-4 ring-white"></span>
-                                <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                                    <h4 class="text-[15px] font-semibold text-[#1D1D1F]">{{ $item['school'] ?? 'School' }}</h4>
+            {{-- Education --}}
+            @if (count($education) > 0)
+                <section id="education" class="li-card li-section">
+                    <h2 class="li-heading">Education</h2>
+                    <ul class="mt-4 space-y-5">
+                        @foreach ($education as $item)
+                            <li class="flex gap-3.5">
+                                <div class="li-logo-tile" aria-hidden="true">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+                                </div>
+                                <div class="min-w-0 flex-1 border-b border-[#E0DFDC] pb-5 last:border-0 last:pb-0">
+                                    <h3 class="text-[15px] font-semibold text-[#191919]">{{ $item['school'] ?? 'School' }}</h3>
+                                    @if (! empty($item['degree']))
+                                        <p class="text-[14px] text-[#191919]">{{ $item['degree'] }}</p>
+                                    @endif
                                     @if (! empty($item['period']))
-                                        <span class="rounded-md bg-[#F5F5F7] px-2 py-0.5 text-[12px] font-medium text-[#6E6E73]">{{ $item['period'] }}</span>
+                                        <p class="text-[13px] text-[#666666]">{{ $item['period'] }}</p>
+                                    @endif
+                                    @if (! empty($item['description']))
+                                        <p class="mt-2 whitespace-pre-line text-[14px] leading-relaxed text-[#191919]">{{ $item['description'] }}</p>
                                     @endif
                                 </div>
-                                @if (! empty($item['degree']))
-                                    <p class="mt-0.5 text-[14px] text-[#86868B]">{{ $item['degree'] }}</p>
-                                @endif
-                                @if (! empty($item['description']))
-                                    <p class="mt-2 text-[14px] leading-relaxed text-[#1D1D1F]">{{ $item['description'] }}</p>
-                                @endif
                             </li>
+                        @endforeach
+                    </ul>
+                </section>
+            @endif
+
+            {{-- Skills --}}
+            @if (count($skills) > 0)
+                <section id="skills" class="li-card li-section">
+                    <h2 class="li-heading">Skills</h2>
+                    <ul class="mt-3 divide-y divide-[#E0DFDC]">
+                        @foreach ($skills as $skill)
+                            <li class="py-3 text-[15px] font-semibold text-[#191919] first:pt-0 last:pb-0">{{ $skill }}</li>
                         @endforeach
                     </ul>
                 </section>
             @endif
         </div>
-    @endif
+
+        {{-- ============ Sidebar ============ --}}
+        <aside class="space-y-2 sm:space-y-4">
+            <section class="li-card li-section">
+                <h2 class="text-[16px] font-semibold text-[#191919]">Profile</h2>
+                <dl class="mt-3 space-y-3 text-[14px]">
+                    <div class="flex items-center justify-between gap-3">
+                        <dt class="text-[#666666]">Published apps</dt>
+                        <dd class="font-semibold tabular-nums text-[#191919]">{{ $apps->count() }}</dd>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <dt class="text-[#666666]">Categories</dt>
+                        <dd class="font-semibold tabular-nums text-[#191919]">{{ $categories->count() }}</dd>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <dt class="text-[#666666]">Skills</dt>
+                        <dd class="font-semibold tabular-nums text-[#191919]">{{ count($skills) }}</dd>
+                    </div>
+                </dl>
+            </section>
+
+            @if ($hasCv)
+                <section class="li-card li-section">
+                    <h2 class="text-[16px] font-semibold text-[#191919]">Curriculum vitae</h2>
+                    <p class="mt-1 text-[13px] text-[#666666]">Preview a template and download as PDF.</p>
+                    <a href="{{ route('creators.cv.preview', $creator->slug) }}" class="li-btn li-btn-primary mt-3 w-full">Preview & download</a>
+                </section>
+            @endif
+
+            @if ($creator->websiteUrl())
+                <section class="li-card li-section">
+                    <h2 class="text-[16px] font-semibold text-[#191919]">Website</h2>
+                    <a href="{{ $creator->websiteUrl() }}" target="_blank" rel="noopener noreferrer" class="li-btn li-btn-outline mt-3 w-full">{{ $creator->websiteHost() }}</a>
+                </section>
+            @endif
+
+            @if (count($skills) > 0)
+                <section class="li-card li-section">
+                    <h2 class="text-[16px] font-semibold text-[#191919]">Top skills</h2>
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        @foreach (array_slice($skills, 0, 8) as $skill)
+                            <span class="li-chip cursor-default">{{ $skill }}</span>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
+        </aside>
+    </div>
 </div>
 @endsection
