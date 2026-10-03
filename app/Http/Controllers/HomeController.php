@@ -29,17 +29,28 @@ class HomeController extends Controller
             ->with(['category', 'user', 'tags'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
-            ->orderByRaw("CASE WHEN video_url IS NOT NULL AND video_url <> '' THEN 0 ELSE 1 END")
             ->latest()
             ->take(6)
             ->get();
+
+        $featuredVideos = AppListing::query()
+            ->publiclyVisible()
+            ->whereNotNull('video_url')
+            ->where('video_url', '<>', '')
+            ->with(['category', 'user'])
+            ->latest()
+            ->take(16)
+            ->get()
+            ->filter(fn (AppListing $app) => $app->directVideoUrl() || $app->videoEmbedUrl())
+            ->take(8)
+            ->values();
 
         $totalApps = AppListing::query()->publiclyVisible()->count();
 
         $topAuthors = $this->topAuthors(12);
         $popularTags = $this->popularTags(16);
 
-        return view('home', compact('categories', 'featured', 'totalApps', 'topAuthors', 'popularTags'));
+        return view('home', compact('categories', 'featured', 'featuredVideos', 'totalApps', 'topAuthors', 'popularTags'));
     }
 
     public function docs(): View
