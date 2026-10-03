@@ -3,28 +3,30 @@
     $avatar = $media['avatar'] ?? null;
 @endphp
 <style>
-    .cv-exec { font-family: DejaVu Sans, Helvetica, Arial, sans-serif; color: #020617; font-size: 10.5px; line-height: 1.45; }
+    .cv-exec { font-family: DejaVu Sans, Helvetica, Arial, sans-serif; color: #172033; font-size: 10.5px; line-height: 1.55; }
+    .cv-exec p { margin-top: 0; }
     .cv-exec .frame { width: 100%; border-collapse: collapse; }
-    .cv-exec .sidebar { width: 32%; background: #0F172A; color: #F8FAFC; padding: 16px 12px; vertical-align: top; }
-    .cv-exec .main { width: 68%; background: #F8FAFC; padding: 16px 14px; vertical-align: top; }
+    .cv-exec .sidebar { width: 31%; background: #0F172A; color: #F8FAFC; padding: 22px 16px; vertical-align: top; }
+    .cv-exec .main { width: 69%; background: #F8FAFC; padding: 22px 20px; vertical-align: top; }
     .cv-exec .photo { width: 88px; height: 88px; border-radius: 44px; display: block; margin: 0 auto 10px; border: 2px solid #334155; }
     .cv-exec .photo-fallback { width: 88px; height: 88px; border-radius: 44px; background: #334155; text-align: center; line-height: 88px; font-size: 24px; font-weight: bold; margin: 0 auto 10px; color: #F8FAFC; }
-    .cv-exec .side-name { text-align: center; font-size: 16px; font-weight: bold; margin: 0 0 4px; color: #F8FAFC; }
-    .cv-exec .side-role { text-align: center; font-size: 10px; color: #94A3B8; margin: 0 0 12px; }
-    .cv-exec .side-h { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: #38BDF8; margin: 14px 0 6px; border-bottom: 1px solid #334155; padding-bottom: 3px; }
-    .cv-exec .side-p { color: #CBD5E1; font-size: 9.5px; margin: 0 0 4px; }
-    .cv-exec .chip { display: inline-block; background: #1E293B; color: #E2E8F0; padding: 2px 6px; margin: 0 3px 4px 0; border-radius: 8px; font-size: 8.5px; }
-    .cv-exec h1 { font-size: 18px; margin: 0 0 2px; color: #0F172A; }
-    .cv-exec .lead { color: #475569; margin: 0 0 10px; font-size: 11px; }
-    .cv-exec h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #0369A1; border-bottom: 1px solid #E2E8F0; padding-bottom: 3px; margin: 12px 0 8px; }
-    .cv-exec .entry { margin-bottom: 9px; }
+    .cv-exec .side-name { text-align: center; font-size: 17px; font-weight: bold; margin: 0 0 5px; color: #F8FAFC; }
+    .cv-exec .side-role { text-align: center; font-size: 10px; line-height: 1.45; color: #CBD5E1; margin: 0 0 17px; }
+    .cv-exec .side-h { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #7DD3FC; margin: 18px 0 8px; border-bottom: 1px solid #334155; padding-bottom: 5px; }
+    .cv-exec .side-p { color: #D7E0EB; font-size: 9.5px; line-height: 1.5; margin: 0 0 5px; }
+    .cv-exec .chip { display: inline-block; background: #1E293B; border: 1px solid #334155; color: #F1F5F9; padding: 3px 7px; margin: 0 4px 5px 0; border-radius: 8px; font-size: 8.5px; }
+    .cv-exec h1 { font-size: 20px; margin: 0 0 5px; color: #0F172A; }
+    .cv-exec .lead { color: #475569; margin: 0 0 15px; font-size: 10.5px; line-height: 1.6; }
+    .cv-exec h2 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em; color: #0369A1; border-bottom: 2px solid #BAE6FD; padding-bottom: 5px; margin: 17px 0 10px; }
+    .cv-exec .entry { margin-bottom: 12px; }
     .cv-exec .entry-title { font-weight: bold; font-size: 11px; }
     .cv-exec .entry-period { float: right; color: #64748B; font-size: 9px; }
     .cv-exec .entry-sub { clear: both; color: #475569; font-size: 9.5px; margin: 1px 0 3px; }
-    .cv-exec .app { margin-bottom: 9px; page-break-inside: avoid; border-bottom: 1px solid #E2E8F0; padding-bottom: 7px; }
-    .cv-exec .app-name { font-weight: bold; font-size: 11px; margin: 0 0 2px; }
-    .cv-exec .app-meta { font-size: 8.5px; color: #64748B; margin: 0 0 3px; }
-    .cv-exec .footer { margin-top: 12px; font-size: 8px; color: #94A3B8; }
+    .cv-exec .app { margin-bottom: 10px; page-break-inside: avoid; background: #FFFFFF; border: 1px solid #E2E8F0; border-left: 3px solid #0EA5E9; padding: 8px 9px; }
+    .cv-exec .app-name { font-weight: bold; font-size: 10.5px; margin: 0 0 3px; color: #0F172A; }
+    .cv-exec .app-meta { font-size: 8px; color: #64748B; margin: 0 0 4px; }
+    .cv-exec .app-copy { font-size: 9.5px; line-height: 1.45; margin: 0; color: #334155; }
+    .cv-exec .footer { margin-top: 16px; padding-top: 6px; border-top: 1px solid #CBD5E1; font-size: 8px; color: #64748B; }
 </style>
 
 <div class="cv-exec">
@@ -90,13 +92,13 @@
                                 @if ($app->link) · {{ \Illuminate\Support\Str::limit($app->link, 40) }}@endif
                             </p>
                             @if ($app->description)
-                                <p>{{ \Illuminate\Support\Str::limit($app->description, 140) }}</p>
+                                <p class="app-copy">{{ \Illuminate\Support\Str::limit($app->description, 120) }}</p>
                             @endif
                         </div>
                     @endforeach
                 @endif
 
-                <div class="footer">{{ $creator->publicUrl() }} · Executive template</div>
+                <div class="footer">Portfolio: {{ $creator->publicUrl() }}</div>
             </td>
         </tr>
     </table>

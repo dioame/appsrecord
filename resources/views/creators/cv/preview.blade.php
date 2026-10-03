@@ -89,7 +89,7 @@
     .cv-preview-sheet .app { break-inside: avoid; page-break-inside: avoid; }
     .cv-preview-sheet h2 { break-after: avoid; page-break-after: avoid; }
 
-    @page { size: A4; margin: 14mm 15mm; }
+    @page { size: A4; margin: 12mm 13mm; }
     @media print {
         html, body { background: #fff !important; }
         * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }

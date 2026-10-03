@@ -3,26 +3,31 @@
     $avatar = $media['avatar'] ?? null;
 @endphp
 <style>
-    .cv-show { font-family: DejaVu Sans, Helvetica, Arial, sans-serif; color: #134E4A; font-size: 11px; line-height: 1.45; }
-    .cv-show .banner { background: #0F766E; color: #F0FDFA; padding: 16px 14px; margin-bottom: 14px; }
+    .cv-show { font-family: DejaVu Sans, Helvetica, Arial, sans-serif; color: #163C3A; font-size: 11px; line-height: 1.55; }
+    .cv-show p { margin-top: 0; }
+    .cv-show .banner { background: #0F766E; color: #F0FDFA; padding: 18px 17px; margin-bottom: 18px; }
     .cv-show .banner table { width: 100%; }
     .cv-show .banner td { vertical-align: middle; }
     .cv-show .photo { width: 70px; height: 70px; border-radius: 12px; border: 2px solid #5EEAD4; }
     .cv-show .photo-fallback { width: 70px; height: 70px; border-radius: 12px; background: #115E59; text-align: center; line-height: 70px; font-size: 20px; font-weight: bold; color: #F0FDFA; }
-    .cv-show h1 { font-size: 22px; margin: 0 0 3px; color: #F0FDFA; }
+    .cv-show h1 { font-size: 24px; margin: 0 0 4px; color: #F0FDFA; letter-spacing: -0.01em; }
     .cv-show .headline { margin: 0 0 3px; color: #99F6E4; font-size: 12px; }
     .cv-show .meta { margin: 0; color: #CCFBF1; font-size: 10px; }
     .cv-show .pad { padding: 0 2px; }
-    .cv-show .bio { margin: 0 0 12px; color: #134E4A; }
-    .cv-show h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #0F766E; border-bottom: 2px solid #99F6E4; padding-bottom: 4px; margin: 14px 0 8px; }
+    .cv-show .bio { margin: 0 0 16px; color: #285E5A; }
+    .cv-show h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.11em; color: #0F766E; border-bottom: 2px solid #99F6E4; padding-bottom: 6px; margin: 20px 0 11px; }
     .cv-show .skill { display: inline-block; background: #CCFBF1; color: #115E59; padding: 3px 8px; margin: 0 4px 5px 0; border-radius: 4px; font-size: 10px; }
     .cv-show .entry { margin-bottom: 10px; }
     .cv-show .entry-title { font-weight: bold; font-size: 12px; color: #134E4A; }
     .cv-show .entry-period { float: right; color: #0F766E; font-size: 10px; }
     .cv-show .entry-sub { clear: both; color: #0F766E; font-size: 10px; margin: 2px 0 3px; }
-    .cv-show .app { margin-bottom: 10px; page-break-inside: avoid; border-bottom: 1px solid #99F6E4; padding-bottom: 8px; }
-    .cv-show .app-name { font-size: 13px; font-weight: bold; color: #134E4A; margin: 0 0 2px; }
-    .cv-show .app-meta { font-size: 9px; color: #0F766E; margin: 0 0 3px; }
+    .cv-show .app-grid { width: 100%; border-collapse: separate; border-spacing: 0 9px; margin-top: -9px; }
+    .cv-show .app-cell { width: 50%; vertical-align: top; padding-right: 6px; page-break-inside: avoid; }
+    .cv-show .app-cell + .app-cell { padding-right: 0; padding-left: 6px; }
+    .cv-show .app { min-height: 66px; page-break-inside: avoid; background: #F0FDFA; border-top: 3px solid #14B8A6; padding: 9px 10px 10px; }
+    .cv-show .app-name { font-size: 11px; font-weight: bold; color: #134E4A; margin: 0 0 3px; }
+    .cv-show .app-meta { font-size: 8px; color: #0F766E; margin: 0 0 4px; }
+    .cv-show .app-copy { font-size: 9.5px; line-height: 1.45; margin: 0; color: #285E5A; }
     .cv-show .footer { margin-top: 16px; font-size: 8px; color: #5EEAD4; border-top: 1px solid #99F6E4; padding-top: 6px; }
 </style>
 
@@ -57,19 +62,28 @@
 
         @if ($apps->isNotEmpty())
             <h2>Deployed apps ({{ $apps->count() }})</h2>
-            @foreach ($apps as $app)
-                <div class="app">
-                    <p class="app-name">{{ $app->name }}</p>
-                    <p class="app-meta">
-                        {{ $app->platformLabel() }}
-                        @if ($app->category) · {{ $app->category->name }}@endif
-                        @if ($app->link) · {{ \Illuminate\Support\Str::limit($app->link, 40) }}@endif
-                    </p>
-                    @if ($app->description)
-                        <p>{{ \Illuminate\Support\Str::limit($app->description, 150) }}</p>
-                    @endif
-                </div>
-            @endforeach
+            <table class="app-grid" cellpadding="0" cellspacing="0">
+                @foreach ($apps->chunk(2) as $row)
+                    <tr>
+                        @foreach ($row as $app)
+                            <td class="app-cell">
+                                <div class="app">
+                                    <p class="app-name">{{ $app->name }}</p>
+                                    <p class="app-meta">
+                                        {{ $app->platformLabel() }}
+                                        @if ($app->category) · {{ $app->category->name }}@endif
+                                        @if ($app->link) · {{ \Illuminate\Support\Str::limit($app->link, 34) }}@endif
+                                    </p>
+                                    @if ($app->description)
+                                        <p class="app-copy">{{ \Illuminate\Support\Str::limit($app->description, 115) }}</p>
+                                    @endif
+                                </div>
+                            </td>
+                        @endforeach
+                        @if ($row->count() === 1)<td class="app-cell"></td>@endif
+                    </tr>
+                @endforeach
+            </table>
         @endif
 
         @if (count($creator->skillList()) > 0)
@@ -105,6 +119,6 @@
             @endforeach
         @endif
 
-        <div class="footer">{{ $creator->publicUrl() }} · Showcase template</div>
+        <div class="footer">Portfolio: {{ $creator->publicUrl() }}</div>
     </div>
 </div>
